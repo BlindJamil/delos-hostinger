@@ -22,7 +22,7 @@
 </div>
 
 {{-- 1. HERO --}}
-<section id="hero" class="relative min-h-screen flex items-center overflow-hidden bg-delos-dark hero-grain">
+<section id="hero" class="relative min-h-dvh flex items-center overflow-hidden bg-delos-dark hero-grain">
     <div class="absolute inset-0">
         <img src="{{ asset('images/delos-erbil-showroom-4.jpg') }}"
              alt="Delos International Classic Kitchen Showroom — Erbil, Iraq"
@@ -32,7 +32,7 @@
         <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/80 via-delos-dark/30 to-delos-dark/30"></div>
     </div>
 
-    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-28 w-full">
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-28 pb-16 lg:pt-40 lg:pb-28 w-full">
         <div class="hero-fade flex items-center gap-3 mb-8" data-hero-delay="600">
             <span class="w-8 h-px bg-delos-gold float-subtle"></span>
             <span class="text-overline text-delos-gold">Italian Luxury Solutions

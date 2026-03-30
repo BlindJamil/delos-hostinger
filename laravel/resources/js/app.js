@@ -368,10 +368,10 @@ function initAnimations() {
                     opacity: 1, scale: 1,
                     duration: isMobile ? 1.8 : 1.2,
                     ease: 'power2.out',
-                    delay: i * (isMobile ? 1.2 : 0.3),
+                    delay: i * (isMobile ? 0.4 : 0.3),
                     scrollTrigger: {
                         trigger: employeeSection,
-                        start: 'top 15%',
+                        start: isMobile ? 'top 30%' : 'top 15%',
                         toggleActions: 'play none none none'
                     }
                 }
@@ -390,7 +390,7 @@ function initAnimations() {
                 ease: 'none',
                 scrollTrigger: {
                     trigger: employeeSection,
-                    start: 'top -10%',
+                    start: isMobile ? 'top top' : 'top -10%',
                     end: () => `+=${totalScroll + buffer}`,
                     scrub: 2,
                     pin: true,
