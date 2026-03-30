@@ -138,7 +138,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <a href="{{ route('projects') }}" data-reveal="slide-left" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                <img src="{{ asset('images/lube-delos-iraq-4.jpg') }}" alt="Delos LUBE Classic Kitchen Collection" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <img src="{{ asset('images/collection-lube-classic.jpg') }}" alt="LUBE Agnese Style Classic Kitchen — Italian Luxury" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
                 <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
                 <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">01</span>
                 <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
@@ -149,7 +149,7 @@
                 <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
             </a>
             <a href="{{ route('projects') }}" data-reveal="slide-right" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                <img src="{{ asset('images/delos-erbil-showroom-6.jpg') }}" alt="Delos Modern Kitchen — Erbil" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <img src="{{ asset('images/collection-lube-modern.jpg') }}" alt="LUBE Clover Modern Kitchen — Contemporary Italian Design" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
                 <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
                 <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">02</span>
                 <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
@@ -160,7 +160,7 @@
                 <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
             </a>
             <a href="{{ route('projects') }}" data-reveal="slide-left" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                <img src="{{ asset('images/frigerio-living.jpg') }}" alt="Frigerio Eleganza Living Collection" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <img src="{{ asset('images/collection-vittoria.jpg') }}" alt="Vittoria Frigerio Luxury Living Room — Italian Elegance" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
                 <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
                 <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">03</span>
                 <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
@@ -171,7 +171,7 @@
                 <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
             </a>
             <a href="{{ route('projects') }}" data-reveal="slide-up" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                <img src="{{ asset('images/cantori-1.jpg') }}" alt="CANTORI Outdoor Living Collection" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <img src="{{ asset('images/collection-cantori.jpg') }}" alt="CANTORI Outdoor Dining — Mediterranean Poolside Living" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
                 <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
                 <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">04</span>
                 <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
