@@ -396,11 +396,12 @@ function initAnimations() {
                 x: -totalScroll,
                 ease: 'none',
                 scrollTrigger: {
-                    trigger: employeeSection,
-                    start: 'top top',
+                    trigger: employeeTrack,
+                    start: 'top 30%',
                     end: () => `+=${totalScroll + buffer}`,
                     scrub: isMobile ? 1 : 2,
                     pin: true,
+                    pinSpacing: true,
                     anticipatePin: 1
                 }
             });
