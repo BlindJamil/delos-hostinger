@@ -200,7 +200,7 @@
 </section>
 
 {{-- Employee cards — pinned separately so cards fill full viewport --}}
-<section id="employees-section" class="bg-delos-dark overflow-hidden">
+<section id="employees-section" class="bg-delos-dark overflow-hidden min-h-dvh flex items-center">
     {{-- Horizontal scroll track --}}
     <div id="employee-track" class="flex gap-6 pb-20 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]">
         @php
