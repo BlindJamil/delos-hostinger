@@ -33,21 +33,21 @@
     </div>
 
     <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-28 pb-8 lg:pt-40 lg:pb-28 w-full flex-1 flex flex-col justify-center">
-        <div class="hero-fade flex items-center gap-3 mb-8" data-hero-delay="600">
+        <div class="hero-fade flex items-center gap-3 mb-4 lg:mb-8" data-hero-delay="600">
             <span class="w-8 h-px bg-delos-gold float-subtle"></span>
             <span class="text-overline text-delos-gold">Italian Luxury Solutions
                 <span class="italian-flag"><span class="flag-green"></span><span class="flag-white"></span><span class="flag-red"></span></span>
             </span>
         </div>
 
-        <h1 class="text-heading-1 text-delos-cream mb-8 max-w-3xl">
+        <h1 class="text-heading-1 text-delos-cream mb-4 lg:mb-8 max-w-3xl">
             <span class="split-line"><span class="split-line-inner">Find pieces designed to</span></span>
             <span class="split-line"><span class="split-line-inner">transform your home</span></span>
             <span class="split-line"><span class="split-line-inner"><em class="text-delos-gold not-italic">one room, one moment,</em></span></span>
             <span class="split-line"><span class="split-line-inner">one feeling at a time.</span></span>
         </h1>
 
-        <p class="hero-fade text-body text-delos-cream/50 max-w-lg mb-12" data-hero-delay="800">
+        <p class="hero-fade text-body text-delos-cream/50 max-w-lg mb-6 lg:mb-12" data-hero-delay="800">
             Enhance your spaces with our timeless Italian luxury furniture and interior solutions. Designed to enrich your daily life now and for generations to come.
         </p>
 
@@ -198,7 +198,7 @@
     </div>
 
     {{-- Horizontal scroll track --}}
-    <div id="employee-track" class="flex gap-6 pb-20 px-6 lg:px-12 overflow-x-auto lg:overflow-visible lg:justify-center lg:mx-auto lg:max-w-[1400px]" style="width: max-content;">
+    <div id="employee-track" class="flex gap-6 pb-20 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]" style="width: max-content;">
         @php
             $employees = [
                 ['name' => 'Ahmed K.', 'role' => 'Lead Interior Designer', 'branch' => 'Erbil', 'img' => 'employee-1.jpg', 'achievement' => 'Led the design of 12 luxury villa transformations across Erbil this quarter.'],

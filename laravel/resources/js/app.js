@@ -370,46 +370,43 @@ function initAnimations() {
         const slides = employeeTrack.querySelectorAll('.employee-slide');
         const isMobile = window.innerWidth < 1024;
 
-        // Card fade-in — works on all screen sizes
+        // Card fade-in
         slides.forEach((slide, i) => {
             gsap.fromTo(slide,
                 { opacity: 0, scale: 0.9 },
                 {
                     opacity: 1, scale: 1,
-                    duration: 1,
+                    duration: isMobile ? 0.8 : 1.2,
                     ease: 'power2.out',
-                    delay: i * 0.3,
+                    delay: i * 0.2,
                     scrollTrigger: {
                         trigger: employeeSection,
-                        start: 'top 40%',
+                        start: isMobile ? 'top 50%' : 'top 15%',
                         toggleActions: 'play none none none'
                     }
                 }
             );
         });
 
-        // Horizontal scroll with pin — DESKTOP ONLY
-        // Mobile uses native overflow-x-auto scroll (set in HTML)
-        if (!isMobile) {
-            const lastSlide = slides[slides.length - 1];
-            const totalScroll = lastSlide
-                ? (lastSlide.offsetLeft + lastSlide.offsetWidth) - window.innerWidth + 24
-                : employeeTrack.scrollWidth - window.innerWidth;
-            if (totalScroll > 0) {
-                const buffer = 300;
-                gsap.to(employeeTrack, {
-                    x: -totalScroll,
-                    ease: 'none',
-                    scrollTrigger: {
-                        trigger: employeeSection,
-                        start: 'top -10%',
-                        end: () => `+=${totalScroll + buffer}`,
-                        scrub: 2,
-                        pin: true,
-                        anticipatePin: 1
-                    }
-                });
-            }
+        // Horizontal scroll — all screens, mobile-optimized timing
+        const lastSlide = slides[slides.length - 1];
+        const totalScroll = lastSlide
+            ? (lastSlide.offsetLeft + lastSlide.offsetWidth) - window.innerWidth + 24
+            : employeeTrack.scrollWidth - window.innerWidth;
+        if (totalScroll > 0) {
+            const buffer = isMobile ? 200 : 300;
+            gsap.to(employeeTrack, {
+                x: -totalScroll,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: employeeSection,
+                    start: isMobile ? 'top 5%' : 'top -10%',
+                    end: () => `+=${totalScroll + buffer}`,
+                    scrub: isMobile ? 1 : 2,
+                    pin: true,
+                    anticipatePin: 1
+                }
+            });
         }
     }
 

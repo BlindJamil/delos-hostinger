@@ -43,6 +43,13 @@
     line-height: 1.08;
 }
 
+@media (max-width: 767px) {
+    .text-heading-1 {
+        font-size: clamp(2rem, 7vw, 2.75rem);
+        line-height: 1.12;
+    }
+}
+
 .text-heading-2 {
     font-family: var(--font-serif);
     font-size: clamp(2.25rem, 4vw, 3.25rem);
