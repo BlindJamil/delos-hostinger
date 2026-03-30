@@ -20,4 +20,3 @@ $app = require_once __DIR__.'/laravel/bootstrap/app.php';
 $app->usePublicPath(__DIR__);
 
 $app->handleRequest(Request::capture());
-<!-- deployed 1774844118 -->
