@@ -391,16 +391,13 @@ function initAnimations() {
         // Horizontal scroll — only when cards overflow the container
         const totalScroll = employeeTrack.scrollWidth - employeeSection.offsetWidth;
         if (totalScroll > 50) {
-            const buffer = isMobile ? 200 : 300;
-            // Calculate header height so we pin after cards are visible
-            const headerHeight = employeeTrack.offsetTop - employeeSection.offsetTop;
             gsap.to(employeeTrack, {
                 x: -totalScroll,
                 ease: 'none',
                 scrollTrigger: {
                     trigger: employeeSection,
-                    start: () => `top -${headerHeight}px`,
-                    end: () => `+=${totalScroll + buffer}`,
+                    start: 'top top',
+                    end: () => `+=${totalScroll + (isMobile ? 200 : 300)}`,
                     scrub: isMobile ? 1 : 2,
                     pin: true,
                     anticipatePin: 1

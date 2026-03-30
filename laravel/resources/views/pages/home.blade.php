@@ -186,7 +186,7 @@
 </section>
 
 {{-- 4. EMPLOYEES --}}
-<section id="employees-section" class="bg-delos-dark overflow-hidden" data-section-enter="left">
+<section class="bg-delos-dark gsap-section" data-section-enter="left">
     <div class="section-padding">
         <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
             <div class="text-center mb-16">
@@ -197,7 +197,10 @@
             </div>
         </div>
     </div>
+</section>
 
+{{-- Employee cards — pinned separately so cards fill full viewport --}}
+<section id="employees-section" class="bg-delos-dark overflow-hidden">
     {{-- Horizontal scroll track --}}
     <div id="employee-track" class="flex gap-6 pb-20 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]">
         @php
