@@ -396,7 +396,7 @@ function initAnimations() {
                 ease: 'none',
                 scrollTrigger: {
                     trigger: employeeSection,
-                    start: 'top top',
+                    start: 'top 15%',
                     end: () => `+=${totalScroll + (isMobile ? 200 : 300)}`,
                     scrub: isMobile ? 1 : 2,
                     pin: true,
