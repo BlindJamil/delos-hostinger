@@ -223,11 +223,14 @@ function initAnimations() {
 
     // --- LENIS SMOOTH SCROLL ---
     if (typeof Lenis !== 'undefined' && !prefersReducedMotion) {
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
         const lenis = new Lenis({
-            duration: 2.2,
+            duration: isTouch ? 1.6 : 2.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             smoothWheel: true,
-            wheelMultiplier: 0.8
+            smoothTouch: true,
+            wheelMultiplier: 0.8,
+            touchMultiplier: 1.2
         });
 
         lenis.on('scroll', ScrollTrigger.update);
