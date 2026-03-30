@@ -370,37 +370,34 @@ function initAnimations() {
         const slides = employeeTrack.querySelectorAll('.employee-slide');
         const isMobile = window.innerWidth < 1024;
 
-        // Card fade-in
+        // Card fade-in — trigger early so cards are visible before pin activates
         slides.forEach((slide, i) => {
             gsap.fromTo(slide,
                 { opacity: 0, scale: 0.9 },
                 {
                     opacity: 1, scale: 1,
-                    duration: isMobile ? 0.8 : 1.2,
+                    duration: isMobile ? 0.6 : 0.8,
                     ease: 'power2.out',
-                    delay: i * 0.2,
+                    delay: i * 0.15,
                     scrollTrigger: {
                         trigger: employeeSection,
-                        start: isMobile ? 'top 50%' : 'top 15%',
+                        start: 'top 80%',
                         toggleActions: 'play none none none'
                     }
                 }
             );
         });
 
-        // Horizontal scroll — all screens, mobile-optimized timing
-        const lastSlide = slides[slides.length - 1];
-        const totalScroll = lastSlide
-            ? (lastSlide.offsetLeft + lastSlide.offsetWidth) - window.innerWidth + 24
-            : employeeTrack.scrollWidth - window.innerWidth;
-        if (totalScroll > 0) {
+        // Horizontal scroll — only when cards overflow the container
+        const totalScroll = employeeTrack.scrollWidth - employeeSection.offsetWidth;
+        if (totalScroll > 50) {
             const buffer = isMobile ? 200 : 300;
             gsap.to(employeeTrack, {
                 x: -totalScroll,
                 ease: 'none',
                 scrollTrigger: {
                     trigger: employeeSection,
-                    start: isMobile ? 'top 5%' : 'top -10%',
+                    start: 'top top',
                     end: () => `+=${totalScroll + buffer}`,
                     scrub: isMobile ? 1 : 2,
                     pin: true,

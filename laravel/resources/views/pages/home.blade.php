@@ -34,8 +34,9 @@
 
     <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-28 pb-8 lg:pt-40 lg:pb-28 w-full flex-1 flex flex-col justify-center">
         <div class="hero-fade flex items-center gap-3 mb-4 lg:mb-8" data-hero-delay="600">
-            <span class="w-8 h-px bg-delos-gold float-subtle"></span>
-            <span class="text-overline text-delos-gold">Italian Luxury Solutions
+            <span class="w-8 h-px bg-delos-gold"></span>
+            <span class="text-overline text-delos-gold inline-flex items-center gap-3">
+                <span>Italian Luxury Solutions</span>
                 <span class="italian-flag"><span class="flag-green"></span><span class="flag-white"></span><span class="flag-red"></span></span>
             </span>
         </div>
@@ -198,7 +199,7 @@
     </div>
 
     {{-- Horizontal scroll track --}}
-    <div id="employee-track" class="flex gap-6 pb-20 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]" style="width: max-content;">
+    <div id="employee-track" class="flex gap-6 pb-20 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]">
         @php
             $employees = [
                 ['name' => 'Ahmed K.', 'role' => 'Lead Interior Designer', 'branch' => 'Erbil', 'img' => 'employee-1.jpg', 'achievement' => 'Led the design of 12 luxury villa transformations across Erbil this quarter.'],
