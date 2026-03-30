@@ -1,0 +1,308 @@
+@extends('layouts.app')
+
+@section('title', 'Delos International — Italian Luxury Solutions in Iraq')
+@section('description', 'Delos International brings the finest Italian luxury interior design to Iraq. Premium kitchens, furniture, wardrobes, and turnkey solutions across Erbil, Kirkuk, Sulaymaniyah, and Baghdad.')
+
+@section('content')
+
+{{-- PAGE LOADER --}}
+<div class="page-loader">
+    <div class="flex flex-col items-center gap-6">
+        <div class="loader-logo flex flex-col items-center gap-3">
+            <div class="w-14 h-14 overflow-hidden rounded-full border border-delos-gold/20">
+                <img src="{{ asset('images/delos-logo.jpg') }}" alt="" class="w-full h-full object-cover">
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="font-serif text-xl tracking-[0.3em] text-delos-cream font-semibold">DELOS</span>
+                <span class="text-overline-sm text-delos-gold/70">INTERNATIONAL</span>
+            </div>
+        </div>
+        <div class="loader-bar"></div>
+    </div>
+</div>
+
+{{-- 1. HERO --}}
+<section id="hero" class="relative min-h-screen flex items-center overflow-hidden bg-delos-dark hero-grain">
+    <div class="absolute inset-0">
+        <img src="{{ asset('images/delos-erbil-showroom-4.jpg') }}"
+             alt="Delos International Classic Kitchen Showroom — Erbil, Iraq"
+             class="w-full h-full object-cover opacity-30 hero-parallax-img"
+             fetchpriority="high">
+        <div class="absolute inset-0 bg-gradient-to-r from-delos-dark via-delos-dark/80 to-delos-dark/50"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/80 via-delos-dark/30 to-delos-dark/30"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-28 w-full">
+        <div class="hero-fade flex items-center gap-3 mb-8" data-hero-delay="600">
+            <span class="w-8 h-px bg-delos-gold float-subtle"></span>
+            <span class="text-overline text-delos-gold">Italian Luxury Solutions
+                <span class="italian-flag"><span class="flag-green"></span><span class="flag-white"></span><span class="flag-red"></span></span>
+            </span>
+        </div>
+
+        <h1 class="text-heading-1 text-delos-cream mb-8 max-w-3xl">
+            <span class="split-line"><span class="split-line-inner">Find pieces designed to</span></span>
+            <span class="split-line"><span class="split-line-inner">transform your home</span></span>
+            <span class="split-line"><span class="split-line-inner"><em class="text-delos-gold not-italic">one room, one moment,</em></span></span>
+            <span class="split-line"><span class="split-line-inner">one feeling at a time.</span></span>
+        </h1>
+
+        <p class="hero-fade text-body text-delos-cream/50 max-w-lg mb-12" data-hero-delay="800">
+            Enhance your spaces with our timeless Italian luxury furniture and interior solutions. Designed to enrich your daily life now and for generations to come.
+        </p>
+
+        <div class="hero-fade flex flex-col sm:flex-row gap-4" data-hero-delay="1000">
+            <a href="{{ route('contact') }}" class="magnetic-btn btn-ripple inline-flex items-center justify-center gap-3 px-8 py-3.5 bg-delos-gold text-delos-dark text-btn hover:bg-delos-gold-light transition-colors duration-300 group">
+                Book Consultation
+                <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <a href="{{ route('about') }}" class="magnetic-btn btn-ripple inline-flex items-center justify-center gap-3 px-8 py-3.5 border border-delos-cream/20 text-delos-cream text-btn font-medium hover:border-delos-gold hover:text-delos-gold transition-colors duration-300">
+                Our Story
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-fade-no-translate absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3" data-hero-delay="0">
+        <span class="text-overline-sm text-delos-cream/30">Scroll</span>
+        <div class="w-px h-12 bg-delos-cream/20 relative overflow-hidden">
+            <div class="scroll-line absolute top-0 left-0 w-full bg-delos-gold/60" style="height:30%"></div>
+        </div>
+    </div>
+</section>
+
+{{-- 2. ABOUT --}}
+<section class="section-padding bg-delos-cream gsap-section" data-section-enter="left">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+            <div data-reveal="slide-left" class="relative aspect-[4/3] overflow-hidden bg-delos-dark rounded-sm">
+                <img src="{{ asset('images/delos-building.jpg') }}" alt="Delos International Building — Erbil"
+                     class="w-full h-full object-cover object-[70%_30%] opacity-50" loading="lazy">
+                <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[1]"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-delos-dark/40 to-transparent z-[1]"></div>
+                <div class="absolute bottom-6 left-7 z-[2]">
+                    <p class="text-overline-sm text-delos-gold mb-1">Established 2020</p>
+                    <p class="font-serif text-delos-cream/60 text-sm">Erbil, Kurdistan Region</p>
+                </div>
+            </div>
+            <div class="about-text-col border-l-2 border-delos-gold pl-8" data-reveal="slide-right">
+                <div class="gsap-line w-0 h-px bg-delos-gold mb-6"></div>
+                <p class="text-overline text-delos-gold mb-5">About Delos</p>
+                <h2 class="text-heading-2 text-delos-dark mb-6">Where Italian craft<br>meets Iraqi homes.</h2>
+                <p class="scroll-text text-body text-delos-muted mb-6">Delos International is a distinguished company based in Iraq, dedicated to bringing the finest in Italian luxury design to homes across the region. Representing an exclusive portfolio of premium Italian brands, Delos curates a complete lifestyle experience defined by elegance, craftsmanship, and precision.</p>
+                <blockquote class="pull-quote mb-8">The name "Delos" draws inspiration from the Greek island — a historic symbol of civilization and wisdom. Our lion emblem represents strength, protection, and trust.</blockquote>
+                <a href="{{ route('about') }}" class="btn-ripple inline-flex items-center gap-2 text-delos-dark text-btn hover:text-delos-gold transition-colors duration-300 group">
+                    Learn More <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- 2.5 VIDEO --}}
+<section class="relative bg-delos-dark overflow-hidden gsap-section" data-section-enter="bottom">
+    <div class="relative w-full">
+        <video id="delos-video" class="w-full block"
+               preload="metadata" playsinline muted>
+            <source src="{{ asset('videos/delos-brand.mp4') }}" type="video/mp4">
+        </video>
+        <div id="video-overlay" class="absolute inset-0 bg-delos-dark/60 z-[1] transition-opacity duration-700 cursor-pointer">
+            <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-transparent to-delos-dark/40"></div>
+            <div class="absolute inset-0 flex flex-col items-center justify-center z-[2]">
+                <p class="text-overline text-delos-gold/60 mb-6">Discover Delos</p>
+                <button id="video-play-btn" class="group relative w-20 h-20 lg:w-24 lg:h-24 rounded-full border-2 border-delos-gold/40 flex items-center justify-center hover:border-delos-gold hover:scale-110 transition-all duration-500">
+                    <svg class="w-7 h-7 lg:w-8 lg:h-8 text-delos-gold ml-1 group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <span class="absolute inset-0 rounded-full border border-delos-gold/20 animate-ping"></span>
+                </button>
+                <p class="font-serif text-delos-cream/40 text-sm mt-6">Watch Our Story</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- 3. NEW COLLECTION --}}
+<section class="section-padding bg-delos-ivory gsap-section" data-section-enter="right">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-16 gap-6">
+            <div>
+                <div class="gsap-line w-0 h-px bg-delos-gold mb-5"></div>
+                <p class="gsap-el text-overline text-delos-gold mb-5">Featured</p>
+                <h2 class="gsap-el text-heading-2 text-delos-dark leading-tight">New Collection</h2>
+            </div>
+            <a href="{{ route('projects') }}" class="gsap-el btn-ripple self-start inline-flex items-center gap-2 text-delos-muted text-btn font-medium hover:text-delos-gold transition-colors duration-300 group">
+                View All Projects <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <a href="{{ route('projects') }}" data-reveal="slide-left" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
+                <img src="{{ asset('images/lube-delos-iraq-4.jpg') }}" alt="Delos LUBE Classic Kitchen Collection" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
+                <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">01</span>
+                <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <p class="text-overline-sm text-delos-gold mb-2">LUBE Kitchens</p>
+                    <h3 class="font-serif text-delos-cream text-2xl lg:text-3xl font-light mb-3 group-hover:text-delos-gold transition-colors duration-300">Villa Classica Kitchen</h3>
+                    <p class="text-body-sm text-delos-cream/0 group-hover:text-delos-cream/60 transition-all duration-500 max-w-sm leading-relaxed">A masterpiece of Italian craftsmanship, blending classic elegance with modern functionality.</p>
+                </div>
+                <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
+            </a>
+            <a href="{{ route('projects') }}" data-reveal="slide-right" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
+                <img src="{{ asset('images/delos-erbil-showroom-6.jpg') }}" alt="Delos Modern Kitchen — Erbil" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
+                <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">02</span>
+                <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <p class="text-overline-sm text-delos-gold mb-2">CREO Kitchens</p>
+                    <h3 class="font-serif text-delos-cream text-2xl lg:text-3xl font-light mb-3 group-hover:text-delos-gold transition-colors duration-300">Nero Contemporary</h3>
+                    <p class="text-body-sm text-delos-cream/0 group-hover:text-delos-cream/60 transition-all duration-500 max-w-sm leading-relaxed">Sleek minimalism meets Italian precision in this modern kitchen collection.</p>
+                </div>
+                <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
+            </a>
+            <a href="{{ route('projects') }}" data-reveal="slide-left" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
+                <img src="{{ asset('images/frigerio-living.jpg') }}" alt="Frigerio Eleganza Living Collection" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
+                <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">03</span>
+                <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <p class="text-overline-sm text-delos-gold mb-2">Frigerio</p>
+                    <h3 class="font-serif text-delos-cream text-2xl lg:text-3xl font-light mb-3 group-hover:text-delos-gold transition-colors duration-300">Eleganza Living</h3>
+                    <p class="text-body-sm text-delos-cream/0 group-hover:text-delos-cream/60 transition-all duration-500 max-w-sm leading-relaxed">Refined Italian furniture that elevates every living space with timeless sophistication.</p>
+                </div>
+                <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
+            </a>
+            <a href="{{ route('projects') }}" data-reveal="slide-up" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
+                <img src="{{ asset('images/cantori-1.jpg') }}" alt="CANTORI Outdoor Living Collection" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
+                <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">04</span>
+                <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <p class="text-overline-sm text-delos-gold mb-2">CANTORI</p>
+                    <h3 class="font-serif text-delos-cream text-2xl lg:text-3xl font-light mb-3 group-hover:text-delos-gold transition-colors duration-300">Mediterranean Living</h3>
+                    <p class="text-body-sm text-delos-cream/0 group-hover:text-delos-cream/60 transition-all duration-500 max-w-sm leading-relaxed">Timeless outdoor elegance inspired by the warmth of the Mediterranean coast.</p>
+                </div>
+                <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
+            </a>
+        </div>
+    </div>
+</section>
+
+{{-- 4. EMPLOYEES --}}
+<section id="employees-section" class="bg-delos-dark overflow-hidden" data-section-enter="left">
+    <div class="section-padding">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16">
+                <div class="gsap-line w-0 h-px bg-delos-gold mx-auto mb-5"></div>
+                <p class="gsap-el text-overline text-delos-gold mb-5">Our Team</p>
+                <h2 class="gsap-el text-heading-2 text-delos-cream">Best Employees of the Month</h2>
+                <p class="gsap-el text-body text-delos-cream/40 mt-5 max-w-xl mx-auto">Recognizing the dedicated professionals behind every exceptional Delos project.</p>
+            </div>
+        </div>
+    </div>
+
+    {{-- Horizontal scroll track --}}
+    <div id="employee-track" class="flex gap-6 pb-20 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]" style="width: max-content;">
+        @php
+            $employees = [
+                ['name' => 'Ahmed K.', 'role' => 'Lead Interior Designer', 'branch' => 'Erbil', 'img' => 'employee-1.jpg', 'achievement' => 'Led the design of 12 luxury villa transformations across Erbil this quarter.'],
+                ['name' => 'Sara M.',  'role' => 'Senior Engineer',        'branch' => 'Sulaymaniyah', 'img' => 'employee-2.jpg', 'achievement' => 'Revolutionized our 3D concept workflow, cutting design timelines by 40%.'],
+                ['name' => 'Omar R.',  'role' => 'Project Manager',        'branch' => 'Baghdad', 'img' => 'employee-3.jpg', 'achievement' => 'Spearheaded the successful launch of our new Baghdad showroom.'],
+            ];
+        @endphp
+        @foreach($employees as $emp)
+            <div class="employee-slide employee-card card-tilt group relative w-[350px] lg:w-[420px] aspect-[3/4] overflow-hidden bg-delos-dark-2 flex-shrink-0">
+                <img src="{{ asset('images/' . $emp['img']) }}" alt="{{ $emp['name'] }} — {{ $emp['role'] }}" class="absolute inset-0 w-full h-full object-cover opacity-60" loading="lazy">
+                <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3]">
+                    <p class="text-overline-sm text-delos-gold mb-3">{{ $emp['branch'] }}</p>
+                    <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $emp['name'] }}</h3>
+                    <p class="text-overline-sm text-delos-cream/50 mb-4">{{ $emp['role'] }}</p>
+                    <p class="text-body-sm text-delos-cream/40 leading-relaxed group-hover:text-delos-cream/60 transition-colors duration-500">"{{ $emp['achievement'] }}"</p>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</section>
+
+{{-- 5. STATS --}}
+<section class="section-padding bg-delos-cream gsap-section" data-section-enter="bottom">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <div class="text-center mb-16">
+            <div class="gsap-line w-0 h-px bg-delos-gold mx-auto mb-5"></div>
+            <p class="gsap-el text-overline text-delos-gold mb-5">By The Numbers</p>
+            <h2 class="gsap-el text-heading-2 text-delos-dark">A Legacy in Numbers</h2>
+        </div>
+        <div class="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-16">
+            <div class="gsap-el text-center">
+                <span class="stat-number" data-counter="500">0</span>
+                <span class="stat-suffix font-serif text-2xl text-delos-gold font-light">+</span>
+                <p class="text-overline text-delos-muted mt-3">Projects Completed</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="gsap-el text-center">
+                <span class="stat-number" data-counter="5">0</span>
+                <p class="text-overline text-delos-muted mt-3">Exclusive Italian Houses</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="gsap-el text-center">
+                <span class="stat-number" data-counter="4">0</span>
+                <p class="text-overline text-delos-muted mt-3">Showrooms in Iraq</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="gsap-el text-center">
+                <span class="stat-number" data-counter="6">0</span>
+                <p class="text-overline text-delos-muted mt-3">Years of Excellence</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- 6. BRANDS --}}
+<section id="brands-section" class="section-padding bg-delos-dark gsap-section" data-section-enter="right">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <div class="text-center mb-16">
+            <div class="gsap-line w-0 h-px bg-delos-gold mx-auto mb-5"></div>
+            <p class="gsap-el text-overline text-delos-gold mb-5">Exclusive Partnerships</p>
+            <h2 class="gsap-el text-heading-2 text-delos-cream">Italian Brand Partners</h2>
+            <p class="gsap-el text-body text-delos-cream/40 mt-5 max-w-2xl mx-auto">Delos proudly partners with leading Italian brands in kitchens, furniture, wardrobes, and flooring — delivering authentic Italian design, premium materials, and world-class craftsmanship to the Iraqi market.</p>
+        </div>
+        {{-- Infinite marquee ticker (Furnexa "Trusted by Homeowners" style) --}}
+        <div class="brand-marquee-wrapper overflow-hidden mb-12 border-t border-b border-delos-cream/5 py-8">
+            <div class="brand-marquee flex whitespace-nowrap">
+                @for($i = 0; $i < 4; $i++)
+                    <div class="brand-marquee-inner flex items-center gap-10 lg:gap-16 px-5 lg:px-8">
+                        @foreach(['LUBE', 'Frigerio', 'Vittoria Frigerio', 'CANTORI', 'SKEMA'] as $brand)
+                            <a href="{{ route('brands') }}" class="brand-strip-item font-serif text-delos-cream/40 text-2xl lg:text-4xl font-light tracking-wider hover:text-delos-gold transition-colors duration-400 pb-1">{{ $brand }}</a>
+                            <span class="text-delos-gold/20 text-xs select-none">&#9670;</span>
+                        @endforeach
+                    </div>
+                @endfor
+            </div>
+        </div>
+        <div class="gsap-el text-center">
+            <a href="{{ route('brands') }}" class="btn-ripple inline-flex items-center gap-2 text-delos-gold text-btn font-medium hover:text-delos-gold-light transition-colors duration-300 group">
+                Explore Our Partners <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+{{-- 7. CTA --}}
+<section id="cta-section" class="relative section-padding overflow-hidden bg-delos-dark gsap-section" data-section-enter="bottom">
+    <div class="absolute inset-0">
+        <img src="{{ asset('images/delos-erbil-showroom-5.jpg') }}" alt="" class="w-full h-full object-cover opacity-22" loading="lazy">
+    </div>
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
+        <div class="gsap-line w-0 h-px bg-delos-gold mx-auto mb-8"></div>
+        <p class="gsap-el text-overline text-delos-gold/50 mb-8">Your Home Awaits
+            <span class="italian-flag"><span class="flag-green"></span><span class="flag-white"></span><span class="flag-red"></span></span>
+        </p>
+        <h2 class="gsap-el font-serif text-delos-cream text-[clamp(2rem,4.5vw,3.8rem)] font-light leading-tight mb-10 max-w-2xl mx-auto">Begin your Italian luxury journey today.</h2>
+        <div class="gsap-el flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{{ route('contact') }}" class="magnetic-btn btn-ripple inline-flex items-center gap-3 px-9 py-4 bg-delos-gold text-delos-dark text-btn hover:bg-delos-gold-light transition-colors duration-300 group">
+                Book Consultation <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <a href="tel:07501001701" class="magnetic-btn btn-ripple inline-flex items-center gap-3 px-9 py-4 border border-delos-cream/20 text-delos-cream text-btn font-medium hover:border-delos-gold hover:text-delos-gold transition-colors duration-300">
+                Call 0750 100 1701
+            </a>
+        </div>
+    </div>
+</section>
+
+@endsection
