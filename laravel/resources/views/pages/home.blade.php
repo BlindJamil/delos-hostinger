@@ -200,9 +200,9 @@
 </section>
 
 {{-- Employee cards — pinned separately so cards fill full viewport --}}
-<section id="employees-section" class="bg-delos-dark overflow-hidden min-h-dvh flex items-center">
+<section id="employees-section" class="bg-delos-dark overflow-hidden min-h-dvh flex items-center" style="background-color: #3D2E2A;">
     {{-- Horizontal scroll track --}}
-    <div id="employee-track" class="flex gap-6 pb-20 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]">
+    <div id="employee-track" class="flex gap-6 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]">
         @php
             $employees = [
                 ['name' => 'Ahmed K.', 'role' => 'Lead Interior Designer', 'branch' => 'Erbil', 'img' => 'employee-1.jpg', 'achievement' => 'Led the design of 12 luxury villa transformations across Erbil this quarter.'],

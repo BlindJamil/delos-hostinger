@@ -397,10 +397,11 @@ function initAnimations() {
                 scrollTrigger: {
                     trigger: employeeSection,
                     start: 'top top',
-                    end: () => `+=${totalScroll + (isMobile ? 200 : 300)}`,
-                    scrub: isMobile ? 1 : 2,
+                    end: () => `+=${totalScroll + (isMobile ? 300 : 400)}`,
+                    scrub: isMobile ? 1.5 : 2.5,
                     pin: true,
-                    anticipatePin: 1
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true
                 }
             });
         }
