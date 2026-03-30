@@ -392,16 +392,17 @@ function initAnimations() {
         const totalScroll = employeeTrack.scrollWidth - employeeSection.offsetWidth;
         if (totalScroll > 50) {
             const buffer = isMobile ? 200 : 300;
+            // Calculate header height so we pin after cards are visible
+            const headerHeight = employeeTrack.offsetTop - employeeSection.offsetTop;
             gsap.to(employeeTrack, {
                 x: -totalScroll,
                 ease: 'none',
                 scrollTrigger: {
-                    trigger: employeeTrack,
-                    start: 'top 30%',
+                    trigger: employeeSection,
+                    start: () => `top -${headerHeight}px`,
                     end: () => `+=${totalScroll + buffer}`,
                     scrub: isMobile ? 1 : 2,
                     pin: true,
-                    pinSpacing: true,
                     anticipatePin: 1
                 }
             });
