@@ -1,4 +1,13 @@
 // ============================================================
+// REAL VIEWPORT HEIGHT — accounts for mobile browser chrome
+// ============================================================
+function setRealVH() {
+    document.documentElement.style.setProperty('--vh', window.innerHeight + 'px');
+}
+setRealVH();
+window.addEventListener('resize', setRealVH);
+
+// ============================================================
 // PAGE LOADER — reduced freeze from 1.4s to 0.8s
 // ============================================================
 document.documentElement.classList.add('has-loader');
@@ -359,44 +368,48 @@ function initAnimations() {
 
     if (employeeTrack && employeeSection) {
         const slides = employeeTrack.querySelectorAll('.employee-slide');
-
         const isMobile = window.innerWidth < 1024;
+
+        // Card fade-in — works on all screen sizes
         slides.forEach((slide, i) => {
             gsap.fromTo(slide,
                 { opacity: 0, scale: 0.9 },
                 {
                     opacity: 1, scale: 1,
-                    duration: isMobile ? 1.8 : 1.2,
+                    duration: 1,
                     ease: 'power2.out',
-                    delay: i * (isMobile ? 0.4 : 0.3),
+                    delay: i * 0.3,
                     scrollTrigger: {
                         trigger: employeeSection,
-                        start: isMobile ? 'top 30%' : 'top 15%',
+                        start: 'top 40%',
                         toggleActions: 'play none none none'
                     }
                 }
             );
         });
 
-        // Horizontal scroll — pin section, scroll cards left
-        const lastSlide = slides[slides.length - 1];
-        const totalScroll = lastSlide
-            ? (lastSlide.offsetLeft + lastSlide.offsetWidth) - window.innerWidth + 24
-            : employeeTrack.scrollWidth - window.innerWidth;
-        if (totalScroll > 0) {
-            const buffer = 300;
-            gsap.to(employeeTrack, {
-                x: -totalScroll,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: employeeSection,
-                    start: isMobile ? 'top top' : 'top -10%',
-                    end: () => `+=${totalScroll + buffer}`,
-                    scrub: 2,
-                    pin: true,
-                    anticipatePin: 1
-                }
-            });
+        // Horizontal scroll with pin — DESKTOP ONLY
+        // Mobile uses native overflow-x-auto scroll (set in HTML)
+        if (!isMobile) {
+            const lastSlide = slides[slides.length - 1];
+            const totalScroll = lastSlide
+                ? (lastSlide.offsetLeft + lastSlide.offsetWidth) - window.innerWidth + 24
+                : employeeTrack.scrollWidth - window.innerWidth;
+            if (totalScroll > 0) {
+                const buffer = 300;
+                gsap.to(employeeTrack, {
+                    x: -totalScroll,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: employeeSection,
+                        start: 'top -10%',
+                        end: () => `+=${totalScroll + buffer}`,
+                        scrub: 2,
+                        pin: true,
+                        anticipatePin: 1
+                    }
+                });
+            }
         }
     }
 

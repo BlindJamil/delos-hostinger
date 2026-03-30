@@ -22,7 +22,7 @@
 </div>
 
 {{-- 1. HERO --}}
-<section id="hero" class="relative min-h-dvh flex items-center overflow-hidden bg-delos-dark hero-grain">
+<section id="hero" class="relative min-h-dvh flex flex-col overflow-hidden bg-delos-dark hero-grain">
     <div class="absolute inset-0">
         <img src="{{ asset('images/delos-erbil-showroom-4.jpg') }}"
              alt="Delos International Classic Kitchen Showroom — Erbil, Iraq"
@@ -32,7 +32,7 @@
         <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/80 via-delos-dark/30 to-delos-dark/30"></div>
     </div>
 
-    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-28 pb-16 lg:pt-40 lg:pb-28 w-full">
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-28 pb-8 lg:pt-40 lg:pb-28 w-full flex-1 flex flex-col justify-center">
         <div class="hero-fade flex items-center gap-3 mb-8" data-hero-delay="600">
             <span class="w-8 h-px bg-delos-gold float-subtle"></span>
             <span class="text-overline text-delos-gold">Italian Luxury Solutions
@@ -198,7 +198,7 @@
     </div>
 
     {{-- Horizontal scroll track --}}
-    <div id="employee-track" class="flex gap-6 pb-20 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]" style="width: max-content;">
+    <div id="employee-track" class="flex gap-6 pb-20 px-6 lg:px-12 overflow-x-auto lg:overflow-visible lg:justify-center lg:mx-auto lg:max-w-[1400px]" style="width: max-content;">
         @php
             $employees = [
                 ['name' => 'Ahmed K.', 'role' => 'Lead Interior Designer', 'branch' => 'Erbil', 'img' => 'employee-1.jpg', 'achievement' => 'Led the design of 12 luxury villa transformations across Erbil this quarter.'],
