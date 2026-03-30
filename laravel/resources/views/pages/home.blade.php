@@ -32,7 +32,7 @@
         <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/80 via-delos-dark/30 to-delos-dark/30"></div>
     </div>
 
-    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-28 pb-8 lg:pt-40 lg:pb-28 w-full flex-1 flex flex-col justify-center">
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-28 pb-16 lg:pt-32 lg:pb-32 w-full flex-1 flex flex-col justify-center">
         <div class="hero-fade flex items-center gap-3 mb-4 lg:mb-8" data-hero-delay="600">
             <span class="w-8 h-px bg-delos-gold"></span>
             <span class="text-overline text-delos-gold inline-flex items-center gap-3">
