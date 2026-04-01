@@ -13,11 +13,11 @@
         <div class="absolute inset-0 bg-gradient-to-t from-delos-dark to-transparent"></div>
     </div>
     <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-20 w-full">
-        <div class="hero-badge inline-flex items-center gap-3 mb-6 opacity-0">
+        <div class="hero-fade inline-flex items-center gap-3 mb-6 opacity-0 translate-y-4">
             <span class="w-8 h-px bg-delos-gold"></span>
             <span class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">Our Portfolio</span>
         </div>
-        <h1 class="hero-heading font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-tight opacity-0">
+        <h1 class="hero-fade font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-tight opacity-0 translate-y-4">
             500+ projects.<br>
             <em class="text-delos-gold not-italic">One standard.</em>
         </h1>

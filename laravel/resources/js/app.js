@@ -8,18 +8,27 @@ setRealVH();
 window.addEventListener('resize', setRealVH);
 
 // ============================================================
-// PAGE LOADER — reduced freeze from 1.4s to 0.8s
+// PAGE LOADER — only gate pages that have a loader element
 // ============================================================
-document.documentElement.classList.add('has-loader');
+const pageLoader = document.querySelector('.page-loader');
 
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        const loader = document.querySelector('.page-loader');
-        if (loader) loader.classList.add('loaded');
-        document.documentElement.classList.remove('has-loader');
-        setTimeout(initAnimations, 200);
-    }, 800);
-});
+if (pageLoader) {
+    document.documentElement.classList.add('has-loader');
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            pageLoader.classList.add('loaded');
+            document.documentElement.classList.remove('has-loader');
+            setTimeout(initAnimations, 100);
+        }, 300);
+    });
+} else {
+    // No loader — start animations as soon as DOM + GSAP are ready
+    if (document.readyState === 'complete') {
+        setTimeout(initAnimations, 50);
+    } else {
+        window.addEventListener('load', () => setTimeout(initAnimations, 50));
+    }
+}
 
 // ============================================================
 // PAGE TRANSITIONS
@@ -221,42 +230,42 @@ function initAnimations() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // --- LENIS SMOOTH SCROLL ---
-    if (typeof Lenis !== 'undefined' && !prefersReducedMotion) {
-        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    // --- LENIS SMOOTH SCROLL (desktop only) ---
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (typeof Lenis !== 'undefined' && !prefersReducedMotion && !isTouch) {
         const lenis = new Lenis({
-            duration: isTouch ? 1.6 : 2.2,
+            duration: 1.4,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             smoothWheel: true,
-            smoothTouch: true,
-            wheelMultiplier: 0.8,
-            touchMultiplier: 1.2
+            wheelMultiplier: 0.9
         });
 
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time) => lenis.raf(time * 1000));
-        gsap.ticker.lagSmoothing(0);
     }
 
     // --- HERO ENTRANCE ---
     const heroTl = gsap.timeline();
+    const hasSplitLines = document.querySelectorAll('.split-line-inner').length > 0;
 
-    heroTl.to('.split-line-inner', {
-        y: 0, rotation: 0,
-        duration: 1.4,
-        ease: 'power4.out',
-        stagger: 0.14
-    });
+    if (hasSplitLines) {
+        heroTl.to('.split-line-inner', {
+            y: 0, rotation: 0,
+            duration: 1.4,
+            ease: 'power4.out',
+            stagger: 0.14
+        });
+    }
 
     heroTl.to('.hero-fade', {
-        opacity: 1, y: 0, scale: 1, filter: 'blur(0px)',
+        opacity: 1, y: 0, scale: 1,
         duration: 1.2,
         ease: 'power3.out',
         stagger: 0.18
-    }, '-=0.6');
+    }, hasSplitLines ? '-=0.6' : 0);
 
     heroTl.to('.hero-fade-no-translate', {
-        opacity: 1, filter: 'blur(0px)',
+        opacity: 1,
         duration: 1.2,
         ease: 'power2.out'
     }, '-=0.3');
@@ -272,18 +281,56 @@ function initAnimations() {
         scrollTrigger: { trigger: '#hero', start: '30% top', end: '60% top', scrub: true }
     });
 
-    // --- SECTION ANIMATIONS (timeline-based) ---
+    // --- .gsap-el REVEALS — pure IntersectionObserver + CSS transitions ---
+    // No GSAP involvement = no library conflict, no frame-drop glitch
+    const elObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const delay = parseFloat(el.dataset.staggerDelay || 0);
+                if (delay) {
+                    el.style.transitionDelay = delay + 's';
+                }
+                el.classList.add('in-view');
+                elObserver.unobserve(el);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
+
+    // Assign stagger delays per section, then observe
+    document.querySelectorAll('.gsap-section, #employees-section').forEach(section => {
+        section.querySelectorAll('.gsap-el').forEach((el, i) => {
+            el.dataset.staggerDelay = (i * 0.08).toFixed(2);
+            elObserver.observe(el);
+        });
+    });
+
+    // Observe any .gsap-el not inside a .gsap-section (standalone)
+    document.querySelectorAll('.gsap-el').forEach(el => {
+        if (!el.closest('.gsap-section') && !el.closest('#employees-section')) {
+            elObserver.observe(el);
+        }
+    });
+
+    // --- SECTION ANIMATIONS (GSAP only for complex stuff: entrances, images, lines) ---
     const revealConfigs = {
-        'slide-left':   { x: -80, y: 30, opacity: 0, rotation: -3, scale: 0.95 },
-        'slide-right':  { x: 80, y: 30, opacity: 0, rotation: 3, scale: 0.95 },
-        'slide-up':     { y: 60, opacity: 0, scale: 0.9, filter: 'blur(8px)' },
-        'scale-rotate': { scale: 0.7, opacity: 0, rotation: -5, filter: 'blur(10px)' },
-        'fade-blur':    { opacity: 0, filter: 'blur(15px)', scale: 0.95, y: 40 }
+        'slide-left':   { x: -60, y: 20, opacity: 0, rotation: -2, scale: 0.97 },
+        'slide-right':  { x: 60, y: 20, opacity: 0, rotation: 2, scale: 0.97 },
+        'slide-up':     { y: 50, opacity: 0, scale: 0.95 },
+        'scale-rotate': { scale: 0.8, opacity: 0, rotation: -3 },
+        'fade-blur':    { opacity: 0, scale: 0.97, y: 30 }
     };
 
     document.querySelectorAll('.gsap-section:not(#brands-section):not(#cta-section), #employees-section').forEach(section => {
         const hasEntrance = section.hasAttribute('data-section-enter');
         const dir = section.dataset.sectionEnter;
+
+        // Only create a GSAP timeline if the section has entrance animations, lines, or image reveals
+        const lines = section.querySelectorAll('.gsap-line');
+        const reveals = section.querySelectorAll('[data-reveal]:not(.collection-card):not(.about-text-col)');
+        const brandMarquee = section.querySelector('.brand-marquee-wrapper');
+
+        if (!hasEntrance && !lines.length && !reveals.length && !brandMarquee) return;
 
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -293,7 +340,7 @@ function initAnimations() {
             }
         });
 
-        // Step 1: Section entrance slide-in
+        // Section entrance slide-in
         if (hasEntrance) {
             const fromVars = {
                 left:   { x: -100 },
@@ -308,38 +355,26 @@ function initAnimations() {
             );
         }
 
-        // Step 2: Gold accent lines draw
-        const lines = section.querySelectorAll('.gsap-line');
+        // Gold accent lines
         if (lines.length) {
-            tl.to(lines, {
-                width: 60, duration: 1.6, ease: 'power4.out', stagger: 0.12
-            }, hasEntrance ? 0.6 : 0);
+            tl.fromTo(lines,
+                { scaleX: 0, transformOrigin: 'left center' },
+                { scaleX: 1, duration: 1.4, ease: 'power4.out', stagger: 0.12 },
+                hasEntrance ? 0.6 : 0);
         }
 
-        // Step 3: Text/element reveals
-        const els = section.querySelectorAll('.gsap-el');
-        if (els.length) {
-            tl.fromTo(els,
-                { y: 30, opacity: 0, filter: 'blur(3px)' },
-                { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.1,
-                  ease: 'power3.out', stagger: 0.13
-                }, hasEntrance ? 0.7 : lines.length ? 0.25 : 0);
-        }
-
-        // Step 4: Image reveals (skip collection cards + about text — they have own triggers)
-        const reveals = section.querySelectorAll('[data-reveal]:not(.collection-card):not(.about-text-col)');
+        // Image reveals
         reveals.forEach((el, i) => {
             const type = el.dataset.reveal;
             const from = revealConfigs[type] || revealConfigs['fade-blur'];
             tl.fromTo(el, from,
-                { x: 0, y: 0, opacity: 1, scale: 1, rotation: 0, filter: 'blur(0px)',
-                  duration: 1.5, ease: 'power3.out',
+                { x: 0, y: 0, opacity: 1, scale: 1, rotation: 0,
+                  duration: 1.3, ease: 'power3.out',
                   onComplete: () => el.classList.add('revealed')
-                }, hasEntrance ? (0.6 + i * 0.15) : (0.25 + i * 0.15));
+                }, hasEntrance ? (0.6 + i * 0.15) : (0.15 + i * 0.15));
         });
 
-        // Step 5: Brand marquee entrance
-        const brandMarquee = section.querySelector('.brand-marquee-wrapper');
+        // Brand marquee entrance
         if (brandMarquee) {
             tl.fromTo(brandMarquee,
                 { opacity: 0 },
@@ -353,8 +388,8 @@ function initAnimations() {
         const type = el.dataset.reveal;
         const from = revealConfigs[type] || revealConfigs['fade-blur'];
         gsap.fromTo(el, from,
-            { x: 0, y: 0, opacity: 1, scale: 1, rotation: 0, filter: 'blur(0px)',
-              duration: 1.5, ease: 'power3.out',
+            { x: 0, y: 0, opacity: 1, scale: 1, rotation: 0,
+              duration: 1.3, ease: 'power3.out',
               onComplete: () => el.classList.add('revealed'),
               scrollTrigger: {
                   trigger: el,
@@ -410,18 +445,7 @@ function initAnimations() {
         }
     }
 
-    // --- SCROLL-LINKED PARALLAX ---
-    document.querySelectorAll('.gsap-section .gsap-el').forEach((el, i) => {
-        if (i % 3 === 0) {
-            gsap.to(el, {
-                yPercent: -5, ease: 'none',
-                scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 2 }
-            });
-        }
-    });
-
     // --- BRANDS & CTA — animated after pin recalculation ---
-    // Refresh positions after employee pin is set up
     ScrollTrigger.refresh();
 
     ['#brands-section', '#cta-section'].forEach(id => {
@@ -449,16 +473,12 @@ function initAnimations() {
 
         const lines = section.querySelectorAll('.gsap-line');
         if (lines.length) {
-            tl.to(lines, { width: 60, duration: 1.6, ease: 'power4.out', stagger: 0.12 }, 0.6);
+            tl.fromTo(lines,
+                { scaleX: 0, transformOrigin: 'left center' },
+                { scaleX: 1, duration: 1.4, ease: 'power4.out', stagger: 0.12 }, 0.6);
         }
 
-        const els = section.querySelectorAll('.gsap-el');
-        if (els.length) {
-            tl.fromTo(els,
-                { y: 30, opacity: 0, filter: 'blur(3px)' },
-                { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.1, ease: 'power3.out', stagger: 0.13 },
-                0.7);
-        }
+        // .gsap-el handled by IntersectionObserver — not GSAP
 
         const brandMarquee = section.querySelector('.brand-marquee-wrapper');
         if (brandMarquee) {

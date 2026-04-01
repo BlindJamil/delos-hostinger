@@ -8,32 +8,32 @@
 {{-- ============================================================
      ABOUT HERO
 ============================================================ --}}
-<section class="relative min-h-[80vh] flex items-end overflow-hidden bg-delos-dark">
+<section class="relative min-h-[80vh] flex flex-col overflow-hidden bg-delos-dark">
     {{-- Background --}}
     <div class="absolute inset-0">
         <img src="{{ asset('images/about-hero.jpg') }}" alt="Delos International Showroom"
-             class="w-full h-full object-cover opacity-35 hero-parallax"
-             onerror="this.style.display='none'">
+             class="w-full h-full object-cover opacity-35"
+             onerror="this.style.display='none'" style="transform: scale(1.1);">
         <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/50 to-transparent"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-delos-dark/50 to-transparent"></div>
     </div>
 
     {{-- Content --}}
-    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-20 w-full">
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-28 pb-16 lg:pt-32 lg:pb-32 w-full flex-1 flex flex-col justify-center">
         <div class="max-w-3xl">
             {{-- Badge --}}
-            <div class="hero-badge inline-flex items-center gap-3 mb-6 opacity-0">
+            <div class="hero-fade inline-flex items-center gap-3 mb-6 opacity-0 translate-y-4">
                 <span class="w-8 h-px bg-delos-gold"></span>
                 <span class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">Est. 2020 · Erbil, Iraq</span>
             </div>
 
-            <h1 class="hero-heading font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-[1.05] mb-6 opacity-0">
+            <h1 class="hero-fade font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-[1.05] mb-6 opacity-0 translate-y-4">
                 Bringing Italian<br>
                 luxury to every<br>
                 <em class="text-delos-gold not-italic">Iraqi home.</em>
             </h1>
 
-            <p class="hero-sub text-delos-cream/60 text-base lg:text-lg leading-relaxed max-w-lg opacity-0" style="font-family: 'Inter', sans-serif;">
+            <p class="hero-fade text-delos-cream/60 text-base lg:text-lg leading-relaxed max-w-lg opacity-0 translate-y-4" style="font-family: 'Inter', sans-serif;">
                 Delos International is Iraq's trusted destination for authentic Italian luxury interior solutions.
             </p>
         </div>
@@ -43,13 +43,13 @@
 {{-- ============================================================
      OUR STORY (replaces Furnexa's "Our story began in 2019")
 ============================================================ --}}
-<section class="py-24 lg:py-32 bg-delos-cream">
+<section class="py-24 lg:py-32 bg-delos-cream gsap-section" data-section-enter="bottom">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
         <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
             {{-- Image --}}
-            <div class="reveal relative aspect-[3/4] overflow-hidden bg-delos-dark">
+            <div data-reveal="slide-left" class="relative aspect-[3/4] overflow-hidden bg-delos-dark">
                 <img src="{{ asset('images/about-story.jpg') }}" alt="Delos International Showroom"
                      class="w-full h-full object-cover opacity-80"
                      onerror="this.style.display='none'">
@@ -62,20 +62,21 @@
 
             {{-- Text --}}
             <div>
-                <p class="reveal text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">Our Story</p>
-                <h2 class="reveal font-serif text-4xl lg:text-5xl font-light text-delos-dark leading-tight mb-8">
+                <div class="gsap-line w-16 h-px bg-delos-gold mb-5" style="transform: scaleX(0); transform-origin: left;"></div>
+                <p class="gsap-el text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">Our Story</p>
+                <h2 class="gsap-el font-serif text-4xl lg:text-5xl font-light text-delos-dark leading-tight mb-8">
                     Where passion<br>
                     for Italian craft<br>
                     <em class="text-delos-gold not-italic">first took shape.</em>
                 </h2>
                 <div class="space-y-5">
-                    <p class="reveal text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">
+                    <p class="gsap-el text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">
                         Our story began in 2020, in Erbil, Iraq — where a vision to bring authentic Italian luxury design to Iraqi homes became a reality. What started as a single showroom on 60m Street has grown into Delos International, the most trusted name in Italian luxury interior solutions across Iraq.
                     </p>
-                    <p class="reveal text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">
+                    <p class="gsap-el text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">
                         From day one, we have focused on what truly matters: genuine Italian craftsmanship, responsibly sourced premium materials, and a complete service that takes our clients from first consultation to final installation — with nothing left to chance.
                     </p>
-                    <p class="reveal text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">
+                    <p class="gsap-el text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">
                         Today, with 4 showrooms in Erbil, Kirkuk, Sulaymaniyah, and Baghdad, and exclusive partnerships with Italy's most prestigious brands, Delos International stands as Iraq's destination for Italian luxury living.
                     </p>
                 </div>
@@ -89,12 +90,12 @@
 {{-- ============================================================
      VISION, MISSION & GOAL
 ============================================================ --}}
-<section class="py-24 lg:py-32 bg-delos-ivory">
+<section class="py-24 lg:py-32 bg-delos-ivory gsap-section">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
         <div class="text-center mb-16">
-            <p class="reveal text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">Our Direction</p>
-            <h2 class="reveal font-serif text-4xl lg:text-5xl font-light text-delos-dark max-w-2xl mx-auto leading-tight">
+            <p class="gsap-el text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">Our Direction</p>
+            <h2 class="gsap-el font-serif text-4xl lg:text-5xl font-light text-delos-dark max-w-2xl mx-auto leading-tight">
                 Vision, Mission<br>& Purpose
             </h2>
         </div>
@@ -120,8 +121,8 @@
                 ];
             @endphp
             @foreach($visions as $i => $v)
-                <div class="reveal group" style="transition-delay: {{ $i * 0.15 }}s">
-                    <div class="p-8 lg:p-10 border border-delos-dark/10 h-full hover:border-delos-gold/30 hover:bg-delos-cream transition-all duration-400">
+                <div class="gsap-el group" style="transition-delay: {{ $i * 0.15 }}s">
+                    <div class="p-8 lg:p-10 border border-delos-dark/10 h-full hover:border-delos-gold/30 hover:bg-delos-cream transition-colors duration-400">
                         <span class="inline-block text-delos-gold text-[10px] tracking-[0.4em] uppercase font-medium mb-6 border border-delos-gold/30 px-3 py-1" style="font-family: 'Inter', sans-serif;">{{ $v['label'] }}</span>
                         <h3 class="font-serif text-delos-dark text-2xl font-medium mb-4 group-hover:text-delos-gold transition-colors duration-300">
                             {{ $v['title'] }}
@@ -140,29 +141,30 @@
 {{-- ============================================================
      PHILOSOPHY (replaces Furnexa "Every piece begins with...")
 ============================================================ --}}
-<section class="py-24 lg:py-32 bg-delos-cream">
+<section class="py-24 lg:py-32 bg-delos-cream gsap-section">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
         <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
             <div>
-                <p class="reveal text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">Our Philosophy</p>
-                <h2 class="reveal font-serif text-4xl lg:text-5xl font-light text-delos-dark leading-tight mb-8">
+                <div class="gsap-line w-16 h-px bg-delos-gold mb-5" style="transform: scaleX(0); transform-origin: left;"></div>
+                <p class="gsap-el text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">Our Philosophy</p>
+                <h2 class="gsap-el font-serif text-4xl lg:text-5xl font-light text-delos-dark leading-tight mb-8">
                     Every project<br>
                     begins with a<br>
                     <em class="text-delos-gold not-italic">single idea.</em>
                 </h2>
                 <div class="space-y-5">
-                    <p class="reveal text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">
+                    <p class="gsap-el text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">
                         Every Delos project begins with one idea: create a space that looks stunning, feels perfectly comfortable, and performs seamlessly for your daily life. We obsess over material selection, spatial design, and functional precision — ensuring every installation enhances how you live.
                     </p>
-                    <p class="reveal text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">
+                    <p class="gsap-el text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">
                         Our philosophy blends the aesthetics of Italian luxury with the practicalities of modern Iraqi living. Your space should inspire you every day, support your family, and endure for generations — not simply decorate.
                     </p>
                 </div>
             </div>
 
             {{-- Image --}}
-            <div class="reveal relative aspect-[4/3] overflow-hidden bg-delos-dark">
+            <div data-reveal="slide-right" class="relative aspect-[4/3] overflow-hidden bg-delos-dark">
                 <img src="{{ asset('images/about-philosophy.jpg') }}" alt="Italian Design Philosophy"
                      class="w-full h-full object-cover opacity-75"
                      onerror="this.style.display='none'">
@@ -176,7 +178,7 @@
 {{-- ============================================================
      ITALIAN MATERIALS (full-width callout)
 ============================================================ --}}
-<section class="relative py-24 lg:py-40 overflow-hidden bg-delos-dark">
+<section class="relative py-24 lg:py-40 overflow-hidden bg-delos-dark gsap-section">
     <div class="absolute inset-0">
         <img src="{{ asset('images/italian-materials.jpg') }}" alt="Italian Materials"
              class="w-full h-full object-cover opacity-25"
@@ -185,14 +187,15 @@
     </div>
     <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
         <div class="max-w-2xl">
-            <p class="reveal text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">Sourced from Italy</p>
-            <h2 class="reveal font-serif text-delos-cream text-4xl lg:text-5xl xl:text-6xl font-light leading-tight mb-8">
+            <div class="gsap-line w-16 h-px bg-delos-gold mb-5" style="transform: scaleX(0); transform-origin: left;"></div>
+            <p class="gsap-el text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">Sourced from Italy</p>
+            <h2 class="gsap-el font-serif text-delos-cream text-4xl lg:text-5xl xl:text-6xl font-light leading-tight mb-8">
                 Materials chosen<br>
                 for their <em class="text-delos-gold not-italic">strength,<br>
                 character,</em> and<br>
                 natural warmth.
             </h2>
-            <p class="reveal text-delos-cream/60 text-base leading-relaxed max-w-md" style="font-family: 'Inter', sans-serif;">
+            <p class="gsap-el text-delos-cream/60 text-base leading-relaxed max-w-md" style="font-family: 'Inter', sans-serif;">
                 Every Delos creation begins with the quiet beauty of Italy. We carefully source premium woods, marbles, and textiles — chosen not only for their beauty, but for their longevity and soul.
             </p>
         </div>
@@ -202,12 +205,12 @@
 {{-- ============================================================
      4 PILLARS (replaces Furnexa's 4 core value cards)
 ============================================================ --}}
-<section class="py-24 lg:py-32 bg-delos-cream">
+<section class="py-24 lg:py-32 bg-delos-cream gsap-section">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
         <div class="text-center mb-16">
-            <p class="reveal text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">What Sets Us Apart</p>
-            <h2 class="reveal font-serif text-4xl lg:text-5xl font-light text-delos-dark">The Delos Difference</h2>
+            <p class="gsap-el text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">What Sets Us Apart</p>
+            <h2 class="gsap-el font-serif text-4xl lg:text-5xl font-light text-delos-dark">The Delos Difference</h2>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -220,7 +223,7 @@
                 ];
             @endphp
             @foreach($pillars as $i => $p)
-                <div class="reveal group text-center p-8 border border-delos-dark/10 hover:border-delos-gold/40 hover:bg-delos-ivory transition-all duration-400"
+                <div class="gsap-el group text-center p-8 border border-delos-dark/10 hover:border-delos-gold/40 hover:bg-delos-ivory transition-colors duration-400"
                      style="transition-delay: {{ $i * 0.1 }}s">
                     <div class="w-12 h-12 border border-delos-gold/30 flex items-center justify-center mx-auto mb-6 group-hover:bg-delos-gold group-hover:border-delos-gold transition-all duration-300">
                         <span class="text-delos-gold text-[11px] tracking-wide font-medium group-hover:text-delos-dark transition-colors duration-300" style="font-family: 'Inter', sans-serif;">{{ $p['num'] }}</span>
@@ -241,13 +244,13 @@
 {{-- ============================================================
      LARGE QUOTE STATEMENT (replaces Furnexa's central quote)
 ============================================================ --}}
-<section class="py-24 lg:py-40 bg-delos-dark text-center">
+<section class="py-24 lg:py-40 bg-delos-dark text-center gsap-section">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <p class="reveal text-delos-gold/50 text-[11px] tracking-[0.5em] uppercase font-medium mb-10" style="font-family: 'Inter', sans-serif;">Our Commitment</p>
-        <blockquote class="reveal font-serif text-delos-cream text-3xl lg:text-5xl xl:text-6xl font-light leading-tight max-w-5xl mx-auto">
+        <p class="gsap-el text-delos-gold/50 text-[11px] tracking-[0.5em] uppercase font-medium mb-10" style="font-family: 'Inter', sans-serif;">Our Commitment</p>
+        <blockquote class="gsap-el font-serif text-delos-cream text-3xl lg:text-5xl xl:text-6xl font-light leading-tight max-w-5xl mx-auto">
             "Italian luxury that <em class="text-delos-gold not-italic">lives with you</em> — design that adapts, furniture that inspires, spaces that tell your story."
         </blockquote>
-        <div class="reveal mt-16 flex items-center justify-center gap-6">
+        <div class="gsap-el mt-16 flex items-center justify-center gap-6">
             <span class="w-16 h-px bg-delos-gold/30"></span>
             <p class="font-serif text-delos-gold text-2xl italic font-light">DELOS — TRUST THE LION</p>
             <span class="w-16 h-px bg-delos-gold/30"></span>
@@ -258,7 +261,7 @@
 {{-- ============================================================
      STATS (replaces "Happy Homes Furnished")
 ============================================================ --}}
-<section class="py-20 lg:py-24 bg-delos-ivory">
+<section class="py-20 lg:py-24 bg-delos-ivory gsap-section">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             @php
@@ -270,7 +273,7 @@
                 ];
             @endphp
             @foreach($stats as $i => $stat)
-                <div class="reveal" style="transition-delay: {{ $i * 0.15 }}s">
+                <div class="gsap-el" style="transition-delay: {{ $i * 0.15 }}s">
                     <div class="flex items-baseline justify-center gap-1 mb-3">
                         <span class="font-serif text-delos-dark text-5xl lg:text-6xl font-light"
                               data-counter="{{ $stat['value'] }}">0</span>
@@ -286,12 +289,12 @@
 {{-- ============================================================
      OUR WORKFLOW (replaces "Meet the Makers")
 ============================================================ --}}
-<section class="py-24 lg:py-32 bg-delos-cream">
+<section class="py-24 lg:py-32 bg-delos-cream gsap-section">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
         <div class="text-center mb-16">
-            <p class="reveal text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">How We Work</p>
-            <h2 class="reveal font-serif text-4xl lg:text-5xl font-light text-delos-dark">
+            <p class="gsap-el text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">How We Work</p>
+            <h2 class="gsap-el font-serif text-4xl lg:text-5xl font-light text-delos-dark">
                 From concept<br>to completion.
             </h2>
         </div>
@@ -306,7 +309,7 @@
                 ];
             @endphp
             @foreach($steps as $i => $step)
-                <div class="reveal text-center group" style="transition-delay: {{ $i * 0.1 }}s">
+                <div class="gsap-el text-center group" style="transition-delay: {{ $i * 0.1 }}s">
                     <div class="relative mb-8">
                         <div class="w-16 h-16 border border-delos-gold/30 rounded-full flex items-center justify-center mx-auto group-hover:bg-delos-gold group-hover:border-delos-gold transition-all duration-400">
                             <span class="font-serif text-delos-gold text-xl font-light group-hover:text-delos-dark transition-colors duration-400">{{ $step['step'] }}</span>
@@ -331,18 +334,19 @@
 {{-- ============================================================
      OUR BRANCHES
 ============================================================ --}}
-<section class="py-24 lg:py-32 bg-delos-dark">
+<section class="py-24 lg:py-32 bg-delos-dark gsap-section">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-16 gap-6">
             <div>
-                <p class="reveal text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">Our Presence in Iraq</p>
-                <h2 class="reveal font-serif text-delos-cream text-4xl lg:text-5xl font-light leading-tight">
+                <div class="gsap-line w-16 h-px bg-delos-gold mb-5" style="transform: scaleX(0); transform-origin: left;"></div>
+                <p class="gsap-el text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">Our Presence in Iraq</p>
+                <h2 class="gsap-el font-serif text-delos-cream text-4xl lg:text-5xl font-light leading-tight">
                     Four cities.<br>One standard<br>of <em class="text-delos-gold not-italic">excellence.</em>
                 </h2>
             </div>
             <a href="{{ route('contact') }}"
-               class="reveal self-start inline-flex items-center gap-2 text-delos-gold text-[12px] tracking-[0.2em] uppercase font-medium hover:text-delos-cream transition-colors duration-300 group" style="font-family: 'Inter', sans-serif;">
+               class="gsap-el self-start inline-flex items-center gap-2 text-delos-gold text-[12px] tracking-[0.2em] uppercase font-medium hover:text-delos-cream transition-colors duration-300 group" style="font-family: 'Inter', sans-serif;">
                 Find Your Nearest Showroom
                 <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -360,7 +364,7 @@
                 ];
             @endphp
             @foreach($branches as $i => $branch)
-                <div class="reveal group border border-white/10 p-6 lg:p-8 hover:border-delos-gold/40 transition-all duration-400"
+                <div class="gsap-el group border border-white/10 p-6 lg:p-8 hover:border-delos-gold/40 transition-colors duration-400"
                      style="transition-delay: {{ $i * 0.1 }}s">
                     <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">Est. {{ $branch['year'] }}</p>
                     <h3 class="font-serif text-delos-cream text-2xl font-light mb-4 group-hover:text-delos-gold transition-colors duration-300">

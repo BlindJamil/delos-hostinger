@@ -8,8 +8,8 @@
 {{-- Hero --}}
 <section class="relative min-h-[50vh] flex items-end overflow-hidden bg-delos-dark">
     <div class="absolute inset-0">
-        <img src="{{ asset('images/delos-erbil-showroom-2.jpg') }}" alt="Delos Showroom"
-             class="w-full h-full object-cover opacity-20">
+        <img src="{{ asset('images/delos-wall-branding.jpg') }}" alt="Delos International Wall"
+             class="w-full h-full object-cover opacity-30">
         <div class="absolute inset-0 bg-gradient-to-t from-delos-dark to-transparent"></div>
     </div>
     <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-20 w-full">
@@ -63,26 +63,32 @@
                     <input type="tel" name="phone" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="07XX XXX XXXX">
                 </div>
                 <div>
-                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">Nearest Showroom</label>
-                    <select name="showroom" required class="w-full px-4 py-3 bg-delos-cream border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300">
-                        <option value="">Select a city</option>
-                        <option>Erbil</option>
-                        <option>Kirkuk</option>
-                        <option>Sulaymaniyah</option>
-                        <option>Baghdad</option>
-                    </select>
+                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">Branch</label>
+                    <div style="position: relative;">
+                        <select name="showroom" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 cursor-pointer" style="-webkit-appearance: none; -moz-appearance: none; appearance: none; border-radius: 0; padding-right: 2.5rem;">
+                            <option value="">Select a city</option>
+                            <option>Erbil</option>
+                            <option>Kirkuk</option>
+                            <option>Sulaymaniyah</option>
+                            <option>Baghdad</option>
+                        </select>
+                        <svg style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); pointer-events: none;" class="w-4 h-4 text-delos-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">Service Interest</label>
-                    <select name="service" class="w-full px-4 py-3 bg-delos-cream border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300">
-                        <option value="">Select a service</option>
-                        <option>Luxury Kitchen</option>
-                        <option>Living Room</option>
-                        <option>Bedroom</option>
-                        <option>Wardrobes</option>
-                        <option>Flooring & Walls</option>
-                        <option>Complete Turnkey Project</option>
-                    </select>
+                    <div style="position: relative;">
+                        <select name="service" class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 cursor-pointer" style="-webkit-appearance: none; -moz-appearance: none; appearance: none; border-radius: 0; padding-right: 2.5rem;">
+                            <option value="">Select a service</option>
+                            <option>Luxury Kitchen</option>
+                            <option>Living Room</option>
+                            <option>Bedroom</option>
+                            <option>Wardrobes</option>
+                            <option>Flooring & Walls</option>
+                            <option>Complete Turnkey Project</option>
+                        </select>
+                        <svg style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); pointer-events: none;" class="w-4 h-4 text-delos-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">Message (Optional)</label>

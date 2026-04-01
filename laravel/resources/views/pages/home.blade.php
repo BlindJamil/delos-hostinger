@@ -100,23 +100,27 @@
 </section>
 
 {{-- 2.5 VIDEO --}}
-<section class="relative bg-delos-dark overflow-hidden gsap-section" data-section-enter="bottom">
-    <div class="relative w-full">
-        <video id="delos-video" class="w-full block"
-               preload="metadata" playsinline muted>
-            <source src="{{ asset('videos/delos-brand.mp4') }}" type="video/mp4">
-        </video>
-        <div id="video-overlay" class="absolute inset-0 bg-delos-dark/60 z-[1] transition-opacity duration-700 cursor-pointer">
-            <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-transparent to-delos-dark/40"></div>
-            <div class="absolute inset-0 flex flex-col items-center justify-center z-[2]">
-                <p class="text-overline text-delos-gold/60 mb-6">Discover Delos</p>
-                <button id="video-play-btn" class="group relative w-20 h-20 lg:w-24 lg:h-24 rounded-full border-2 border-delos-gold/40 flex items-center justify-center hover:border-delos-gold hover:scale-110 transition-all duration-500">
-                    <svg class="w-7 h-7 lg:w-8 lg:h-8 text-delos-gold ml-1 group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                    <span class="absolute inset-0 rounded-full border border-delos-gold/20 animate-ping"></span>
-                </button>
-                <p class="font-serif text-delos-cream/40 text-sm mt-6">Watch Our Story</p>
+<section class="section-padding bg-delos-cream gsap-section" data-section-enter="bottom">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+        {{-- 16:9 video container --}}
+        <div class="relative w-full rounded-xl overflow-hidden shadow-2xl" style="aspect-ratio: 16 / 9;">
+            <video id="delos-video" class="absolute inset-0 w-full h-full object-cover"
+                   preload="metadata" playsinline muted
+                   poster="{{ asset('images/video-poster.jpg') }}">
+                <source src="{{ asset('videos/delos-brand.mp4') }}" type="video/mp4">
+            </video>
+            <div id="video-overlay" class="absolute inset-0 bg-delos-dark/65 z-[1] transition-opacity duration-700 cursor-pointer">
+                <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/80 via-delos-dark/30 to-delos-dark/50"></div>
+                <div class="absolute inset-0 flex flex-col items-center justify-center z-[2]">
+                    <p class="text-overline text-delos-gold mb-6">Discover Delos</p>
+                    <button id="video-play-btn" class="group relative w-20 h-20 lg:w-24 lg:h-24 rounded-full border-2 border-delos-gold/50 flex items-center justify-center hover:border-delos-gold hover:scale-110 transition-all duration-500 bg-delos-dark/40 backdrop-blur-md">
+                        <svg class="w-7 h-7 lg:w-8 lg:h-8 text-delos-gold ml-1 group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <span class="absolute inset-0 rounded-full border border-delos-gold/20 animate-ping"></span>
+                    </button>
+                    <p class="font-serif text-delos-cream/60 text-sm mt-6 tracking-wide">Watch Our Story</p>
+                </div>
             </div>
         </div>
     </div>

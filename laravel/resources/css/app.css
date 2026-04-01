@@ -198,33 +198,27 @@ html.has-loader {
 }
 
 /* ============================================================
-   HERO ENTRANCE (Framer-style: blur + scale + opacity)
+   HERO ENTRANCE (opacity + transform only — no blur for perf)
 ============================================================ */
 .hero-fade {
     opacity: 0;
     transform: translateY(30px) scale(0.95);
-    filter: blur(8px);
     transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+                transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-fade.hero-visible {
     opacity: 1;
     transform: translateY(0) scale(1);
-    filter: blur(0);
 }
 
 .hero-fade-no-translate {
     opacity: 0;
-    filter: blur(4px);
-    transition: opacity 1.4s 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 1.4s 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 1.4s 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-fade-no-translate.hero-visible {
     opacity: 1;
-    filter: blur(0);
 }
 
 /* Hero Ken Burns — slow ambient zoom for "alive" feel */
@@ -276,8 +270,8 @@ html.has-loader {
 
 #site-header.header-scrolled {
     background: rgba(44, 34, 32, 0.97);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 1px 0 rgba(196, 154, 122, 0.08);
 }
 
@@ -342,9 +336,17 @@ html.has-loader {
    GSAP handles all scroll animations — these are starting positions
 ============================================================ */
 
-/* Elements start invisible — GSAP animates them in */
+/* Elements start invisible — IntersectionObserver adds .in-view to trigger transition */
 .gsap-el {
-    /* GSAP sets initial state via gsap.from() */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gsap-el.in-view {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .gsap-img {
@@ -368,14 +370,7 @@ html.has-loader {
     will-change: auto;
 }
 
-[data-reveal] img {
-    transform: scale(1.12);
-    transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-[data-reveal].revealed img {
-    transform: scale(1);
-}
+/* data-reveal img scale removed — GSAP handles wrapper animation */
 
 /* ============================================================
    SECTION ENTRANCES — hidden until GSAP animates them in
@@ -594,17 +589,18 @@ body.has-custom-cursor, body.has-custom-cursor a, body.has-custom-cursor button 
 
 .custom-cursor {
     position: fixed;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    border: 1px solid rgba(196, 154, 122, 0.4);
+    border: 1.5px solid rgba(196, 154, 122, 0.7);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
     pointer-events: none;
     z-index: 9998;
-    mix-blend-mode: difference;
     transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
                 height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 0.35s,
                 background 0.35s,
+                box-shadow 0.35s,
                 opacity 0.35s;
     transform: translate(-50%, -50%);
     opacity: 0;
@@ -846,7 +842,8 @@ body {
         filter: none !important;
     }
 
-    .reveal, .reveal-left, .reveal-right, .reveal-scale {
+    .reveal, .reveal-left, .reveal-right, .reveal-scale,
+    .gsap-el {
         opacity: 1 !important;
         transform: none !important;
         filter: none !important;
