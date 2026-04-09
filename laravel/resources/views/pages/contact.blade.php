@@ -5,19 +5,21 @@
 
 @section('content')
 
-{{-- Hero --}}
-<section data-motion-hero class="relative min-h-[50vh] flex items-end overflow-hidden bg-delos-dark">
-    <div class="absolute inset-0">
-        <img src="{{ asset('images/delos-wall-branding.jpg') }}" alt="Delos International Wall"
-             class="w-full h-full object-cover opacity-30">
-        <div class="absolute inset-0 bg-gradient-to-t from-delos-dark to-transparent"></div>
-    </div>
-    <div data-motion-group="hero" class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-20 w-full">
-        <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6">
+{{-- Hero Image --}}
+<section class="relative h-[55vh] lg:h-[60vh] overflow-hidden">
+    <img src="{{ asset('images/delos-wall-branding.jpg') }}" alt="Delos International Wall"
+         class="w-full h-full object-cover" fetchpriority="high">
+</section>
+
+{{-- Page Title --}}
+<section class="bg-delos-cream pt-16 lg:pt-20 pb-8 lg:pb-10">
+    <div data-motion-group="hero" class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
+        <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-5">
             <span class="w-8 h-px bg-delos-gold"></span>
             <span class="text-overline text-delos-gold">Get in Touch</span>
+            <span class="w-8 h-px bg-delos-gold"></span>
         </div>
-        <h1 data-motion="fade-up" class="font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-tight">
+        <h1 data-motion="fade-up" class="font-serif text-delos-dark text-5xl lg:text-7xl font-light leading-tight">
             Contact us.<br>
             <em class="text-delos-gold not-italic">We're here for you.</em>
         </h1>

@@ -21,52 +21,42 @@
     </div>
 </div>
 
-{{-- 1. HERO --}}
-<section id="hero" data-motion-hero class="relative min-h-dvh flex flex-col overflow-hidden bg-delos-dark hero-grain">
-    <div class="absolute inset-0">
-        <img src="{{ asset('images/delos-erbil-showroom-4.jpg') }}"
-             alt="Delos International Classic Kitchen Showroom — Erbil, Iraq"
-             data-hero-parallax
-             class="w-full h-full object-cover opacity-30 hero-parallax-img"
-             fetchpriority="high">
-        <div class="absolute inset-0 bg-gradient-to-r from-delos-dark via-delos-dark/80 to-delos-dark/50"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/80 via-delos-dark/30 to-delos-dark/30"></div>
+{{-- 1. HERO SLIDESHOW --}}
+<section id="hero" data-motion-hero class="relative min-h-dvh flex flex-col overflow-hidden bg-delos-dark">
+    {{-- Slideshow images --}}
+    <div id="hero-slideshow" class="absolute inset-0">
+        @php
+            $heroSlides = [
+                ['img' => 'cantori-4.jpg', 'alt' => 'Cantori Italian Outdoor Living — Luxury Terrace Design'],
+                ['img' => 'collection-lube-classic.jpg', 'alt' => 'LUBE Agnese Style Classic Kitchen — Italian Luxury'],
+                ['img' => 'collection-vittoria.jpg',     'alt' => 'Vittoria Frigerio Luxury Living Room — Italian Elegance'],
+                ['img' => 'cantori-1.jpg',               'alt' => 'CANTORI Italian Luxury Furniture Collection'],
+                ['img' => 'lube-kitchen-2.jpg',          'alt' => 'LUBE Modern Italian Kitchen Design'],
+            ];
+        @endphp
+        @foreach($heroSlides as $i => $slide)
+            <img src="{{ asset('images/' . $slide['img']) }}"
+                 alt="{{ $slide['alt'] }}"
+                 class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
+                 {{ $i === 0 ? 'fetchpriority=high' : 'loading=lazy' }}>
+        @endforeach
     </div>
 
-    <div data-motion-group="hero" class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-28 pb-16 lg:pt-32 lg:pb-32 w-full flex-1 flex flex-col justify-center">
-        <div data-motion="fade-up" class="flex items-center gap-3 mb-4 lg:mb-8">
-            <span class="w-8 h-px bg-delos-gold"></span>
-            <span class="text-overline text-delos-gold inline-flex items-center gap-3">
-                <span>Italian Luxury Solutions</span>
-                <span class="italian-flag"><span class="flag-green"></span><span class="flag-white"></span><span class="flag-red"></span></span>
-            </span>
-        </div>
+    {{-- Bottom vignette for scroll indicator readability --}}
+    <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-delos-dark/50 to-transparent z-[1] pointer-events-none"></div>
 
-        <h1 class="text-heading-1 text-delos-cream mb-4 lg:mb-8 max-w-3xl">
-            <span class="motion-split"><span data-motion="split-line">Find pieces designed to</span></span>
-            <span class="motion-split"><span data-motion="split-line">transform your home</span></span>
-            <span class="motion-split"><span data-motion="split-line"><em class="text-delos-gold not-italic">one room, one moment,</em></span></span>
-            <span class="motion-split"><span data-motion="split-line">one feeling at a time.</span></span>
-        </h1>
-
-        <p data-motion="fade-up" class="text-body text-delos-cream/50 max-w-lg mb-6 lg:mb-12">
-            Enhance your spaces with our timeless Italian luxury furniture and interior solutions. Designed to enrich your daily life now and for generations to come.
-        </p>
-
-        <div data-motion="fade-up" class="flex flex-col sm:flex-row gap-4">
-            <a href="{{ route('contact') }}" class="magnetic-btn btn-ripple inline-flex items-center justify-center gap-3 px-8 py-3.5 bg-delos-gold text-delos-dark text-btn hover:bg-delos-gold-light transition-colors duration-300 group">
-                Book Consultation
-                <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            </a>
-            <a href="{{ route('about') }}" class="magnetic-btn btn-ripple inline-flex items-center justify-center gap-3 px-8 py-3.5 border border-delos-cream/20 text-delos-cream text-btn font-medium hover:border-delos-gold hover:text-delos-gold transition-colors duration-300">
-                Our Story
-            </a>
-        </div>
+    {{-- Slide indicator dots --}}
+    <div class="absolute bottom-24 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3">
+        @for($i = 0; $i < count($heroSlides); $i++)
+            <button class="hero-dot w-2 h-2 rounded-full transition-all duration-500 {{ $i === 0 ? 'bg-delos-gold w-6' : 'bg-delos-cream/40 hover:bg-delos-cream/60' }}"
+                    aria-label="Go to slide {{ $i + 1 }}" data-slide="{{ $i }}"></button>
+        @endfor
     </div>
 
-    <div data-motion="fade" data-hero-fade-out class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
-        <span class="text-overline-sm text-delos-cream/30">Scroll</span>
-        <div class="w-px h-12 bg-delos-cream/20 relative overflow-hidden">
+    {{-- Scroll indicator --}}
+    <div data-motion="fade" data-hero-fade-out class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3">
+        <span class="text-overline-sm text-delos-cream/50">Scroll</span>
+        <div class="w-px h-10 bg-delos-cream/25 relative overflow-hidden">
             <div class="scroll-line absolute top-0 left-0 w-full bg-delos-gold/60" style="height:30%"></div>
         </div>
     </div>
@@ -191,43 +181,34 @@
 </section>
 
 {{-- 4. EMPLOYEES --}}
-<section class="bg-delos-dark">
-    <div class="section-padding">
-        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-            <div data-motion-group="employee-header" class="text-center employee-header-intro">
-                <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mb-5"></div>
-                <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">Our Team</p>
-                <h2 data-motion="fade-up" class="text-heading-2 text-delos-cream">Best Employees of the Month</h2>
-                <p data-motion="fade-up" class="text-body text-delos-cream/40 mt-5 max-w-xl mx-auto">Recognizing the dedicated professionals behind every exceptional Delos project.</p>
-            </div>
+<section id="employees-section" class="section-padding bg-delos-dark overflow-hidden">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <div data-motion-group="employee-header" class="text-center mb-12 lg:mb-16">
+            <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mb-5"></div>
+            <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">Our Team</p>
+            <h2 data-motion="fade-up" class="text-heading-2 text-delos-cream">Best Employees of the Month</h2>
+            <p data-motion="fade-up" class="text-body text-delos-cream/40 mt-5 max-w-xl mx-auto">Recognizing the dedicated professionals behind every exceptional Delos project.</p>
         </div>
     </div>
-</section>
-
-{{-- Employee cards — pinned separately so cards fill full viewport --}}
-<section id="employees-section" class="bg-delos-dark overflow-hidden min-h-dvh flex items-center" style="background-color: #3D2E2A;">
-    <div id="employee-stage">
-        {{-- Horizontal scroll track --}}
-        <div id="employee-track" class="flex gap-6 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]">
-            @php
-                $employees = [
-                    ['name' => 'Ahmed K.', 'role' => 'Lead Interior Designer', 'branch' => 'Erbil', 'img' => 'employee-1.jpg', 'achievement' => 'Led the design of 12 luxury villa transformations across Erbil this quarter.'],
-                    ['name' => 'Sara M.',  'role' => 'Senior Engineer',        'branch' => 'Sulaymaniyah', 'img' => 'employee-2.jpg', 'achievement' => 'Revolutionized our 3D concept workflow, cutting design timelines by 40%.'],
-                    ['name' => 'Omar R.',  'role' => 'Project Manager',        'branch' => 'Baghdad', 'img' => 'employee-3.jpg', 'achievement' => 'Spearheaded the successful launch of our new Baghdad showroom.'],
-                ];
-            @endphp
-            @foreach($employees as $emp)
-                <div data-motion="fade-up" class="employee-slide employee-card card-tilt group relative w-[350px] lg:w-[420px] aspect-[3/4] overflow-hidden bg-delos-dark-2 flex-shrink-0">
-                    <img src="{{ asset('images/' . $emp['img']) }}" alt="{{ $emp['name'] }} — {{ $emp['role'] }}" class="absolute inset-0 w-full h-full object-cover opacity-60" loading="lazy">
-                    <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3]">
-                        <p class="text-overline-sm text-delos-gold mb-3">{{ $emp['branch'] }}</p>
-                        <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $emp['name'] }}</h3>
-                        <p class="text-overline-sm text-delos-cream/50 mb-4">{{ $emp['role'] }}</p>
-                        <p class="text-body-sm text-delos-cream/40 leading-relaxed group-hover:text-delos-cream/60 transition-colors duration-500">"{{ $emp['achievement'] }}"</p>
-                    </div>
+    <div id="employee-track" class="flex gap-6 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]">
+        @php
+            $employees = [
+                ['name' => 'Ahmed K.', 'role' => 'Lead Interior Designer', 'branch' => 'Erbil', 'img' => 'employee-1.jpg', 'achievement' => 'Led the design of 12 luxury villa transformations across Erbil this quarter.'],
+                ['name' => 'Sara M.',  'role' => 'Senior Engineer',        'branch' => 'Sulaymaniyah', 'img' => 'employee-2.jpg', 'achievement' => 'Revolutionized our 3D concept workflow, cutting design timelines by 40%.'],
+                ['name' => 'Omar R.',  'role' => 'Project Manager',        'branch' => 'Baghdad', 'img' => 'employee-3.jpg', 'achievement' => 'Spearheaded the successful launch of our new Baghdad showroom.'],
+            ];
+        @endphp
+        @foreach($employees as $emp)
+            <div data-motion="fade-up" class="employee-slide employee-card card-tilt group relative w-[350px] lg:w-[420px] aspect-[3/4] overflow-hidden bg-delos-dark-2 flex-shrink-0">
+                <img src="{{ asset('images/' . $emp['img']) }}" alt="{{ $emp['name'] }} — {{ $emp['role'] }}" class="absolute inset-0 w-full h-full object-cover opacity-60" loading="lazy">
+                <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3]">
+                    <p class="text-overline-sm text-delos-gold mb-3">{{ $emp['branch'] }}</p>
+                    <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $emp['name'] }}</h3>
+                    <p class="text-overline-sm text-delos-cream/50 mb-4">{{ $emp['role'] }}</p>
+                    <p class="text-body-sm text-delos-cream/40 leading-relaxed group-hover:text-delos-cream/60 transition-colors duration-500">"{{ $emp['achievement'] }}"</p>
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endforeach
     </div>
 </section>
 

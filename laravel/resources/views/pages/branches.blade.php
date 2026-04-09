@@ -5,19 +5,22 @@
 
 @section('content')
 
-{{-- Hero --}}
-<section data-motion-hero class="relative min-h-[50vh] flex items-end overflow-hidden bg-delos-dark">
-    <div class="absolute inset-0">
-        <img src="{{ asset('images/delos-erbil-showroom-3.jpg') }}" alt="Delos LUBE Showroom Interior"
-             class="w-full h-full object-cover opacity-25">
-        <div class="absolute inset-0 bg-gradient-to-t from-delos-dark to-transparent"></div>
-    </div>
-    <div data-motion-group="hero" class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-20 w-full">
-        <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6">
+{{-- Hero Image --}}
+<section class="relative h-[45vh] lg:h-[50vh] overflow-hidden">
+    <img src="{{ asset('images/collection-vittoria.jpg') }}"
+         alt="Delos luxury Italian interior design"
+         class="w-full h-full object-cover" fetchpriority="high">
+</section>
+
+{{-- Page Title --}}
+<section class="bg-delos-cream pt-16 lg:pt-20 pb-8 lg:pb-10">
+    <div data-motion-group="hero" class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
+        <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-5">
             <span class="w-8 h-px bg-delos-gold"></span>
             <span class="text-overline text-delos-gold">Our Presence</span>
+            <span class="w-8 h-px bg-delos-gold"></span>
         </div>
-        <h1 data-motion="fade-up" class="font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-tight">
+        <h1 data-motion="fade-up" class="font-serif text-delos-dark text-5xl lg:text-7xl font-light leading-tight">
             Four cities.<br>
             <em class="text-delos-gold not-italic">One standard of excellence.</em>
         </h1>
@@ -27,12 +30,6 @@
 {{-- Showrooms Grid --}}
 <section class="section-padding bg-delos-cream">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-
-        <div data-motion-group="branches-heading" class="mb-16">
-            <div data-motion-line class="w-16 h-px bg-delos-gold mb-5"></div>
-            <p data-motion="fade-up" class="text-overline text-delos-gold mb-4">Our Showrooms</p>
-            <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark">Four cities across Iraq.</h2>
-        </div>
 
         <div data-motion-group="branches-cards" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-20">
             @php

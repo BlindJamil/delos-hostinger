@@ -56,17 +56,6 @@
         </div>
     </div>
 
-    {{-- Top overlay: page title --}}
-    <div class="absolute top-0 inset-x-0 z-10 pt-28 lg:pt-36 text-center pointer-events-none">
-        <div data-motion="fade" class="inline-flex items-center gap-3 mb-3">
-            <span class="w-8 h-px bg-delos-gold/60"></span>
-            <span class="text-delos-gold text-[10px] tracking-[0.5em] uppercase font-semibold drop-shadow-sm" style="font-family: 'Inter', sans-serif;">Our Portfolio</span>
-            <span class="w-8 h-px bg-delos-gold/60"></span>
-        </div>
-        <h1 data-motion="fade-up" class="font-serif text-delos-dark text-4xl lg:text-5xl font-light leading-tight drop-shadow-sm">
-            One standard of <em class="text-delos-gold not-italic">excellence.</em>
-        </h1>
-    </div>
 </section>
 
 {{-- Filter + Grid --}}

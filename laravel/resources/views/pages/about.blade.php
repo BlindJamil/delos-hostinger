@@ -6,37 +6,72 @@
 @section('content')
 
 {{-- ============================================================
-     ABOUT HERO
+     ABOUT HERO — Editorial Mosaic
 ============================================================ --}}
-<section data-motion-hero class="relative min-h-[80vh] flex flex-col overflow-hidden bg-delos-dark">
-    {{-- Background --}}
-    <div class="absolute inset-0">
-        <img src="{{ asset('images/about-hero.jpg') }}" alt="Delos International Showroom"
-             data-hero-parallax
-             class="w-full h-full object-cover opacity-35 hero-parallax-img">
-        <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/50 to-transparent"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-delos-dark/50 to-transparent"></div>
-    </div>
+<section data-motion-hero class="bg-delos-cream overflow-hidden">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
-    {{-- Content --}}
-    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-28 pb-16 lg:pt-32 lg:pb-32 w-full flex-1 flex flex-col justify-center">
-        <div data-motion-group="hero" class="max-w-3xl">
-            {{-- Badge --}}
-            <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6">
-                <span class="w-8 h-px bg-delos-gold"></span>
-                <span class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">Est. 2020 · Erbil, Iraq</span>
+        {{-- Mosaic grid --}}
+        <div class="pt-28 lg:pt-36 pb-0">
+            <div class="grid lg:grid-cols-12 gap-5 lg:gap-7">
+
+                {{-- Left: text + accent image --}}
+                <div class="lg:col-span-5 flex flex-col order-2 lg:order-none">
+                    <div data-motion-group="hero" class="pt-10 lg:pt-6 lg:pr-4">
+                        <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6">
+                            <span class="w-8 h-px bg-delos-gold"></span>
+                            <span class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">Est. 2020 · Erbil, Iraq</span>
+                        </div>
+
+                        <h1 data-motion="fade-up" class="font-serif text-delos-dark text-4xl lg:text-5xl xl:text-[3.5rem] font-light leading-[1.08] mb-5">
+                            Bringing Italian<br>
+                            luxury to every<br>
+                            <em class="text-delos-gold not-italic">Iraqi home.</em>
+                        </h1>
+
+                        <p data-motion="fade-up" class="text-delos-muted text-base lg:text-lg leading-relaxed max-w-md mb-8 lg:mb-10" style="font-family: 'Inter', sans-serif;">
+                            Iraq's trusted destination for authentic Italian luxury interior solutions — from concept to completion.
+                        </p>
+                    </div>
+
+                    {{-- Accent image — desktop only, creates mosaic rhythm --}}
+                    <div data-motion="fade-up" class="hidden lg:block relative overflow-hidden lg:h-[260px] mt-auto">
+                        <img src="{{ asset('images/delos-erbil-showroom-6.jpg') }}" alt="Delos Erbil Showroom"
+                             class="w-full h-full object-cover" loading="lazy">
+                    </div>
+                </div>
+
+                {{-- Right: main image, taller --}}
+                <div class="lg:col-span-7 order-1 lg:order-none">
+                    <div data-motion="fade" class="relative overflow-hidden h-[55vh] lg:h-[75vh]">
+                        <img src="{{ asset('images/about-hero.jpg') }}" alt="Delos International Showroom"
+                             data-hero-parallax
+                             class="w-full h-full object-cover hero-parallax-img"
+                             fetchpriority="high">
+                    </div>
+                </div>
+
             </div>
-
-            <h1 data-motion="fade-up" class="font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-[1.05] mb-6">
-                Bringing Italian<br>
-                luxury to every<br>
-                <em class="text-delos-gold not-italic">Iraqi home.</em>
-            </h1>
-
-            <p data-motion="fade-up" class="text-delos-cream/60 text-base lg:text-lg leading-relaxed max-w-lg" style="font-family: 'Inter', sans-serif;">
-                Delos International is Iraq's trusted destination for authentic Italian luxury interior solutions.
-            </p>
         </div>
+
+        {{-- Stats row --}}
+        <div data-motion="fade-up" class="border-t border-delos-gold/15 mt-12 lg:mt-16 py-10 lg:py-12">
+            <div class="grid grid-cols-3 gap-4">
+                <div class="text-center">
+                    <span class="block font-serif text-delos-dark text-3xl lg:text-4xl font-light">500+</span>
+                    <span class="text-delos-muted text-[9px] lg:text-[10px] tracking-[0.3em] uppercase mt-1.5 block" style="font-family: 'Inter', sans-serif;">Projects Completed</span>
+                </div>
+                <div class="text-center border-x border-delos-gold/15">
+                    <span class="block font-serif text-delos-dark text-3xl lg:text-4xl font-light">4</span>
+                    <span class="text-delos-muted text-[9px] lg:text-[10px] tracking-[0.3em] uppercase mt-1.5 block" style="font-family: 'Inter', sans-serif;">Showrooms in Iraq</span>
+                </div>
+                <div class="text-center">
+                    <span class="block font-serif text-delos-dark text-3xl lg:text-4xl font-light">5</span>
+                    <span class="text-delos-muted text-[9px] lg:text-[10px] tracking-[0.3em] uppercase mt-1.5 block" style="font-family: 'Inter', sans-serif;">Italian Brand Partners</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
 

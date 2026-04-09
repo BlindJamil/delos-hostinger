@@ -5,22 +5,62 @@
 
 @section('content')
 
-{{-- Hero --}}
-<section data-motion-hero class="relative min-h-[55vh] flex items-end overflow-hidden bg-delos-dark">
-    <div class="absolute inset-0">
-        <img src="{{ asset('images/delos-wall-branding.jpg') }}" alt=""
-             class="w-full h-full object-cover opacity-25">
-        <div class="absolute inset-0 bg-gradient-to-t from-delos-dark to-transparent"></div>
-    </div>
-    <div data-motion-group="hero" class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-20 w-full">
-        <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6">
-            <span class="w-8 h-px bg-delos-gold"></span>
-            <span class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">Made in Italy</span>
+{{-- Hero: Brand Gallery --}}
+<section id="brand-showcase" class="bg-delos-cream pt-28 lg:pt-32 pb-16 lg:pb-24">
+    @php
+        $showcaseBrands = [
+            ['name' => 'LUBE',              'category' => 'Kitchen Excellence',    'since' => 'Est. 1967', 'img' => 'collection-lube-classic.jpg'],
+            ['name' => 'Frigerio',           'category' => 'Classic Furniture',     'since' => 'Est. 1955', 'img' => 'frigerio-sofa-3.webp'],
+            ['name' => 'Vittoria Frigerio',  'category' => 'Heritage Luxury',       'since' => 'Heritage',  'img' => 'collection-vittoria.jpg'],
+            ['name' => 'CANTORI',            'category' => 'Artisan Creations',     'since' => 'Est. 1948', 'img' => 'cantori-2.jpg'],
+            ['name' => 'SKEMA',              'category' => 'Premium Flooring',      'since' => 'Premium',   'img' => 'italian-materials.jpg'],
+        ];
+    @endphp
+
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+        {{-- Header --}}
+        <div data-motion-group="brands-hero-header" class="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-12 lg:mb-16 gap-6">
+            <div>
+                <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-5">
+                    <span class="w-8 h-px bg-delos-gold"></span>
+                    <span class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">Our Italian Partners
+                        <span class="italian-flag ml-2"><span class="flag-green"></span><span class="flag-white"></span><span class="flag-red"></span></span>
+                    </span>
+                </div>
+                <h1 data-motion="fade-up" class="font-serif text-delos-dark text-4xl lg:text-6xl font-light leading-tight">
+                    Five houses.<br>
+                    One standard of<br>
+                    <em class="text-delos-gold not-italic">Italian excellence.</em>
+                </h1>
+            </div>
+            <p data-motion="fade-up" class="text-delos-muted text-sm leading-relaxed max-w-sm lg:text-right lg:pb-1" style="font-family: 'Inter', sans-serif;">
+                Delos holds exclusive partnerships with Italy's most prestigious luxury manufacturers.
+            </p>
         </div>
-        <h1 data-motion="fade-up" class="font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-tight">
-            Italy's finest.<br>
-            <em class="text-delos-gold not-italic">Delivered to Iraq.</em>
-        </h1>
+
+        {{-- Brand Grid --}}
+        <div id="brand-gallery-grid" class="brand-gallery-grid">
+            @foreach($showcaseBrands as $i => $b)
+                <div class="brand-card card-tilt {{ $i === 0 ? 'is-featured' : '' }}" data-brand-index="{{ $i }}">
+                    <div class="brand-card-inner">
+                        <div class="brand-card-image">
+                            <img src="{{ asset('images/' . $b['img']) }}" alt="{{ $b['name'] }}"
+                                 class="w-full h-full object-cover"
+                                 {{ $i === 0 ? 'fetchpriority=high' : 'loading=lazy' }}>
+                        </div>
+                        <div class="brand-card-info">
+                            <div class="flex items-center justify-between gap-3">
+                                <div>
+                                    <h2 class="font-serif text-delos-cream text-lg lg:text-xl font-light leading-tight">{{ $b['name'] }}</h2>
+                                    <p class="text-delos-cream/35 text-[9px] tracking-[0.2em] uppercase mt-0.5" style="font-family: 'Inter', sans-serif;">{{ $b['category'] }}</p>
+                                </div>
+                                <span class="text-delos-gold/50 text-[9px] tracking-[0.3em] uppercase flex-shrink-0" style="font-family: 'Inter', sans-serif;">{{ $b['since'] }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
 </section>
 

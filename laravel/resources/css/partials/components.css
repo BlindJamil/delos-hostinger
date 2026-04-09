@@ -58,6 +58,31 @@
     color: #C49A7A;
 }
 
+#navbar .nav-social {
+    border-color: rgba(248, 244, 239, 0.25);
+}
+
+#navbar .nav-social-icon {
+    color: rgba(248, 244, 239, 0.75);
+}
+
+#navbar .nav-social:hover .nav-social-icon {
+    color: #3D2E2A;
+}
+
+#site-header.header-scrolled .nav-social {
+    border-color: rgba(248, 244, 239, 0.2);
+}
+
+#site-header.header-scrolled .nav-social-icon {
+    color: rgba(248, 244, 239, 0.6);
+}
+
+#site-header.header-scrolled .nav-social:hover {
+    border-color: #C49A7A;
+    background: #C49A7A;
+}
+
 #site-header.header-scrolled .nav-cta {
     border-color: rgba(196, 154, 122, 0.35);
 }
