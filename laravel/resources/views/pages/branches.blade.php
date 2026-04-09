@@ -6,18 +6,18 @@
 @section('content')
 
 {{-- Hero --}}
-<section class="relative min-h-[50vh] flex items-end overflow-hidden bg-delos-dark">
+<section data-motion-hero class="relative min-h-[50vh] flex items-end overflow-hidden bg-delos-dark">
     <div class="absolute inset-0">
         <img src="{{ asset('images/delos-erbil-showroom-3.jpg') }}" alt="Delos LUBE Showroom Interior"
              class="w-full h-full object-cover opacity-25">
         <div class="absolute inset-0 bg-gradient-to-t from-delos-dark to-transparent"></div>
     </div>
-    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-20 w-full">
-        <div class="gsap-el inline-flex items-center gap-3 mb-6">
+    <div data-motion-group="hero" class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-20 w-full">
+        <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6">
             <span class="w-8 h-px bg-delos-gold"></span>
             <span class="text-overline text-delos-gold">Our Presence</span>
         </div>
-        <h1 class="gsap-el font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-tight">
+        <h1 data-motion="fade-up" class="font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-tight">
             Four cities.<br>
             <em class="text-delos-gold not-italic">One standard of excellence.</em>
         </h1>
@@ -25,16 +25,16 @@
 </section>
 
 {{-- Showrooms Grid --}}
-<section class="section-padding bg-delos-cream gsap-section">
+<section class="section-padding bg-delos-cream">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
-        <div class="mb-16">
-            <div class="gsap-line w-0 h-px bg-delos-gold mb-5"></div>
-            <p class="gsap-el text-overline text-delos-gold mb-4">Our Showrooms</p>
-            <h2 class="gsap-el text-heading-2 text-delos-dark">Four cities across Iraq.</h2>
+        <div data-motion-group="branches-heading" class="mb-16">
+            <div data-motion-line class="w-16 h-px bg-delos-gold mb-5"></div>
+            <p data-motion="fade-up" class="text-overline text-delos-gold mb-4">Our Showrooms</p>
+            <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark">Four cities across Iraq.</h2>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-20">
+        <div data-motion-group="branches-cards" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-20">
             @php
                 $branches = [
                     ['city' => 'Erbil', 'est' => 'Est. 2020', 'address' => 'Gulan Street, Opposite the Chamber of Commerce', 'phone' => '0750 200 1003', 'open' => 'Sat – Thu: 10:00 – 20:00'],
@@ -44,7 +44,7 @@
                 ];
             @endphp
             @foreach($branches as $i => $b)
-                <div class="gsap-el group p-8 lg:p-10 border border-delos-dark/10 hover:border-delos-gold/40 hover:bg-delos-ivory transition-all duration-400">
+                <div data-motion="fade-up" class="group p-8 lg:p-10 border border-delos-dark/10 hover:border-delos-gold/40 hover:bg-delos-ivory transition-all duration-400">
                     <div class="flex items-start justify-between mb-6">
                         <div>
                             <p class="font-sans text-delos-gold text-[10px] tracking-[0.4em] uppercase font-medium mb-2">{{ $b['est'] }}</p>

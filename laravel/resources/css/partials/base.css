@@ -1,0 +1,97 @@
+.text-overline {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.text-overline-sm {
+    font-family: var(--font-sans);
+    font-size: 0.5rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.text-body {
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    line-height: 1.8;
+}
+
+.text-body-sm {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+}
+
+.text-heading-1 {
+    font-family: var(--font-serif);
+    font-size: clamp(2.75rem, 5.5vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.08;
+}
+
+@media (max-width: 767px) {
+    .text-heading-1 {
+        font-size: clamp(2rem, 7vw, 2.75rem);
+        line-height: 1.12;
+    }
+}
+
+.text-heading-2 {
+    font-family: var(--font-serif);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 300;
+    line-height: 1.15;
+}
+
+.text-btn {
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.section-padding {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+}
+
+@media (min-width: 1024px) {
+    .section-padding {
+        padding-top: 7.5rem;
+        padding-bottom: 7.5rem;
+    }
+}
+
+.italian-flag {
+    display: inline-flex;
+    gap: 2px;
+    vertical-align: middle;
+}
+
+.italian-flag span {
+    display: inline-block;
+    width: 3px;
+    height: 12px;
+    border-radius: 1px;
+}
+
+.italian-flag .flag-green {
+    background: #009246;
+}
+
+.italian-flag .flag-white {
+    background: #F1F1F1;
+}
+
+.italian-flag .flag-red {
+    background: #CE2B37;
+}
+
+#hero {
+    min-height: var(--vh, 100dvh);
+}

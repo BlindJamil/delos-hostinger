@@ -6,18 +6,18 @@
 @section('content')
 
 {{-- Hero --}}
-<section class="relative min-h-[50vh] flex items-end overflow-hidden bg-delos-dark">
+<section data-motion-hero class="relative min-h-[50vh] flex items-end overflow-hidden bg-delos-dark">
     <div class="absolute inset-0">
         <img src="{{ asset('images/delos-wall-branding.jpg') }}" alt="Delos International Wall"
              class="w-full h-full object-cover opacity-30">
         <div class="absolute inset-0 bg-gradient-to-t from-delos-dark to-transparent"></div>
     </div>
-    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-20 w-full">
-        <div class="gsap-el inline-flex items-center gap-3 mb-6">
+    <div data-motion-group="hero" class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-40 pb-20 w-full">
+        <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6">
             <span class="w-8 h-px bg-delos-gold"></span>
             <span class="text-overline text-delos-gold">Get in Touch</span>
         </div>
-        <h1 class="gsap-el font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-tight">
+        <h1 data-motion="fade-up" class="font-serif text-delos-cream text-5xl lg:text-7xl font-light leading-tight">
             Contact us.<br>
             <em class="text-delos-gold not-italic">We're here for you.</em>
         </h1>
@@ -25,24 +25,24 @@
 </section>
 
 {{-- Contact Form --}}
-<section class="section-padding bg-delos-cream gsap-section">
+<section class="section-padding bg-delos-cream">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
         <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-            <div>
-                <div class="gsap-line w-0 h-px bg-delos-gold mb-5"></div>
-                <p class="gsap-el text-overline text-delos-gold mb-4">Book a Consultation</p>
-                <h2 class="gsap-el text-heading-2 text-delos-dark leading-tight mb-6">
+            <div data-motion-group="contact-copy">
+                <div data-motion-line class="w-16 h-px bg-delos-gold mb-5"></div>
+                <p data-motion="fade-up" class="text-overline text-delos-gold mb-4">Book a Consultation</p>
+                <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark leading-tight mb-6">
                     Start your<br>
                     <em class="text-delos-gold not-italic">Italian luxury</em><br>
                     journey.
                 </h2>
-                <p class="gsap-el text-body text-delos-muted">
+                <p data-motion="fade-up" class="text-body text-delos-muted">
                     Our specialist will contact you within 24 hours to arrange a complimentary in-home consultation and 3D design concept.
                 </p>
             </div>
 
-            <form class="gsap-el space-y-5 font-sans" method="POST" action="#">
+            <form data-motion="fade-up" class="space-y-5 font-sans" method="POST" action="#">
                 @csrf
                 <div class="grid grid-cols-2 gap-5">
                     <div>

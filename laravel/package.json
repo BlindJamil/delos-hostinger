@@ -4,13 +4,28 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "check:assets": "node scripts/check-assets.mjs",
+        "dev": "vite",
+        "lint": "eslint resources/js scripts tests/e2e playwright.config.js --max-warnings=0",
+        "sync:hostinger": "node scripts/sync-hostinger.mjs",
+        "test:e2e": "playwright test",
+        "test:e2e:mobile": "playwright test --project=mobile",
+        "test:e2e:reduced-motion": "playwright test --project=reduced-motion",
+        "test:e2e:visual": "playwright test tests/e2e/visual.spec.js --project=desktop"
     },
     "devDependencies": {
+        "@eslint/js": "^9.39.4",
+        "@playwright/test": "^1.59.1",
         "@tailwindcss/vite": "^4.2.2",
         "concurrently": "^9.0.1",
+        "eslint": "^9.39.4",
+        "globals": "^17.4.0",
         "laravel-vite-plugin": "^3.0.0",
         "tailwindcss": "^4.2.2",
         "vite": "^8.0.0"
+    },
+    "dependencies": {
+        "gsap": "^3.14.2",
+        "lenis": "^1.3.21"
     }
 }
