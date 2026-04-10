@@ -99,53 +99,15 @@
     </div>
 </section>
 
-{{-- Service Showcase --}}
-<section class="section-padding bg-delos-cream">
+{{-- Services Detail --}}
+<section class="py-24 lg:py-32 bg-delos-cream">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div data-motion-group="services-intro" class="text-center mb-16">
+
+        <div data-motion-group="services-intro" class="text-center mb-20 lg:mb-24">
             <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mb-5"></div>
             <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">What We Offer</p>
             <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark">Six Italian crafts.<br><em class="text-delos-gold not-italic">One standard of luxury.</em></h2>
         </div>
-
-        @php
-            $heroServices = [
-                ['num' => '01', 'name' => 'Italian Kitchens',  'brand' => 'LUBE Kitchens',      'desc' => 'Precision-engineered Italian kitchens — from timeless classic to bold contemporary, designed around your lifestyle.',       'img' => 'lube-kitchen-3.jpg'],
-                ['num' => '02', 'name' => 'Dressing Rooms',    'brand' => 'LUBE · Frigerio',    'desc' => 'Custom walk-in dressing rooms with integrated lighting, premium fittings, and flawless Italian hardware.',                   'img' => 'dressing-room-luxury.jpg'],
-                ['num' => '03', 'name' => 'Laundry Rooms',     'brand' => 'Delos Custom',       'desc' => 'Italian-crafted laundry spaces where premium materials meet daily utility — organized, elegant, effortless.',              'img' => 'laundry-room-luxury.jpg'],
-                ['num' => '04', 'name' => 'Italian Furniture', 'brand' => 'Frigerio · CANTORI', 'desc' => 'Sofas, dining suites, bedroom collections, and statement pieces — sculptural beauty with enduring Italian comfort.',         'img' => 'collection-cantori.jpg'],
-                ['num' => '05', 'name' => 'Italian Parquet',   'brand' => 'SKEMA',              'desc' => 'Premium Italian parquet and wooden flooring — rich natural grain, engineered for a lifetime of quiet luxury.',             'img' => 'parquet-herringbone.jpg'],
-                ['num' => '06', 'name' => 'Bespoke Projects',  'brand' => 'All Delos Partners', 'desc' => 'From single rooms to complete transformations — Delos manages every detail with Italian-grade precision, end to end.',     'img' => 'delos-erbil-showroom-5.jpg'],
-            ];
-        @endphp
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            @foreach($heroServices as $i => $s)
-                <a href="#service-{{ $s['num'] }}"
-                   data-motion="{{ $i % 2 === 0 ? 'slide-left' : 'slide-right' }}"
-                   class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                    <x-responsive-image :src="$s['img']" :alt="$s['name']"
-                        sizes="(min-width: 768px) 50vw, 100vw"
-                        class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700"
-                        :loading="$i === 0 ? 'eager' : 'lazy'"
-                        :fetchpriority="$i === 0 ? 'high' : null" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
-                    <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">{{ $s['num'] }}</span>
-                    <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                        <p class="text-overline-sm text-delos-gold mb-2">{{ $s['brand'] }}</p>
-                        <h3 class="font-serif text-delos-cream text-2xl lg:text-3xl font-light mb-3 group-hover:text-delos-gold transition-colors duration-300">{{ $s['name'] }}</h3>
-                        <p class="text-body-sm text-delos-cream/0 group-hover:text-delos-cream/60 transition-all duration-500 max-w-sm leading-relaxed">{{ $s['desc'] }}</p>
-                    </div>
-                    <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
-                </a>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-{{-- Services Detail --}}
-<section class="py-24 lg:py-32 bg-delos-cream">
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
         @php
             $services = [
