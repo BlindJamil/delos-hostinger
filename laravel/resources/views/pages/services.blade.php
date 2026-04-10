@@ -42,12 +42,12 @@
         {{-- Arch carousel --}}
         @php
             $archSlides = [
-                ['img' => 'collection-lube-classic.jpg',  'label' => 'LUBE · Italian Kitchens'],
-                ['img' => 'dressing-room-luxury.jpg',     'label' => 'LUBE · Dressing Rooms'],
-                ['img' => 'laundry-room-luxury.jpg',      'label' => 'Delos · Laundry Rooms'],
-                ['img' => 'italian-furniture-luxury.jpg', 'label' => 'Frigerio · Italian Furniture'],
-                ['img' => 'parquet-herringbone.jpg',      'label' => 'SKEMA · Italian Parquet'],
-                ['img' => 'villa-transformation.jpg',     'label' => 'Delos · Others'],
+                ['img' => 'collection-lube-classic.jpg', 'label' => 'LUBE · Italian Kitchens'],
+                ['img' => 'delos-erbil-showroom-3.jpg',  'label' => 'LUBE · Dressing Rooms'],
+                ['img' => 'delos-erbil-showroom-2.jpg',  'label' => 'LUBE · Laundry Rooms'],
+                ['img' => 'cantori-1.jpg',               'label' => 'CANTORI · Italian Furniture'],
+                ['img' => 'italian-materials.jpg',       'label' => 'SKEMA · Italian Parquet'],
+                ['img' => 'about-story.jpg',             'label' => 'Delos · Others'],
             ];
         @endphp
 
@@ -125,15 +125,15 @@
                     'desc'  => 'Italian dressing rooms are an art form. Our walk-in wardrobe systems are precision-designed with integrated lighting, custom interior organization, and flawless hardware — transforming your daily routine into an experience of quiet luxury.',
                     'feat'  => ['Walk-in wardrobe design', 'Hinged and sliding door systems', 'Custom interior organization', 'Integrated LED lighting', 'Mirror and glass options'],
                     'brand' => 'LUBE · Frigerio',
-                    'img'   => 'dressing-room-luxury.jpg',
+                    'img'   => 'delos-erbil-showroom-6.jpg',
                 ],
                 [
                     'num'   => '03',
                     'name'  => 'Laundry Rooms',
                     'desc'  => 'A well-designed laundry room should feel as refined as the rest of your home. Delos brings Italian-made cabinetry, premium finishes, and smart storage solutions to create laundry spaces that are both beautifully organized and effortlessly practical.',
                     'feat'  => ['Custom cabinetry and storage', 'Integrated appliance housing', 'Premium worktops and sinks', 'Space-efficient layouts', 'Matching finishes throughout your home'],
-                    'brand' => 'Delos Custom',
-                    'img'   => 'laundry-room-luxury.jpg',
+                    'brand' => 'LUBE · Delos Custom',
+                    'img'   => 'lube-kitchen-3.jpg',
                 ],
                 [
                     'num'   => '04',
@@ -141,7 +141,7 @@
                     'desc'  => 'From the living room to the bedroom, Delos delivers complete Italian furniture collections — sofas, dining suites, beds, and statement pieces that combine sculptural beauty with enduring comfort. Every piece is crafted by Italy\'s most celebrated furniture houses.',
                     'feat'  => ['Italian sofas and sectionals', 'Dining and coffee tables', 'Bedroom collections', 'Accent and statement pieces', 'Complete room styling'],
                     'brand' => 'Frigerio · CANTORI',
-                    'img'   => 'italian-furniture-luxury.jpg',
+                    'img'   => 'collection-vittoria.jpg',
                 ],
                 [
                     'num'   => '05',
@@ -149,7 +149,7 @@
                     'desc'  => 'Flooring is the foundation of great design. SKEMA\'s premium Italian parquet and wooden flooring systems provide the perfect base for your Delos interior — rich natural wood grain, advanced engineering, and finishes that age beautifully for generations.',
                     'feat'  => ['Engineered Italian parquet', 'Natural hardwood options', 'Wide-plank and herringbone patterns', 'Prefinished and site-finished', 'Full installation service'],
                     'brand' => 'SKEMA',
-                    'img'   => 'parquet-modern-interior.jpg',
+                    'img'   => 'italian-materials.jpg',
                 ],
                 [
                     'num'   => '06',
@@ -157,7 +157,7 @@
                     'desc'  => 'Beyond our core categories, Delos takes on anything you need to complete your space. From single bespoke pieces to complete home transformations, our team manages every element — consultation, 3D concept design, Italian sourcing, logistics, and flawless on-site installation — with the same precision as Italy\'s finest interior studios.',
                     'feat'  => ['On-site measurement and consultation', 'Personalized 3D design concepts', 'Italian sourcing and logistics', 'Professional installation team', 'Project management end-to-end'],
                     'brand' => 'All Delos Partners',
-                    'img'   => 'villa-transformation.jpg',
+                    'img'   => 'about-story.jpg',
                 ],
             ];
         @endphp
