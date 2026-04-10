@@ -68,26 +68,20 @@
 {{-- 2. ABOUT --}}
 <section class="section-padding bg-delos-cream">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-            <div data-motion="slide-left" class="relative aspect-[4/3] overflow-hidden bg-delos-dark rounded-sm">
-                <x-responsive-image
-                    src="delos-building.jpg"
-                    alt="Delos International Building — Erbil"
-                    sizes="(min-width: 1024px) 50vw, 100vw"
-                    class="w-full h-full object-cover object-[70%_30%] opacity-50" />
-                <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[1]"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-delos-dark/40 to-transparent z-[1]"></div>
-                <div class="absolute bottom-6 left-7 z-[2]">
-                    <p class="text-overline-sm text-delos-gold mb-1">Established 2020</p>
-                    <p class="font-serif text-delos-cream/60 text-sm">Erbil, Kurdistan Region</p>
-                </div>
-            </div>
-            <div data-motion="slide-right" class="about-text-col border-l-2 border-delos-gold pl-8">
+        <div class="grid lg:grid-cols-12 gap-10 lg:gap-20 items-start">
+            {{-- Left: Overline + Heading --}}
+            <div data-motion="slide-left" class="lg:col-span-5">
                 <div data-motion-line class="w-16 h-px bg-delos-gold mb-6"></div>
-                <p class="text-overline text-delos-gold mb-5">About Delos</p>
-                <h2 class="text-heading-2 text-delos-dark mb-6">Where Italian craft<br>meets Iraqi homes.</h2>
-                <p class="scroll-text text-body text-delos-muted mb-6">Delos International is a distinguished company based in Iraq, dedicated to bringing the finest in Italian luxury design to homes across the region. Representing an exclusive portfolio of premium Italian brands, Delos curates a complete lifestyle experience defined by elegance, craftsmanship, and precision.</p>
-                <blockquote class="pull-quote mb-8">The name "Delos" draws inspiration from the Greek island — a historic symbol of civilization and wisdom. Our lion emblem represents strength, protection, and trust.</blockquote>
+                <p class="text-overline text-delos-gold mb-5">About Delos · Est. 2020</p>
+                <h2 class="text-heading-2 text-delos-dark leading-tight">
+                    Where Italian craft<br>
+                    meets <em class="text-delos-gold not-italic">Iraqi homes.</em>
+                </h2>
+            </div>
+            {{-- Right: Body + Quote + CTA --}}
+            <div data-motion="slide-right" class="lg:col-span-7 lg:border-l lg:border-delos-gold/25 lg:pl-12">
+                <p class="scroll-text text-body text-delos-muted mb-8">Delos International is a distinguished company based in Iraq, dedicated to bringing the finest in Italian luxury design to homes across the region. Representing an exclusive portfolio of premium Italian brands, Delos curates a complete lifestyle experience defined by elegance, craftsmanship, and precision.</p>
+                <blockquote class="pull-quote mb-10">The name "Delos" draws inspiration from the Greek island — a historic symbol of civilization and wisdom. Our lion emblem represents strength, protection, and trust.</blockquote>
                 <a href="{{ route('about') }}" class="btn-ripple inline-flex items-center gap-2 text-delos-dark text-btn hover:text-delos-gold transition-colors duration-300 group">
                     Learn More <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
