@@ -61,9 +61,11 @@
                     {{-- Arch image --}}
                     <div class="relative z-[1] w-[300px] sm:w-[400px] lg:w-[480px] xl:w-[540px] overflow-hidden rounded-t-full shadow-2xl">
                         <div class="aspect-[3/4] overflow-hidden">
-                            <img src="{{ asset('images/' . $slide['img']) }}" alt="{{ $slide['label'] }}"
-                                 class="w-full h-full object-cover"
-                                 {{ $i === 0 ? 'fetchpriority=high' : 'loading=lazy' }}>
+                            <x-responsive-image :src="$slide['img']" :alt="$slide['label']"
+                                sizes="(min-width: 1280px) 540px, (min-width: 1024px) 480px, (min-width: 640px) 400px, 300px"
+                                class="w-full h-full object-cover"
+                                :loading="$i === 0 ? 'eager' : 'lazy'"
+                                :fetchpriority="$i === 0 ? 'high' : null" />
                         </div>
                     </div>
                 </div>
@@ -122,9 +124,11 @@
                 <a href="#service-{{ $s['num'] }}"
                    data-motion="{{ $i % 2 === 0 ? 'slide-left' : 'slide-right' }}"
                    class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                    <img src="{{ asset('images/' . $s['img']) }}" alt="{{ $s['name'] }}"
-                         class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700"
-                         {{ $i === 0 ? 'fetchpriority=high' : 'loading=lazy' }}>
+                    <x-responsive-image :src="$s['img']" :alt="$s['name']"
+                        sizes="(min-width: 768px) 50vw, 100vw"
+                        class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700"
+                        :loading="$i === 0 ? 'eager' : 'lazy'"
+                        :fetchpriority="$i === 0 ? 'high' : null" />
                     <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
                     <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">{{ $s['num'] }}</span>
                     <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
@@ -202,8 +206,9 @@
 
                     {{-- Image --}}
                     <div class="relative aspect-[4/3] overflow-hidden bg-delos-dark">
-                        <img src="{{ asset('images/' . $s['img']) }}" alt="{{ $s['name'] }}"
-                             class="w-full h-full object-cover opacity-70 hover:scale-105 transition-transform duration-700">
+                        <x-responsive-image :src="$s['img']" :alt="$s['name']"
+                            sizes="(min-width: 1024px) 50vw, 100vw"
+                            class="w-full h-full object-cover opacity-70 hover:scale-105 transition-transform duration-700" />
                         <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/40 to-transparent"></div>
                         <div class="absolute top-6 left-6">
                             <span class="text-delos-gold text-[11px] tracking-[0.3em] uppercase font-medium bg-delos-dark/70 backdrop-blur-sm px-3 py-1.5" style="font-family: 'Inter', sans-serif;">

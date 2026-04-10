@@ -36,18 +36,21 @@
 
                     {{-- Accent image — desktop only, creates mosaic rhythm --}}
                     <div data-motion="fade-up" class="hidden lg:block relative overflow-hidden lg:h-[260px] mt-auto">
-                        <img src="{{ asset('images/delos-erbil-showroom-6.jpg') }}" alt="Delos Erbil Showroom"
-                             class="w-full h-full object-cover" loading="lazy">
+                        <x-responsive-image src="delos-erbil-showroom-6.jpg" alt="Delos Erbil Showroom"
+                            sizes="(min-width: 1024px) 42vw, 100vw"
+                            class="w-full h-full object-cover" />
                     </div>
                 </div>
 
                 {{-- Right: main image, taller --}}
                 <div class="lg:col-span-7 order-1 lg:order-none">
                     <div data-motion="fade" class="relative overflow-hidden h-[55vh] lg:h-[75vh]">
-                        <img src="{{ asset('images/about-hero.jpg') }}" alt="Delos International Showroom"
-                             data-hero-parallax
-                             class="w-full h-full object-cover hero-parallax-img"
-                             fetchpriority="high">
+                        <x-responsive-image src="about-hero.jpg" alt="Delos International Showroom"
+                            sizes="(min-width: 1024px) 58vw, 100vw"
+                            loading="eager"
+                            fetchpriority="high"
+                            data-hero-parallax
+                            class="w-full h-full object-cover hero-parallax-img" />
                     </div>
                 </div>
 
@@ -85,8 +88,9 @@
 
             {{-- Image --}}
             <div data-motion="slide-left" class="relative aspect-[3/4] overflow-hidden bg-delos-dark">
-                <img src="{{ asset('images/about-story.jpg') }}" alt="Delos International Showroom"
-                     class="w-full h-full object-cover opacity-80">
+                <x-responsive-image src="about-story.jpg" alt="Delos International Showroom"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    class="w-full h-full object-cover opacity-80" />
                 {{-- Accent badge --}}
                 <div class="absolute bottom-8 right-8 bg-delos-dark/90 backdrop-blur-sm px-6 py-4 border border-delos-gold/20">
                     <p class="font-serif text-delos-gold text-4xl font-light leading-none mb-1">2020</p>
@@ -199,8 +203,9 @@
 
             {{-- Image --}}
             <div data-motion="slide-right" class="relative aspect-[4/3] overflow-hidden bg-delos-dark">
-                <img src="{{ asset('images/about-philosophy.jpg') }}" alt="Italian Design Philosophy"
-                     class="w-full h-full object-cover opacity-75">
+                <x-responsive-image src="about-philosophy.jpg" alt="Italian Design Philosophy"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    class="w-full h-full object-cover opacity-75" />
                 <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/30 to-transparent"></div>
             </div>
         </div>
@@ -213,8 +218,9 @@
 ============================================================ --}}
 <section class="relative py-24 lg:py-40 overflow-hidden bg-delos-dark">
     <div class="absolute inset-0">
-        <img src="{{ asset('images/italian-materials.jpg') }}" alt="Italian Materials"
-             class="w-full h-full object-cover opacity-25">
+        <x-responsive-image src="italian-materials.jpg" alt="Italian Materials"
+            sizes="100vw"
+            class="w-full h-full object-cover opacity-25" />
         <div class="absolute inset-0 bg-gradient-to-r from-delos-dark via-delos-dark/70 to-transparent"></div>
     </div>
     <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">

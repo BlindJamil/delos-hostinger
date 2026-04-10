@@ -7,9 +7,12 @@
 
 {{-- Hero Image --}}
 <section class="relative h-[45vh] lg:h-[50vh] overflow-hidden">
-    <img src="{{ asset('images/collection-vittoria.jpg') }}"
-         alt="Delos luxury Italian interior design"
-         class="w-full h-full object-cover" fetchpriority="high">
+    <x-responsive-image src="collection-vittoria.jpg"
+        alt="Delos luxury Italian interior design"
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="w-full h-full object-cover" />
 </section>
 
 {{-- Page Title --}}

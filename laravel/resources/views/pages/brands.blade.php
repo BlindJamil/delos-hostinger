@@ -44,9 +44,11 @@
                 <div class="brand-card card-tilt {{ $i === 0 ? 'is-featured' : '' }}" data-brand-index="{{ $i }}">
                     <div class="brand-card-inner">
                         <div class="brand-card-image">
-                            <img src="{{ asset('images/' . $b['img']) }}" alt="{{ $b['name'] }}"
-                                 class="w-full h-full object-cover"
-                                 {{ $i === 0 ? 'fetchpriority=high' : 'loading=lazy' }}>
+                            <x-responsive-image :src="$b['img']" :alt="$b['name']"
+                                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                                class="w-full h-full object-cover"
+                                :loading="$i === 0 ? 'eager' : 'lazy'"
+                                :fetchpriority="$i === 0 ? 'high' : null" />
                         </div>
                         <div class="brand-card-info">
                             <div class="flex items-center justify-between gap-3">
@@ -80,8 +82,9 @@
                 </p>
             </div>
             <div data-motion="scale-in" class="relative aspect-square overflow-hidden bg-delos-dark">
-                <img src="{{ asset('images/italian-materials.jpg') }}" alt="Italian Craftsmanship"
-                     class="w-full h-full object-cover opacity-60">
+                <x-responsive-image src="italian-materials.jpg" alt="Italian Craftsmanship"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    class="w-full h-full object-cover opacity-60" />
                 <div class="absolute inset-0 flex items-center justify-center">
                     <p class="font-serif text-delos-cream text-2xl lg:text-3xl font-light italic text-center px-8">
                         "Where Italian<br>craft meets<br>Iraqi homes."
@@ -151,8 +154,9 @@
                 <div data-motion="fade-up" class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center {{ $i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : '' }}">
                     {{-- Image --}}
                     <div class="relative aspect-[4/3] overflow-hidden bg-delos-dark">
-                        <img src="{{ asset('images/' . $brand['img']) }}" alt="{{ $brand['name'] }}"
-                             class="w-full h-full object-cover opacity-65 hover:scale-105 transition-transform duration-700">
+                        <x-responsive-image :src="$brand['img']" :alt="$brand['name']"
+                            sizes="(min-width: 1024px) 50vw, 100vw"
+                            class="w-full h-full object-cover opacity-65 hover:scale-105 transition-transform duration-700" />
                         <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/60 to-transparent"></div>
                         <div class="absolute bottom-6 left-6">
                             <p class="font-serif text-delos-cream text-4xl font-semibold tracking-widest">{{ $brand['name'] }}</p>

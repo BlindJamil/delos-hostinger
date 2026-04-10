@@ -7,8 +7,11 @@
 
 {{-- Hero Image --}}
 <section class="relative h-[55vh] lg:h-[60vh] overflow-hidden">
-    <img src="{{ asset('images/delos-wall-branding.jpg') }}" alt="Delos International Wall"
-         class="w-full h-full object-cover" fetchpriority="high">
+    <x-responsive-image src="delos-wall-branding.jpg" alt="Delos International Wall"
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="w-full h-full object-cover" />
 </section>
 
 {{-- Page Title --}}

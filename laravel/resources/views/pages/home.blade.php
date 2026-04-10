@@ -35,10 +35,13 @@
             ];
         @endphp
         @foreach($heroSlides as $i => $slide)
-            <img src="{{ asset('images/' . $slide['img']) }}"
-                 alt="{{ $slide['alt'] }}"
-                 class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
-                 {{ $i === 0 ? 'fetchpriority=high' : 'loading=lazy' }}>
+            <x-responsive-image
+                :src="$slide['img']"
+                :alt="$slide['alt']"
+                sizes="100vw"
+                class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
+                :loading="$i === 0 ? 'eager' : 'lazy'"
+                :fetchpriority="$i === 0 ? 'high' : null" />
         @endforeach
     </div>
 
@@ -67,8 +70,11 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
             <div data-motion="slide-left" class="relative aspect-[4/3] overflow-hidden bg-delos-dark rounded-sm">
-                <img src="{{ asset('images/delos-building.jpg') }}" alt="Delos International Building — Erbil"
-                     class="w-full h-full object-cover object-[70%_30%] opacity-50" loading="lazy">
+                <x-responsive-image
+                    src="delos-building.jpg"
+                    alt="Delos International Building — Erbil"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    class="w-full h-full object-cover object-[70%_30%] opacity-50" />
                 <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[1]"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-delos-dark/40 to-transparent z-[1]"></div>
                 <div class="absolute bottom-6 left-7 z-[2]">
@@ -133,7 +139,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <a href="{{ route('projects') }}" data-motion="slide-left" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                <img src="{{ asset('images/collection-lube-classic.jpg') }}" alt="LUBE Agnese Style Classic Kitchen — Italian Luxury" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <x-responsive-image src="collection-lube-classic.jpg" alt="LUBE Agnese Style Classic Kitchen — Italian Luxury" sizes="(min-width: 768px) 50vw, 100vw" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
                 <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">01</span>
                 <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
@@ -144,7 +150,7 @@
                 <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
             </a>
             <a href="{{ route('projects') }}" data-motion="slide-right" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                <img src="{{ asset('images/collection-lube-modern.jpg') }}" alt="LUBE Clover Modern Kitchen — Contemporary Italian Design" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <x-responsive-image src="collection-lube-modern.jpg" alt="LUBE Clover Modern Kitchen — Contemporary Italian Design" sizes="(min-width: 768px) 50vw, 100vw" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
                 <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">02</span>
                 <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
@@ -155,7 +161,7 @@
                 <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
             </a>
             <a href="{{ route('projects') }}" data-motion="slide-left" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                <img src="{{ asset('images/collection-vittoria.jpg') }}" alt="Vittoria Frigerio Luxury Living Room — Italian Elegance" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <x-responsive-image src="collection-vittoria.jpg" alt="Vittoria Frigerio Luxury Living Room — Italian Elegance" sizes="(min-width: 768px) 50vw, 100vw" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
                 <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">03</span>
                 <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
@@ -166,7 +172,7 @@
                 <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
             </a>
             <a href="{{ route('projects') }}" data-motion="slide-up" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                <img src="{{ asset('images/collection-cantori.jpg') }}" alt="CANTORI Outdoor Dining — Mediterranean Poolside Living" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" loading="lazy">
+                <x-responsive-image src="collection-cantori.jpg" alt="CANTORI Outdoor Dining — Mediterranean Poolside Living" sizes="(min-width: 768px) 50vw, 100vw" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
                 <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">04</span>
                 <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
@@ -200,7 +206,7 @@
         @endphp
         @foreach($employees as $emp)
             <div data-motion="fade-up" class="employee-slide employee-card card-tilt group relative w-[350px] lg:w-[420px] aspect-[3/4] overflow-hidden bg-delos-dark-2 flex-shrink-0">
-                <img src="{{ asset('images/' . $emp['img']) }}" alt="{{ $emp['name'] }} — {{ $emp['role'] }}" class="absolute inset-0 w-full h-full object-cover opacity-60" loading="lazy">
+                <x-responsive-image :src="$emp['img']" :alt="$emp['name'] . ' — ' . $emp['role']" sizes="(min-width: 1024px) 420px, 350px" class="absolute inset-0 w-full h-full object-cover opacity-60" />
                 <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3]">
                     <p class="text-overline-sm text-delos-gold mb-3">{{ $emp['branch'] }}</p>
                     <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $emp['name'] }}</h3>
@@ -278,7 +284,7 @@
 {{-- 7. CTA --}}
 <section id="cta-section" class="relative section-padding overflow-hidden bg-delos-dark">
     <div class="absolute inset-0">
-        <img src="{{ asset('images/delos-erbil-showroom-5.jpg') }}" alt="" class="w-full h-full object-cover opacity-22" loading="lazy">
+        <x-responsive-image src="delos-erbil-showroom-5.jpg" alt="" sizes="100vw" class="w-full h-full object-cover opacity-22" />
     </div>
     <div data-motion-group="cta" class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
         <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mb-8"></div>

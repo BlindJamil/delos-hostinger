@@ -3,9 +3,10 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
+        "build": "npm run images && vite build",
         "check:assets": "node scripts/check-assets.mjs",
         "dev": "vite",
+        "images": "node scripts/generate-responsive-images.mjs",
         "lint": "eslint resources/js scripts tests/e2e playwright.config.js --max-warnings=0",
         "sync:hostinger": "node scripts/sync-hostinger.mjs",
         "test:e2e": "playwright test",
@@ -21,6 +22,7 @@
         "eslint": "^9.39.4",
         "globals": "^17.4.0",
         "laravel-vite-plugin": "^3.0.0",
+        "sharp": "^0.33.5",
         "tailwindcss": "^4.2.2",
         "vite": "^8.0.0"
     },

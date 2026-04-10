@@ -20,10 +20,14 @@
     {{-- Full-bleed project image --}}
     <div id="project-slideshow" class="absolute inset-0">
         @foreach($heroProjects as $i => $p)
-            <img src="{{ asset('images/' . $p['img']) }}" alt="{{ $p['title'] }}"
-                 data-meta="{{ $p['brand'] }} · {{ $p['city'] }} · {{ $p['year'] }}"
-                 class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
-                 {{ $i === 0 ? 'fetchpriority=high' : 'loading=lazy' }}>
+            <x-responsive-image
+                :src="$p['img']"
+                :alt="$p['title']"
+                sizes="100vw"
+                class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
+                :loading="$i === 0 ? 'eager' : 'lazy'"
+                :fetchpriority="$i === 0 ? 'high' : null"
+                data-meta="{{ $p['brand'] }} · {{ $p['city'] }} · {{ $p['year'] }}" />
         @endforeach
     </div>
 
@@ -94,8 +98,9 @@
                 <div data-motion="fade-up" class="project-item group relative aspect-[4/3] overflow-hidden bg-delos-dark cursor-pointer"
                      data-type="{{ $project['type'] }}"
                      style="--motion-delay: {{ ($i % 3) * 100 }}ms;">
-                    <img src="{{ asset('images/' . $project['img']) }}" alt="{{ $project['title'] }}"
-                         class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700">
+                    <x-responsive-image :src="$project['img']" :alt="$project['title']"
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700" />
                     <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/20 to-transparent"></div>
 
                     {{-- Default label --}}
