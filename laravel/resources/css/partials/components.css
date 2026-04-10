@@ -374,8 +374,8 @@ html.js .stat-suffix.is-visible {
 
 .brand-gallery-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
 }
 
 @media (min-width: 768px) {
@@ -426,12 +426,16 @@ html.js .stat-suffix.is-visible {
 }
 
 .brand-card-image {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 2;
     overflow: hidden;
     flex: 1;
 }
 
 @media (min-width: 768px) {
+    .brand-card-image {
+        aspect-ratio: 4 / 3;
+    }
+
     .brand-gallery-grid .brand-card:nth-child(2) .brand-card-image {
         aspect-ratio: auto;
     }
@@ -447,8 +451,14 @@ html.js .stat-suffix.is-visible {
 }
 
 .brand-card-info {
-    padding: 0.75rem 1rem;
+    padding: 1.25rem 1.5rem;
     flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+    .brand-card-info {
+        padding: 0.75rem 1rem;
+    }
 }
 
 .pull-quote {
