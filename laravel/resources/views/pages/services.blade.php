@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Services — Delos International Italian Luxury Solutions Iraq')
-@section('description', 'Delos International offers luxury Italian kitchens, living room furniture, bedrooms, wardrobes, flooring systems, and complete turnkey project execution across Iraq.')
+@section('description', 'Delos International offers Italian kitchens, dressing rooms, laundry spaces, furniture, parquet flooring, and bespoke projects — luxury interior solutions delivered across Iraq.')
 
 @section('content')
 
@@ -42,12 +42,12 @@
         {{-- Arch carousel --}}
         @php
             $archSlides = [
-                ['img' => 'collection-lube-classic.jpg', 'label' => 'LUBE · Luxury Kitchens'],
-                ['img' => 'cantori-1.jpg',               'label' => 'CANTORI · Living Room'],
-                ['img' => 'collection-vittoria.jpg',     'label' => 'Vittoria Frigerio · Bedroom'],
-                ['img' => 'delos-erbil-showroom-3.jpg',  'label' => 'LUBE · Wardrobes'],
-                ['img' => 'italian-materials.jpg',       'label' => 'SKEMA · Flooring & Walls'],
-                ['img' => 'delos-erbil-showroom-6.jpg',  'label' => 'Delos · Turnkey Projects'],
+                ['img' => 'collection-lube-classic.jpg', 'label' => 'LUBE · Italian Kitchens'],
+                ['img' => 'delos-erbil-showroom-3.jpg',  'label' => 'LUBE · Dressing Rooms'],
+                ['img' => 'delos-erbil-showroom-2.jpg',  'label' => 'Delos · Laundry Rooms'],
+                ['img' => 'cantori-1.jpg',               'label' => 'CANTORI · Italian Furniture'],
+                ['img' => 'italian-materials.jpg',       'label' => 'SKEMA · Italian Parquet'],
+                ['img' => 'delos-erbil-showroom-6.jpg',  'label' => 'Delos · Bespoke Projects'],
             ];
         @endphp
 
@@ -85,7 +85,7 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion-group="services-info" class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 lg:gap-20 text-center sm:text-left">
             <p data-motion="slide-left" class="text-delos-muted text-sm leading-relaxed max-w-xs" style="font-family: 'Inter', sans-serif;">
-                Kitchens, living, bedrooms, wardrobes, flooring, and complete turnkey projects — under one roof.
+                Kitchens, dressing rooms, laundry, furniture, parquet, and bespoke projects — under one roof.
             </p>
             <div data-motion="fade-up" class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-delos-gold"></span>
@@ -110,12 +110,12 @@
 
         @php
             $heroServices = [
-                ['num' => '01', 'name' => 'Luxury Kitchens',    'brand' => 'LUBE Kitchens',      'desc' => 'Precision-engineered Italian kitchens — from classic to ultra-contemporary, designed around your lifestyle.',  'img' => 'lube-kitchen-3.jpg'],
-                ['num' => '02', 'name' => 'Living Room',        'brand' => 'Frigerio · CANTORI', 'desc' => 'Sofas, armchairs, and statement pieces combining sculptural beauty with enduring Italian comfort.',             'img' => 'cantori-1.jpg'],
-                ['num' => '03', 'name' => 'Bedroom',            'brand' => 'Vittoria Frigerio',  'desc' => 'Complete Italian bedroom collections — beds, headboards, and dressers designed as a sanctuary of calm.',        'img' => 'collection-vittoria.jpg'],
-                ['num' => '04', 'name' => 'Wardrobes',          'brand' => 'LUBE · Frigerio',    'desc' => 'Precision-designed dressing systems with integrated lighting, custom fittings, and flawless hardware.',         'img' => 'delos-erbil-showroom-3.jpg'],
-                ['num' => '05', 'name' => 'Flooring & Walls',   'brand' => 'SKEMA',              'desc' => 'Premium Italian flooring and wall systems — from rich natural wood to contemporary engineered surfaces.',      'img' => 'italian-materials.jpg'],
-                ['num' => '06', 'name' => 'Turnkey Projects',   'brand' => 'All Delos Partners', 'desc' => 'From first consultation to final installation — Delos manages every element with Italian-grade precision.',     'img' => 'delos-erbil-showroom-6.jpg'],
+                ['num' => '01', 'name' => 'Italian Kitchens',  'brand' => 'LUBE Kitchens',      'desc' => 'Precision-engineered Italian kitchens — from timeless classic to bold contemporary, designed around your lifestyle.',       'img' => 'lube-kitchen-3.jpg'],
+                ['num' => '02', 'name' => 'Dressing Rooms',    'brand' => 'LUBE · Frigerio',    'desc' => 'Custom walk-in dressing rooms with integrated lighting, premium fittings, and flawless Italian hardware.',                   'img' => 'delos-showroom-card.jpg'],
+                ['num' => '03', 'name' => 'Laundry Rooms',     'brand' => 'Delos Custom',       'desc' => 'Italian-crafted laundry spaces where premium materials meet daily utility — organized, elegant, effortless.',              'img' => 'delos-erbil-showroom-4.jpg'],
+                ['num' => '04', 'name' => 'Italian Furniture', 'brand' => 'Frigerio · CANTORI', 'desc' => 'Sofas, dining suites, bedroom collections, and statement pieces — sculptural beauty with enduring Italian comfort.',         'img' => 'collection-cantori.jpg'],
+                ['num' => '05', 'name' => 'Italian Parquet',   'brand' => 'SKEMA',              'desc' => 'Premium Italian parquet and wooden flooring — rich natural grain, engineered for a lifetime of quiet luxury.',             'img' => 'italian-materials.jpg'],
+                ['num' => '06', 'name' => 'Bespoke Projects',  'brand' => 'All Delos Partners', 'desc' => 'From single rooms to complete transformations — Delos manages every detail with Italian-grade precision, end to end.',     'img' => 'delos-erbil-showroom-5.jpg'],
             ];
         @endphp
 
@@ -151,48 +151,48 @@
             $services = [
                 [
                     'num'   => '01',
-                    'name'  => 'Luxury Kitchens',
-                    'desc'  => 'Your kitchen is the heart of your home. We bring Italy\'s finest kitchen manufacturers directly to your door — precision-engineered, beautifully finished, and designed around your lifestyle. From classic to ultra-contemporary, every Delos kitchen is a masterpiece of Italian craft.',
+                    'name'  => 'Italian Kitchens',
+                    'desc'  => 'Your kitchen is the heart of your home. We bring Italy\'s finest kitchen manufacturers directly to your door — precision-engineered, beautifully finished, and designed around your lifestyle. From timeless classic to ultra-contemporary, every Delos kitchen is a masterpiece of Italian craft.',
                     'feat'  => ['Custom Italian cabinetry', 'Premium hardware and finishes', 'Integrated appliance solutions', 'Ergonomic spatial design', '3D planning service'],
                     'brand' => 'LUBE Kitchens',
                     'img'   => 'lube-kitchen-1.jpeg',
                 ],
                 [
                     'num'   => '02',
-                    'name'  => 'Living Room',
-                    'desc'  => 'Create a living room that reflects who you are. Our Italian living collections offer sofas, armchairs, coffee tables, and statement pieces that combine sculptural beauty with enduring comfort — crafted to elevate your most-lived-in space.',
-                    'feat'  => ['Italian sofas and sectionals', 'Coffee and side tables', 'Statement accent chairs', 'TV unit systems', 'Complete room styling'],
-                    'brand' => 'Frigerio · CANTORI',
-                    'img'   => 'frigerio-living.jpg',
+                    'name'  => 'Dressing Rooms',
+                    'desc'  => 'Italian dressing rooms are an art form. Our walk-in wardrobe systems are precision-designed with integrated lighting, custom interior organization, and flawless hardware — transforming your daily routine into an experience of quiet luxury.',
+                    'feat'  => ['Walk-in wardrobe design', 'Hinged and sliding door systems', 'Custom interior organization', 'Integrated LED lighting', 'Mirror and glass options'],
+                    'brand' => 'LUBE · Frigerio',
+                    'img'   => 'delos-erbil-showroom-3.jpg',
                 ],
                 [
                     'num'   => '03',
-                    'name'  => 'Bedroom',
-                    'desc'  => 'Your bedroom should be a sanctuary. Delos delivers complete Italian bedroom collections — from beds and headboards to wardrobes and bedside tables — where every piece is designed to create a space of calm, beauty, and rest.',
-                    'feat'  => ['Italian bed frames and headboards', 'Premium mattress bases', 'Bedside tables and dressers', 'Full bedroom coordination', 'Custom finish options'],
-                    'brand' => 'Vittoria Frigerio · Frigerio',
-                    'img'   => 'collection-vittoria.jpg',
+                    'name'  => 'Laundry Rooms',
+                    'desc'  => 'A well-designed laundry room should feel as refined as the rest of your home. Delos brings Italian-made cabinetry, premium finishes, and smart storage solutions to create laundry spaces that are both beautifully organized and effortlessly practical.',
+                    'feat'  => ['Custom cabinetry and storage', 'Integrated appliance housing', 'Premium worktops and sinks', 'Space-efficient layouts', 'Matching finishes throughout your home'],
+                    'brand' => 'Delos Custom',
+                    'img'   => 'delos-erbil-showroom-1.jpg',
                 ],
                 [
                     'num'   => '04',
-                    'name'  => 'Wardrobes & Dressing Systems',
-                    'desc'  => 'Italian wardrobes are an art form. Our dressing systems are precision-designed with integrated lighting, custom interior fittings, and flawless hardware — transforming your storage into an experience of everyday luxury.',
-                    'feat'  => ['Walk-in wardrobe design', 'Hinged and sliding door systems', 'Custom interior organization', 'Integrated LED lighting', 'Mirror and glass options'],
-                    'brand' => 'LUBE · Frigerio',
-                    'img'   => 'delos-showroom-card.jpg',
+                    'name'  => 'Italian Furniture',
+                    'desc'  => 'From the living room to the bedroom, Delos delivers complete Italian furniture collections — sofas, dining suites, beds, and statement pieces that combine sculptural beauty with enduring comfort. Every piece is crafted by Italy\'s most celebrated furniture houses.',
+                    'feat'  => ['Italian sofas and sectionals', 'Dining and coffee tables', 'Bedroom collections', 'Accent and statement pieces', 'Complete room styling'],
+                    'brand' => 'Frigerio · CANTORI',
+                    'img'   => 'frigerio-sofa-1.webp',
                 ],
                 [
                     'num'   => '05',
-                    'name'  => 'Flooring & Wall Systems',
-                    'desc'  => 'The foundation of great design. SKEMA\'s premium Italian flooring and wall finishing systems provide the perfect base for your Delos interior — from rich natural wood to contemporary engineered surfaces.',
-                    'feat'  => ['Premium Italian wood flooring', 'Engineered hardwood systems', 'Wall panelling and cladding', 'Technical flooring solutions', 'Full installation service'],
+                    'name'  => 'Italian Parquet',
+                    'desc'  => 'Flooring is the foundation of great design. SKEMA\'s premium Italian parquet and wooden flooring systems provide the perfect base for your Delos interior — rich natural wood grain, advanced engineering, and finishes that age beautifully for generations.',
+                    'feat'  => ['Engineered Italian parquet', 'Natural hardwood options', 'Wide-plank and herringbone patterns', 'Prefinished and site-finished', 'Full installation service'],
                     'brand' => 'SKEMA',
-                    'img'   => 'italian-materials.jpg',
+                    'img'   => 'about-philosophy.jpg',
                 ],
                 [
                     'num'   => '06',
-                    'name'  => 'Turnkey Projects',
-                    'desc'  => 'Our most comprehensive service. From your first consultation to the final delivery and installation — Delos manages every element of your project with the same precision and care as Italy\'s finest interior studios.',
+                    'name'  => 'Bespoke Projects',
+                    'desc'  => 'Our most comprehensive service. Whether you need a single bespoke piece or a complete home transformation, Delos manages every element of your project — consultation, 3D concept design, Italian sourcing, logistics, and flawless on-site installation — with the same precision as Italy\'s finest interior studios.',
                     'feat'  => ['On-site measurement and consultation', 'Personalized 3D design concepts', 'Italian sourcing and logistics', 'Professional installation team', 'Project management end-to-end'],
                     'brand' => 'All Delos Partners',
                     'img'   => 'delos-sulaymaniyah-showroom.jpg',
