@@ -53,10 +53,10 @@
                         <div class="brand-card-info">
                             <div class="flex items-center justify-between gap-3">
                                 <div class="min-w-0">
-                                    <h2 class="font-serif text-delos-cream text-2xl md:text-lg lg:text-xl font-light leading-tight truncate">{{ $b['name'] }}</h2>
-                                    <p class="text-delos-cream/40 text-[10px] md:text-[9px] tracking-[0.2em] uppercase mt-1 md:mt-0.5" style="font-family: 'Inter', sans-serif;">{{ $b['category'] }}</p>
+                                    <h2 class="brand-card-name font-serif text-delos-cream text-base md:text-lg lg:text-xl font-light leading-tight truncate">{{ $b['name'] }}</h2>
+                                    <p class="brand-card-category text-delos-cream/40 text-[9px] tracking-[0.2em] uppercase mt-0.5 truncate" style="font-family: 'Inter', sans-serif;">{{ $b['category'] }}</p>
                                 </div>
-                                <span class="text-delos-gold/60 text-[10px] md:text-[9px] tracking-[0.3em] uppercase flex-shrink-0" style="font-family: 'Inter', sans-serif;">{{ $b['since'] }}</span>
+                                <span class="brand-card-since text-delos-gold/60 text-[9px] tracking-[0.3em] uppercase flex-shrink-0" style="font-family: 'Inter', sans-serif;">{{ $b['since'] }}</span>
                             </div>
                         </div>
                     </div>

@@ -374,8 +374,13 @@ html.js .stat-suffix.is-visible {
 
 .brand-gallery-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+/* Mobile 2-1-2: third card becomes the full-width editorial hero */
+.brand-gallery-grid .brand-card:nth-child(3) {
+    grid-column: 1 / -1;
 }
 
 @media (min-width: 768px) {
@@ -426,13 +431,19 @@ html.js .stat-suffix.is-visible {
 }
 
 .brand-card-image {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
     flex: 1;
 }
 
+/* Wide featured middle card gets a cinematic aspect on mobile */
+.brand-gallery-grid .brand-card:nth-child(3) .brand-card-image {
+    aspect-ratio: 16 / 10;
+}
+
 @media (min-width: 768px) {
-    .brand-card-image {
+    /* Revert the featured card to default on desktop, and let card 2 be centerpiece */
+    .brand-gallery-grid .brand-card:nth-child(3) .brand-card-image {
         aspect-ratio: 4 / 3;
     }
 
@@ -451,13 +462,43 @@ html.js .stat-suffix.is-visible {
 }
 
 .brand-card-info {
-    padding: 1.25rem 1.5rem;
+    padding: 0.75rem 0.9rem;
     flex-shrink: 0;
 }
 
+/* Wide mobile hero card gets more generous padding */
+.brand-gallery-grid .brand-card:nth-child(3) .brand-card-info {
+    padding: 1.25rem 1.5rem;
+}
+
+/* Hide the "Est. …" tag on narrow mobile cards — it clips; show on wide hero + desktop */
+.brand-card-since {
+    display: none;
+}
+
+.brand-gallery-grid .brand-card:nth-child(3) .brand-card-since {
+    display: inline;
+}
+
+/* On the wide mobile hero card, bump the brand name for editorial impact */
+@media (max-width: 767px) {
+    .brand-gallery-grid .brand-card:nth-child(3) .brand-card-name {
+        font-size: 1.5rem;
+        line-height: 1.15;
+    }
+    .brand-gallery-grid .brand-card:nth-child(3) .brand-card-category {
+        font-size: 10px;
+    }
+}
+
 @media (min-width: 768px) {
-    .brand-card-info {
+    .brand-card-info,
+    .brand-gallery-grid .brand-card:nth-child(3) .brand-card-info {
         padding: 0.75rem 1rem;
+    }
+
+    .brand-card-since {
+        display: inline;
     }
 }
 
