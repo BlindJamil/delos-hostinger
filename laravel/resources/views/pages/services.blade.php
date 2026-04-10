@@ -44,10 +44,10 @@
             $archSlides = [
                 ['img' => 'collection-lube-classic.jpg', 'label' => 'LUBE · Italian Kitchens'],
                 ['img' => 'delos-erbil-showroom-3.jpg',  'label' => 'LUBE · Dressing Rooms'],
-                ['img' => 'delos-erbil-showroom-2.jpg',  'label' => 'LUBE · Laundry Rooms'],
+                ['img' => 'lube-laundry-zone.jpg',       'label' => 'LUBE · Laundry Rooms'],
                 ['img' => 'cantori-1.jpg',               'label' => 'CANTORI · Italian Furniture'],
                 ['img' => 'italian-materials.jpg',       'label' => 'SKEMA · Italian Parquet'],
-                ['img' => 'about-story.jpg',             'label' => 'Delos · Others'],
+                ['img' => 'lube-project-mauritius.jpg',  'label' => 'LUBE · Others'],
             ];
         @endphp
 
@@ -133,7 +133,7 @@
                     'desc'  => 'A well-designed laundry room should feel as refined as the rest of your home. Delos brings Italian-made cabinetry, premium finishes, and smart storage solutions to create laundry spaces that are both beautifully organized and effortlessly practical.',
                     'feat'  => ['Custom cabinetry and storage', 'Integrated appliance housing', 'Premium worktops and sinks', 'Space-efficient layouts', 'Matching finishes throughout your home'],
                     'brand' => 'LUBE · Delos Custom',
-                    'img'   => 'lube-kitchen-3.jpg',
+                    'img'   => 'lube-laundry-zone.jpg',
                 ],
                 [
                     'num'   => '04',
@@ -157,7 +157,7 @@
                     'desc'  => 'Beyond our core categories, Delos takes on anything you need to complete your space. From single bespoke pieces to complete home transformations, our team manages every element — consultation, 3D concept design, Italian sourcing, logistics, and flawless on-site installation — with the same precision as Italy\'s finest interior studios.',
                     'feat'  => ['On-site measurement and consultation', 'Personalized 3D design concepts', 'Italian sourcing and logistics', 'Professional installation team', 'Project management end-to-end'],
                     'brand' => 'All Delos Partners',
-                    'img'   => 'about-story.jpg',
+                    'img'   => 'lube-project-mauritius.jpg',
                 ],
             ];
         @endphp
