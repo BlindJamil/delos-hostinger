@@ -10,8 +10,8 @@
     @php
         $showcaseBrands = [
             ['name' => 'LUBE',              'category' => 'Kitchen Excellence',    'since' => 'Est. 1967', 'img' => 'collection-lube-classic.jpg'],
-            ['name' => 'Frigerio',           'category' => 'Classic Furniture',     'since' => 'Est. 1955', 'img' => 'frigerio-sofa-3.webp'],
             ['name' => 'Vittoria Frigerio',  'category' => 'Heritage Luxury',       'since' => 'Heritage',  'img' => 'collection-vittoria.jpg'],
+            ['name' => 'Frigerio',           'category' => 'Classic Furniture',     'since' => 'Est. 1955', 'img' => 'frigerio-sofa-1.webp'],
             ['name' => 'CANTORI',            'category' => 'Artisan Creations',     'since' => 'Est. 1948', 'img' => 'cantori-2.jpg'],
             ['name' => 'SKEMA',              'category' => 'Premium Flooring',      'since' => 'Premium',   'img' => 'italian-materials.jpg'],
         ];
@@ -41,7 +41,7 @@
         {{-- Brand Grid --}}
         <div id="brand-gallery-grid" class="brand-gallery-grid">
             @foreach($showcaseBrands as $i => $b)
-                <div class="brand-card card-tilt {{ $i === 0 ? 'is-featured' : '' }}" data-brand-index="{{ $i }}">
+                <div class="brand-card card-tilt" data-brand-index="{{ $i }}">
                     <div class="brand-card-inner">
                         <div class="brand-card-image">
                             <x-responsive-image :src="$b['img']" :alt="$b['name']"

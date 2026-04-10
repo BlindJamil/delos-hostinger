@@ -482,7 +482,7 @@ function initBrandShowcase(context) {
     }
 
     const total = cards.length;
-    let current = 0;
+    let current = total - 1;
     let timer = null;
 
     const entranceFrom = [
