@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Services — Delos International Italian Luxury Solutions Iraq')
-@section('description', 'Delos International offers Italian kitchens, dressing rooms, laundry spaces, furniture, parquet flooring, and bespoke projects — luxury interior solutions delivered across Iraq.')
+@section('description', 'Delos International offers Italian kitchens, dressing rooms, laundry spaces, furniture, parquet flooring, and complete custom interior solutions delivered across Iraq.')
 
 @section('content')
 
@@ -42,12 +42,12 @@
         {{-- Arch carousel --}}
         @php
             $archSlides = [
-                ['img' => 'collection-lube-classic.jpg', 'label' => 'LUBE · Italian Kitchens'],
-                ['img' => 'dressing-room-luxury.jpg',    'label' => 'LUBE · Dressing Rooms'],
-                ['img' => 'laundry-room-luxury.jpg',     'label' => 'Delos · Laundry Rooms'],
-                ['img' => 'cantori-1.jpg',               'label' => 'CANTORI · Italian Furniture'],
-                ['img' => 'parquet-herringbone.jpg',     'label' => 'SKEMA · Italian Parquet'],
-                ['img' => 'delos-erbil-showroom-6.jpg',  'label' => 'Delos · Bespoke Projects'],
+                ['img' => 'collection-lube-classic.jpg',  'label' => 'LUBE · Italian Kitchens'],
+                ['img' => 'dressing-room-luxury.jpg',     'label' => 'LUBE · Dressing Rooms'],
+                ['img' => 'laundry-room-luxury.jpg',      'label' => 'Delos · Laundry Rooms'],
+                ['img' => 'italian-furniture-luxury.jpg', 'label' => 'Frigerio · Italian Furniture'],
+                ['img' => 'parquet-herringbone.jpg',      'label' => 'SKEMA · Italian Parquet'],
+                ['img' => 'villa-transformation.jpg',     'label' => 'Delos · Others'],
             ];
         @endphp
 
@@ -85,7 +85,7 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion-group="services-info" class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 lg:gap-20 text-center sm:text-left">
             <p data-motion="slide-left" class="text-delos-muted text-sm leading-relaxed max-w-xs" style="font-family: 'Inter', sans-serif;">
-                Kitchens, dressing rooms, laundry, furniture, parquet, and bespoke projects — under one roof.
+                Kitchens, dressing rooms, laundry, furniture, parquet, and more — under one roof.
             </p>
             <div data-motion="fade-up" class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-delos-gold"></span>
@@ -141,7 +141,7 @@
                     'desc'  => 'From the living room to the bedroom, Delos delivers complete Italian furniture collections — sofas, dining suites, beds, and statement pieces that combine sculptural beauty with enduring comfort. Every piece is crafted by Italy\'s most celebrated furniture houses.',
                     'feat'  => ['Italian sofas and sectionals', 'Dining and coffee tables', 'Bedroom collections', 'Accent and statement pieces', 'Complete room styling'],
                     'brand' => 'Frigerio · CANTORI',
-                    'img'   => 'frigerio-sofa-1.webp',
+                    'img'   => 'italian-furniture-luxury.jpg',
                 ],
                 [
                     'num'   => '05',
@@ -153,11 +153,11 @@
                 ],
                 [
                     'num'   => '06',
-                    'name'  => 'Bespoke Projects',
-                    'desc'  => 'Our most comprehensive service. Whether you need a single bespoke piece or a complete home transformation, Delos manages every element of your project — consultation, 3D concept design, Italian sourcing, logistics, and flawless on-site installation — with the same precision as Italy\'s finest interior studios.',
+                    'name'  => 'Others',
+                    'desc'  => 'Beyond our core categories, Delos takes on anything you need to complete your space. From single bespoke pieces to complete home transformations, our team manages every element — consultation, 3D concept design, Italian sourcing, logistics, and flawless on-site installation — with the same precision as Italy\'s finest interior studios.',
                     'feat'  => ['On-site measurement and consultation', 'Personalized 3D design concepts', 'Italian sourcing and logistics', 'Professional installation team', 'Project management end-to-end'],
                     'brand' => 'All Delos Partners',
-                    'img'   => 'delos-sulaymaniyah-showroom.jpg',
+                    'img'   => 'villa-transformation.jpg',
                 ],
             ];
         @endphp
@@ -170,13 +170,7 @@
                     <div class="relative aspect-[4/3] overflow-hidden bg-delos-dark">
                         <x-responsive-image :src="$s['img']" :alt="$s['name']"
                             sizes="(min-width: 1024px) 50vw, 100vw"
-                            class="w-full h-full object-cover opacity-70 hover:scale-105 transition-transform duration-700" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/40 to-transparent"></div>
-                        <div class="absolute top-6 left-6">
-                            <span class="text-delos-gold text-[11px] tracking-[0.3em] uppercase font-medium bg-delos-dark/70 backdrop-blur-sm px-3 py-1.5" style="font-family: 'Inter', sans-serif;">
-                                {{ $s['brand'] }}
-                            </span>
-                        </div>
+                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                     </div>
 
                     {{-- Text --}}
