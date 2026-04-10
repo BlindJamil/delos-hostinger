@@ -43,10 +43,10 @@
         @php
             $archSlides = [
                 ['img' => 'collection-lube-classic.jpg', 'label' => 'LUBE · Italian Kitchens'],
-                ['img' => 'delos-erbil-showroom-3.jpg',  'label' => 'LUBE · Dressing Rooms'],
-                ['img' => 'delos-erbil-showroom-2.jpg',  'label' => 'Delos · Laundry Rooms'],
+                ['img' => 'dressing-room-luxury.jpg',    'label' => 'LUBE · Dressing Rooms'],
+                ['img' => 'laundry-room-luxury.jpg',     'label' => 'Delos · Laundry Rooms'],
                 ['img' => 'cantori-1.jpg',               'label' => 'CANTORI · Italian Furniture'],
-                ['img' => 'italian-materials.jpg',       'label' => 'SKEMA · Italian Parquet'],
+                ['img' => 'parquet-herringbone.jpg',     'label' => 'SKEMA · Italian Parquet'],
                 ['img' => 'delos-erbil-showroom-6.jpg',  'label' => 'Delos · Bespoke Projects'],
             ];
         @endphp
@@ -111,10 +111,10 @@
         @php
             $heroServices = [
                 ['num' => '01', 'name' => 'Italian Kitchens',  'brand' => 'LUBE Kitchens',      'desc' => 'Precision-engineered Italian kitchens — from timeless classic to bold contemporary, designed around your lifestyle.',       'img' => 'lube-kitchen-3.jpg'],
-                ['num' => '02', 'name' => 'Dressing Rooms',    'brand' => 'LUBE · Frigerio',    'desc' => 'Custom walk-in dressing rooms with integrated lighting, premium fittings, and flawless Italian hardware.',                   'img' => 'delos-showroom-card.jpg'],
-                ['num' => '03', 'name' => 'Laundry Rooms',     'brand' => 'Delos Custom',       'desc' => 'Italian-crafted laundry spaces where premium materials meet daily utility — organized, elegant, effortless.',              'img' => 'delos-erbil-showroom-4.jpg'],
+                ['num' => '02', 'name' => 'Dressing Rooms',    'brand' => 'LUBE · Frigerio',    'desc' => 'Custom walk-in dressing rooms with integrated lighting, premium fittings, and flawless Italian hardware.',                   'img' => 'dressing-room-luxury.jpg'],
+                ['num' => '03', 'name' => 'Laundry Rooms',     'brand' => 'Delos Custom',       'desc' => 'Italian-crafted laundry spaces where premium materials meet daily utility — organized, elegant, effortless.',              'img' => 'laundry-room-luxury.jpg'],
                 ['num' => '04', 'name' => 'Italian Furniture', 'brand' => 'Frigerio · CANTORI', 'desc' => 'Sofas, dining suites, bedroom collections, and statement pieces — sculptural beauty with enduring Italian comfort.',         'img' => 'collection-cantori.jpg'],
-                ['num' => '05', 'name' => 'Italian Parquet',   'brand' => 'SKEMA',              'desc' => 'Premium Italian parquet and wooden flooring — rich natural grain, engineered for a lifetime of quiet luxury.',             'img' => 'italian-materials.jpg'],
+                ['num' => '05', 'name' => 'Italian Parquet',   'brand' => 'SKEMA',              'desc' => 'Premium Italian parquet and wooden flooring — rich natural grain, engineered for a lifetime of quiet luxury.',             'img' => 'parquet-herringbone.jpg'],
                 ['num' => '06', 'name' => 'Bespoke Projects',  'brand' => 'All Delos Partners', 'desc' => 'From single rooms to complete transformations — Delos manages every detail with Italian-grade precision, end to end.',     'img' => 'delos-erbil-showroom-5.jpg'],
             ];
         @endphp
@@ -163,7 +163,7 @@
                     'desc'  => 'Italian dressing rooms are an art form. Our walk-in wardrobe systems are precision-designed with integrated lighting, custom interior organization, and flawless hardware — transforming your daily routine into an experience of quiet luxury.',
                     'feat'  => ['Walk-in wardrobe design', 'Hinged and sliding door systems', 'Custom interior organization', 'Integrated LED lighting', 'Mirror and glass options'],
                     'brand' => 'LUBE · Frigerio',
-                    'img'   => 'delos-erbil-showroom-3.jpg',
+                    'img'   => 'dressing-room-luxury.jpg',
                 ],
                 [
                     'num'   => '03',
@@ -171,7 +171,7 @@
                     'desc'  => 'A well-designed laundry room should feel as refined as the rest of your home. Delos brings Italian-made cabinetry, premium finishes, and smart storage solutions to create laundry spaces that are both beautifully organized and effortlessly practical.',
                     'feat'  => ['Custom cabinetry and storage', 'Integrated appliance housing', 'Premium worktops and sinks', 'Space-efficient layouts', 'Matching finishes throughout your home'],
                     'brand' => 'Delos Custom',
-                    'img'   => 'delos-erbil-showroom-1.jpg',
+                    'img'   => 'laundry-room-luxury.jpg',
                 ],
                 [
                     'num'   => '04',
@@ -187,7 +187,7 @@
                     'desc'  => 'Flooring is the foundation of great design. SKEMA\'s premium Italian parquet and wooden flooring systems provide the perfect base for your Delos interior — rich natural wood grain, advanced engineering, and finishes that age beautifully for generations.',
                     'feat'  => ['Engineered Italian parquet', 'Natural hardwood options', 'Wide-plank and herringbone patterns', 'Prefinished and site-finished', 'Full installation service'],
                     'brand' => 'SKEMA',
-                    'img'   => 'about-philosophy.jpg',
+                    'img'   => 'parquet-modern-interior.jpg',
                 ],
                 [
                     'num'   => '06',
