@@ -11,7 +11,7 @@
         $showcaseBrands = [
             ['name' => 'LUBE',              'category' => 'Kitchen Excellence',    'since' => 'Est. 1967', 'img' => 'collection-lube-classic.jpg'],
             ['name' => 'Vittoria Frigerio',  'category' => 'Heritage Luxury',       'since' => 'Heritage',  'img' => 'collection-vittoria.jpg'],
-            ['name' => 'Frigerio',           'category' => 'Classic Furniture',     'since' => 'Est. 1955', 'img' => 'frigerio-sofa-1.webp'],
+            ['name' => 'Frigerio',           'category' => 'Classic Furniture',     'since' => 'Est. 1955', 'img' => 'frigerio-sofa-3.webp'],
             ['name' => 'CANTORI',            'category' => 'Artisan Creations',     'since' => 'Est. 1948', 'img' => 'cantori-2.jpg'],
             ['name' => 'SKEMA',              'category' => 'Premium Flooring',      'since' => 'Premium',   'img' => 'italian-materials.jpg'],
         ];
