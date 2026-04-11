@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Our Branches — Delos International Showrooms Across Iraq')
-@section('description', 'Visit Delos International showrooms in Erbil, Kirkuk, Sulaymaniyah, and Baghdad. Experience Italian luxury interior design in person.')
+@section('title', __('seo.branches.title'))
+@section('description', __('seo.branches.description'))
 
 @section('content')
 
@@ -20,12 +20,12 @@
     <div data-motion-group="hero" class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
         <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-5">
             <span class="w-8 h-px bg-delos-gold"></span>
-            <span class="text-overline text-delos-gold">Our Presence</span>
+            <span class="text-overline text-delos-gold">{{ __('branches.hero.overline') }}</span>
             <span class="w-8 h-px bg-delos-gold"></span>
         </div>
         <h1 data-motion="fade-up" class="font-serif text-delos-dark text-5xl lg:text-7xl font-light leading-tight">
-            Four cities.<br>
-            <em class="text-delos-gold not-italic">One standard of excellence.</em>
+            {{ __('branches.hero.heading_1') }}<br>
+            <em class="text-delos-gold not-italic">{{ __('branches.hero.heading_accent') }}</em>
         </h1>
     </div>
 </section>
@@ -33,17 +33,8 @@
 {{-- Showrooms Grid --}}
 <section class="section-padding bg-delos-cream">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-
         <div data-motion-group="branches-cards" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-20">
-            @php
-                $branches = [
-                    ['city' => 'Erbil', 'est' => 'Est. 2020', 'address' => 'Gulan Street, Opposite the Chamber of Commerce', 'phone' => '0750 200 1003', 'open' => 'Sat – Thu: 10:00 – 20:00'],
-                    ['city' => 'Kirkuk', 'est' => 'Est. 2021', 'address' => 'Kirkuk Showroom — contact for address', 'phone' => 'Contact us', 'open' => 'Sat – Thu: 10:00 – 20:00'],
-                    ['city' => 'Sulaymaniyah', 'est' => 'Est. 2022', 'address' => 'Sulaymaniyah Showroom — contact for address', 'phone' => 'Contact us', 'open' => 'Sat – Thu: 10:00 – 20:00'],
-                    ['city' => 'Baghdad', 'est' => 'Est. 2024', 'address' => 'Baghdad Showroom — contact for address', 'phone' => 'Contact us', 'open' => 'Sat – Thu: 10:00 – 20:00'],
-                ];
-            @endphp
-            @foreach($branches as $i => $b)
+            @foreach(__('branches.items') as $slug => $b)
                 <div data-motion="fade-up" class="group p-8 lg:p-10 border border-delos-dark/10 hover:border-delos-gold/40 hover:bg-delos-ivory transition-all duration-400">
                     <div class="flex items-start justify-between mb-6">
                         <div>
@@ -74,7 +65,6 @@
                 </div>
             @endforeach
         </div>
-
     </div>
 </section>
 

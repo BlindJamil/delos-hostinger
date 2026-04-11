@@ -11,6 +11,7 @@ import {
 } from './navigation.js';
 import { initMotion } from './motion.js';
 import { initViewportHeight } from './viewport.js';
+import { initLanguagePicker, initLanguageSwitcher } from './language.js';
 
 export function initSite() {
     const context = createSiteContext();
@@ -29,6 +30,8 @@ export function initSite() {
     initPageTransitions(context);
     initProjectFilters();
     initMediaControls(context);
+    initLanguagePicker();
+    initLanguageSwitcher();
 
     initPageLoader(context, () => {
         initInteractiveEffects(context);
