@@ -26,29 +26,6 @@
     --color-delos-muted: #7A6B65;
 }
 
-/*
- * Arabic font stack override. When <html lang="ar"> is set, we swap the font
- * CSS variables to Amiri (display/serif) + Cairo (body/sans). Tailwind's
- * font-sans / font-serif utilities already read from these vars, so every
- * existing class switches automatically.
- */
-:root {
-    --font-sans-delos: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-serif-delos: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-}
-[lang="ar"] {
-    --font-sans-delos: 'Cairo', 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-serif-delos: 'Amiri', 'Cormorant Garamond', Georgia, serif;
-}
-[lang="ar"] body,
-[lang="ar"] .font-sans,
-[lang="ar"] [style*="Inter"] {
-    font-family: var(--font-sans-delos) !important;
-}
-[lang="ar"] .font-serif {
-    font-family: var(--font-serif-delos) !important;
-}
-
 html {
     scrollbar-width: thin;
     scrollbar-color: #C49A7A #2C2220;

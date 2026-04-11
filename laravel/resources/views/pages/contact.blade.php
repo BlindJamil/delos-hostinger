@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', __('seo.contact.title'))
-@section('description', __('seo.contact.description'))
+@section('title', 'Contact Us — Delos International')
+@section('description', 'Book a complimentary design consultation with Delos International. Our specialists will help you create your perfect Italian luxury interior.')
 
 @section('content')
 
@@ -19,12 +19,12 @@
     <div data-motion-group="hero" class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
         <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-5">
             <span class="w-8 h-px bg-delos-gold"></span>
-            <span class="text-overline text-delos-gold">{{ __('contact.hero.overline') }}</span>
+            <span class="text-overline text-delos-gold">Get in Touch</span>
             <span class="w-8 h-px bg-delos-gold"></span>
         </div>
         <h1 data-motion="fade-up" class="font-serif text-delos-dark text-5xl lg:text-7xl font-light leading-tight">
-            {{ __('contact.hero.heading_1') }}<br>
-            <em class="text-delos-gold not-italic">{{ __('contact.hero.heading_accent') }}</em>
+            Contact us.<br>
+            <em class="text-delos-gold not-italic">We're here for you.</em>
         </h1>
     </div>
 </section>
@@ -36,16 +36,14 @@
         <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
             <div data-motion-group="contact-copy">
                 <div data-motion-line class="w-16 h-px bg-delos-gold mb-5"></div>
-                <p data-motion="fade-up" class="text-overline text-delos-gold mb-4">{{ __('contact.intro.overline') }}</p>
+                <p data-motion="fade-up" class="text-overline text-delos-gold mb-4">Book a Consultation</p>
                 <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark leading-tight mb-6">
-                    {{ __('contact.intro.heading_1') }}<br>
-                    <em class="text-delos-gold not-italic">{{ __('contact.intro.heading_accent') }}</em>
-                    @if(__('contact.intro.heading_2'))
-                        <br>{{ __('contact.intro.heading_2') }}
-                    @endif
+                    Start your<br>
+                    <em class="text-delos-gold not-italic">Italian luxury</em><br>
+                    journey.
                 </h2>
                 <p data-motion="fade-up" class="text-body text-delos-muted">
-                    {{ __('contact.intro.body') }}
+                    Our specialist will contact you within 24 hours to arrange a complimentary in-home consultation and 3D design concept.
                 </p>
             </div>
 
@@ -53,52 +51,56 @@
                 @csrf
                 <div class="grid grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.first_name') }}</label>
-                        <input type="text" name="first_name" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ __('contact.form.first_name_placeholder') }}">
+                        <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">First Name</label>
+                        <input type="text" name="first_name" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="Ahmad">
                     </div>
                     <div>
-                        <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.last_name') }}</label>
-                        <input type="text" name="last_name" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ __('contact.form.last_name_placeholder') }}">
+                        <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">Last Name</label>
+                        <input type="text" name="last_name" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="Al-Rashid">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.email') }}</label>
-                    <input type="email" name="email" class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ __('contact.form.email_placeholder') }}">
+                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">Email</label>
+                    <input type="email" name="email" class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="your@email.com">
                 </div>
                 <div>
-                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.phone') }}</label>
-                    <input type="tel" name="phone" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ __('contact.form.phone_placeholder') }}">
+                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">Phone Number</label>
+                    <input type="tel" name="phone" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="07XX XXX XXXX">
                 </div>
                 <div>
-                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.branch') }}</label>
+                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">Branch</label>
                     <div style="position: relative;">
                         <select name="showroom" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 cursor-pointer" style="-webkit-appearance: none; -moz-appearance: none; appearance: none; border-radius: 0; padding-right: 2.5rem;">
-                            <option value="">{{ __('contact.form.branch_placeholder') }}</option>
-                            @foreach(__('contact.form.cities') as $city)
-                                <option>{{ $city }}</option>
-                            @endforeach
+                            <option value="">Select a city</option>
+                            <option>Erbil</option>
+                            <option>Kirkuk</option>
+                            <option>Sulaymaniyah</option>
+                            <option>Baghdad</option>
                         </select>
                         <svg style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); pointer-events: none;" class="w-4 h-4 text-delos-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/></svg>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.service') }}</label>
+                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">Service Interest</label>
                     <div style="position: relative;">
                         <select name="service" class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 cursor-pointer" style="-webkit-appearance: none; -moz-appearance: none; appearance: none; border-radius: 0; padding-right: 2.5rem;">
-                            <option value="">{{ __('contact.form.service_placeholder') }}</option>
-                            @foreach(__('contact.form.service_options') as $opt)
-                                <option>{{ $opt }}</option>
-                            @endforeach
+                            <option value="">Select a service</option>
+                            <option>Luxury Kitchen</option>
+                            <option>Living Room</option>
+                            <option>Bedroom</option>
+                            <option>Wardrobes</option>
+                            <option>Flooring & Walls</option>
+                            <option>Complete Turnkey Project</option>
                         </select>
                         <svg style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); pointer-events: none;" class="w-4 h-4 text-delos-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/></svg>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.message') }}</label>
-                    <textarea name="message" rows="4" class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 resize-none placeholder-delos-muted/50" placeholder="{{ __('contact.form.message_placeholder') }}"></textarea>
+                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">Message (Optional)</label>
+                    <textarea name="message" rows="4" class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 resize-none placeholder-delos-muted/50" placeholder="Tell us about your project..."></textarea>
                 </div>
                 <button type="submit" class="btn-ripple w-full py-4 bg-delos-dark text-delos-cream text-[12px] tracking-[0.3em] uppercase font-medium hover:bg-delos-gold hover:text-delos-dark transition-all duration-300">
-                    {{ __('contact.form.submit') }}
+                    Request Consultation
                 </button>
             </form>
         </div>

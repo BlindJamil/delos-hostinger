@@ -41,7 +41,6 @@ class ComposerStaticInitc57754c93ae34ac3b9b716a0fd2f2149
         'ce9671a430e4846b44e1c68c7611f9f5' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery.php',
         'a1cfe24d14977df6878b9bf804af2d1c' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Phpunit/Autoload.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
-        'e4dcf25512b20e43f21b7b3da1599223' => __DIR__ . '/../..' . '/app/Support/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -517,11 +516,8 @@ class ComposerStaticInitc57754c93ae34ac3b9b716a0fd2f2149
 
     public static $classMap = array (
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
-        'App\\Http\\Controllers\\PageController' => __DIR__ . '/../..' . '/app/Http/Controllers/PageController.php',
-        'App\\Http\\Middleware\\SetLocale' => __DIR__ . '/../..' . '/app/Http/Middleware/SetLocale.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
-        'App\\Support\\LocaleResolver' => __DIR__ . '/../..' . '/app/Support/LocaleResolver.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
         'Brick\\Math\\BigInteger' => __DIR__ . '/..' . '/brick/math/src/BigInteger.php',
@@ -7024,9 +7020,6 @@ class ComposerStaticInitc57754c93ae34ac3b9b716a0fd2f2149
         'Termwind\\ValueObjects\\Style' => __DIR__ . '/..' . '/nunomaduro/termwind/src/ValueObjects/Style.php',
         'Termwind\\ValueObjects\\Styles' => __DIR__ . '/..' . '/nunomaduro/termwind/src/ValueObjects/Styles.php',
         'Tests\\Feature\\ExampleTest' => __DIR__ . '/../..' . '/tests/Feature/ExampleTest.php',
-        'Tests\\Feature\\LangFileParityTest' => __DIR__ . '/../..' . '/tests/Feature/LangFileParityTest.php',
-        'Tests\\Feature\\LanguagePickerTest' => __DIR__ . '/../..' . '/tests/Feature/LanguagePickerTest.php',
-        'Tests\\Feature\\LocaleResolutionTest' => __DIR__ . '/../..' . '/tests/Feature/LocaleResolutionTest.php',
         'Tests\\TestCase' => __DIR__ . '/../..' . '/tests/TestCase.php',
         'Tests\\Unit\\ExampleTest' => __DIR__ . '/../..' . '/tests/Unit/ExampleTest.php',
         'TheSeer\\Tokenizer\\Exception' => __DIR__ . '/..' . '/theseer/tokenizer/src/Exception.php',

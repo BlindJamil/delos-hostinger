@@ -947,19 +947,7 @@ function addRevealTween(timeline, element, position) {
 }
 
 function getMotionConfig(element) {
-    const baseConfig = MOTION_VARIANTS[element.dataset.motion] ?? MOTION_VARIANTS['fade-up'];
-
-    // In RTL (Arabic), flip the x-axis sign on slide-left / slide-right so the
-    // animation still enters from the reading direction's leading edge.
-    const isRtl = document.documentElement.getAttribute('dir') === 'rtl';
-    if (isRtl && baseConfig.from && typeof baseConfig.from.x === 'number') {
-        return {
-            ...baseConfig,
-            from: { ...baseConfig.from, x: -baseConfig.from.x },
-        };
-    }
-
-    return baseConfig;
+    return MOTION_VARIANTS[element.dataset.motion] ?? MOTION_VARIANTS['fade-up'];
 }
 
 function clamp(value, min, max) {
