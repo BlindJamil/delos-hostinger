@@ -124,8 +124,8 @@
                     'name'  => 'Dressing Rooms',
                     'desc'  => 'Italian dressing rooms are an art form. Our walk-in wardrobe systems are precision-designed with integrated lighting, custom interior organization, and flawless hardware — transforming your daily routine into an experience of quiet luxury.',
                     'feat'  => ['Walk-in wardrobe design', 'Hinged and sliding door systems', 'Custom interior organization', 'Integrated LED lighting', 'Mirror and glass options'],
-                    'brand' => 'LUBE · Frigerio',
-                    'img'   => 'delos-erbil-showroom-6.jpg',
+                    'brand' => 'LUBE · FAER AMBIENTI',
+                    'img'   => 'faer-dressing-room.jpg',
                 ],
                 [
                     'num'   => '03',
