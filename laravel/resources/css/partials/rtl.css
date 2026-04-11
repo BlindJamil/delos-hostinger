@@ -125,3 +125,27 @@
 .lang-picker-card[dir="rtl"] {
     text-align: right;
 }
+
+/* ------------------------------------------------------------------
+ * Language picker cursor visibility
+ * The site uses a custom cursor (body.has-custom-cursor { cursor: none })
+ * but users need clear feedback that picker cards are clickable. Force
+ * native pointer cursor on the picker container — this overrides the
+ * global `cursor: none !important` scoped to the picker only.
+ * ------------------------------------------------------------------ */
+
+#lang-picker,
+#lang-picker a,
+#lang-picker .lang-picker-card,
+body.has-custom-cursor #lang-picker,
+body.has-custom-cursor #lang-picker a,
+body.has-custom-cursor #lang-picker .lang-picker-card {
+    cursor: default !important;
+}
+
+#lang-picker a,
+#lang-picker .lang-picker-card,
+body.has-custom-cursor #lang-picker a,
+body.has-custom-cursor #lang-picker .lang-picker-card {
+    cursor: pointer !important;
+}

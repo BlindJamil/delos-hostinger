@@ -213,7 +213,9 @@ body.has-custom-cursor button {
     border-radius: 50%;
     border: 1.5px solid rgba(196, 154, 122, 0.8);
     pointer-events: none;
-    z-index: 9998;
+    /* Above the language picker (z-10000) so the cursor stays visible
+       while the first-visit modal is open */
+    z-index: 10001;
     transition:
         width calc(var(--motion-duration-base) - 0.05s) var(--motion-ease-standard),
         height calc(var(--motion-duration-base) - 0.05s) var(--motion-ease-standard),
