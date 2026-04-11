@@ -18,7 +18,7 @@ class LanguagePickerTest extends TestCase
 
     public function test_picker_hidden_when_seen_cookie_is_present(): void
     {
-        $response = $this->withCookie('delos_locale_seen', '1')->get('/en/');
+        $response = $this->withUnencryptedCookie('delos_locale_seen', '1')->get('/en/');
         $response->assertStatus(200);
         $response->assertDontSee('id="lang-picker"', false);
     }
@@ -33,8 +33,27 @@ class LanguagePickerTest extends TestCase
 
     public function test_locale_cookie_is_refreshed_on_every_request(): void
     {
-        $response = $this->withCookie('delos_locale_seen', '1')->get('/en/');
-        $response->assertCookie('delos_locale', 'en');
+        $response = $this->withUnencryptedCookie('delos_locale_seen', '1')->get('/en/');
+        // delos_locale is excluded from cookie encryption — use assertPlainCookie.
+        $response->assertPlainCookie('delos_locale', 'en');
+    }
+
+    public function test_seen_cookie_is_stamped_server_side_on_any_locale_page_visit(): void
+    {
+        // Critical: the server-side middleware stamps delos_locale_seen on every
+        // locale-prefixed page visit. This is the authoritative "user committed
+        // to a locale" signal — works even if client-side JS fails to set it.
+        $response = $this->get('/en/');
+        $response->assertPlainCookie('delos_locale_seen', '1');
+    }
+
+    public function test_seen_cookie_is_NOT_stamped_on_root_redirect(): void
+    {
+        // The root / redirect must not stamp the seen cookie, so the picker
+        // still renders on /en/ after the redirect on a fresh first visit.
+        $response = $this->get('/');
+        $response->assertRedirect('/en');
+        $response->assertCookieMissing('delos_locale_seen');
     }
 
     public function test_picker_heading_renders_in_all_three_languages_regardless_of_page_locale(): void
@@ -49,7 +68,7 @@ class LanguagePickerTest extends TestCase
 
     public function test_language_switcher_is_present_in_all_three_variants(): void
     {
-        $response = $this->withCookie('delos_locale_seen', '1')->get('/en/');
+        $response = $this->withUnencryptedCookie('delos_locale_seen', '1')->get('/en/');
         // Desktop dropdown
         $response->assertSee('data-lang-dropdown-toggle', false);
         // Mobile drawer links + footer links (multiple data-language-switch attrs)

@@ -34,22 +34,49 @@ class SetLocale
         /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = $next($request);
 
-        // Slide the locale cookie forward on every request (1-year sliding window).
-        // Not HttpOnly — client JS reads it to sync localStorage.
-        $oneYearMinutes = 60 * 24 * 365;
+        // Slide both locale cookies forward on every request (1-year sliding
+        // window). Not HttpOnly — client JS reads them to sync localStorage
+        // and to persist the locale choice before navigation.
+        $oneYearSeconds = 60 * 60 * 24 * 365;
+        $expireAt = time() + $oneYearSeconds;
+        $isSecure = $request->isSecure();
+
+        // Always refresh delos_locale to the current resolved value.
         $response->headers->setCookie(
             Cookie::create(
                 name: LocaleResolver::COOKIE_NAME,
                 value: $locale,
-                expire: time() + ($oneYearMinutes * 60),
+                expire: $expireAt,
                 path: '/',
                 domain: null,
-                secure: $request->isSecure(),
+                secure: $isSecure,
                 httpOnly: false,
                 raw: false,
                 sameSite: Cookie::SAMESITE_LAX
             )
         );
+
+        // Stamp delos_locale_seen the moment the user visits any locale-prefixed
+        // page. This is the authoritative "user has committed to a locale" signal
+        // and works regardless of whether the client-side JS picker click handler
+        // succeeds. Once set, the picker never renders again on subsequent requests.
+        // It's only set when the URL already has a locale segment so that hitting
+        // the root `/` (which redirects) doesn't bypass the picker prematurely.
+        if (is_string($request->route('locale'))) {
+            $response->headers->setCookie(
+                Cookie::create(
+                    name: LocaleResolver::SEEN_COOKIE_NAME,
+                    value: '1',
+                    expire: $expireAt,
+                    path: '/',
+                    domain: null,
+                    secure: $isSecure,
+                    httpOnly: false,
+                    raw: false,
+                    sameSite: Cookie::SAMESITE_LAX
+                )
+            );
+        }
 
         return $response;
     }

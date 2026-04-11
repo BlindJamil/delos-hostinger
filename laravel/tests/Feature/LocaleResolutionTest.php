@@ -108,7 +108,9 @@ class LocaleResolutionTest extends TestCase
 
     public function test_root_redirects_to_cookie_locale_when_set(): void
     {
-        $response = $this->withCookie('delos_locale', 'ar')->get('/');
+        // delos_locale is excluded from cookie encryption (see bootstrap/app.php),
+        // so the test helper must send it unencrypted to match production behavior.
+        $response = $this->withUnencryptedCookie('delos_locale', 'ar')->get('/');
         $response->assertRedirect('/ar');
     }
 

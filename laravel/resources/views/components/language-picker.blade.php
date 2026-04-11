@@ -61,6 +61,7 @@
             <a href="{{ $localeUrls['en'] }}"
                data-locale="en"
                data-language-switch="en"
+               data-page-transition="false"
                class="lang-picker-card group flex flex-col items-center gap-3 p-6 lg:p-8 border border-delos-gold/20 hover:border-delos-gold hover:bg-delos-ivory focus:outline-none focus:border-delos-gold focus:bg-delos-ivory transition-all duration-300">
                 <span class="text-delos-gold text-[10px] tracking-[0.4em] uppercase font-medium"
                       style="font-family: 'Inter', sans-serif;">
@@ -79,6 +80,7 @@
                data-locale="ar"
                data-language-switch="ar"
                dir="rtl"
+               data-page-transition="false"
                class="lang-picker-card group flex flex-col items-center gap-3 p-6 lg:p-8 border border-delos-gold/20 hover:border-delos-gold hover:bg-delos-ivory focus:outline-none focus:border-delos-gold focus:bg-delos-ivory transition-all duration-300"
                style="font-family: 'Amiri', 'Cairo', 'Cormorant Garamond', serif;">
                 <span class="text-delos-gold text-xs font-medium"
@@ -97,6 +99,7 @@
             <a href="{{ $localeUrls['it'] }}"
                data-locale="it"
                data-language-switch="it"
+               data-page-transition="false"
                class="lang-picker-card group flex flex-col items-center gap-3 p-6 lg:p-8 border border-delos-gold/20 hover:border-delos-gold hover:bg-delos-ivory focus:outline-none focus:border-delos-gold focus:bg-delos-ivory transition-all duration-300">
                 <span class="text-delos-gold text-[10px] tracking-[0.4em] uppercase font-medium italic"
                       style="font-family: 'Inter', sans-serif;">

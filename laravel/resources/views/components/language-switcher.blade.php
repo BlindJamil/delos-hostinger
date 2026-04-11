@@ -38,6 +38,7 @@
                 @if ($code !== $locale)
                     <a href="{{ $localeUrls[$code] }}"
                        data-language-switch="{{ $code }}"
+                       data-page-transition="false"
                        class="block px-4 py-3 text-xs tracking-[0.18em] uppercase text-delos-cream/80 hover:bg-delos-gold/10 hover:text-delos-gold transition-colors duration-200"
                        style="font-family: 'Inter', sans-serif;"
                        role="menuitem">
@@ -66,6 +67,7 @@
             @foreach ($localeChoices as $code => $labels)
                 <a href="{{ $localeUrls[$code] }}"
                    data-language-switch="{{ $code }}"
+                   data-page-transition="false"
                    class="inline-flex items-center gap-1.5 text-[11px] tracking-[0.2em] uppercase font-medium transition-colors duration-300 {{ $code === $locale ? 'text-delos-gold' : 'text-delos-cream/70 hover:text-delos-gold' }}"
                    style="font-family: 'Inter', sans-serif;">
                     <span>{{ $labels['code'] }}</span>
@@ -84,6 +86,7 @@
         @foreach ($localeChoices as $code => $labels)
             <a href="{{ $localeUrls[$code] }}"
                data-language-switch="{{ $code }}"
+               data-page-transition="false"
                class="text-[11px] tracking-[0.15em] uppercase font-medium transition-colors duration-300 {{ $code === $locale ? 'text-delos-gold' : 'text-delos-muted hover:text-delos-gold' }}"
                style="font-family: 'Inter', sans-serif;">
                 {{ $labels['code'] }}
