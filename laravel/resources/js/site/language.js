@@ -79,6 +79,42 @@ export function initLanguageSwitcher() {
             const locale = link.getAttribute('data-language-switch');
             if (!locale) return;
             persistLocaleChoice(locale);
+            // Let the anchor navigate
         });
     });
+
+    // Desktop dropdown toggle — uses inline style manipulation instead of
+    // CSS class toggling to avoid Tailwind specificity conflicts.
+    const dropdownToggle = document.querySelector('[data-lang-dropdown-toggle]');
+    const dropdownMenu = document.querySelector('[data-lang-dropdown-menu]');
+    if (dropdownToggle && dropdownMenu) {
+        let isOpen = false;
+
+        const setOpen = (open) => {
+            isOpen = open;
+            dropdownToggle.setAttribute('aria-expanded', String(open));
+            // Direct style manipulation — always wins CSS specificity
+            dropdownMenu.style.opacity = open ? '1' : '0';
+            dropdownMenu.style.visibility = open ? 'visible' : 'hidden';
+            dropdownMenu.style.transform = open ? 'translateY(0)' : 'translateY(-4px)';
+            dropdownMenu.style.pointerEvents = open ? 'auto' : 'none';
+        };
+
+        dropdownToggle.addEventListener('click', (event) => {
+            event.stopPropagation();
+            setOpen(!isOpen);
+        });
+
+        document.addEventListener('click', (event) => {
+            if (isOpen && !dropdownMenu.contains(event.target) && event.target !== dropdownToggle) {
+                setOpen(false);
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && isOpen) {
+                setOpen(false);
+            }
+        });
+    }
 }
