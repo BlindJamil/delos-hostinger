@@ -44,33 +44,25 @@
             <div class="w-12 h-px bg-delos-gold mx-auto mt-8"></div>
         </div>
 
-        {{-- Language cards — plain <a> tags, no inline JS.
-             Server middleware stamps cookies on landing. --}}
-        <div class="grid gap-5 lg:grid-cols-3 max-w-2xl mx-auto">
+        {{-- Language cards — pure HTML, no Blade expressions --}}
+        <div style="display: grid; gap: 1.25rem; max-width: 42rem; margin: 0 auto;">
 
-            <a href="{{ $localeUrls['en'] }}"
-               data-page-transition="false"
-               style="cursor: pointer; display: block; padding: 2rem 2.5rem; background: #fff; border: 2px solid rgba(196,154,122,0.15); text-align: center; text-decoration: none; transition: all 0.3s;">
-                <span style="display: block; color: #C49A7A; font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; font-weight: 600; margin-bottom: 1rem; font-family: Inter, sans-serif;">English</span>
-                <span style="display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; color: #3D2E2A; font-weight: 300; margin-bottom: 1.25rem;">Continue in English</span>
-                <span style="display: block; color: #C49A7A; font-size: 14px;">&rarr;</span>
+            <a href="/en" data-page-transition="false" style="cursor: pointer; display: block; padding: 2rem 2.5rem; background: #fff; border: 2px solid rgba(196,154,122,0.15); text-align: center; text-decoration: none;">
+                <span style="display: block; color: #C49A7A; font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; font-weight: 600; margin-bottom: 1rem; font-family: Inter, sans-serif;">ENGLISH</span>
+                <span style="display: block; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.35rem; color: #3D2E2A; font-weight: 300; margin-bottom: 1.25rem;">Continue in English</span>
+                <span style="display: block; color: #C49A7A; font-size: 14px;">→</span>
             </a>
 
-            <a href="{{ $localeUrls['ar'] }}"
-               data-page-transition="false"
-               dir="rtl"
-               style="cursor: pointer; display: block; padding: 2rem 2.5rem; background: #fff; border: 2px solid rgba(196,154,122,0.15); text-align: center; text-decoration: none; transition: all 0.3s; font-family: 'Amiri', serif;">
-                <span style="display: block; color: #C49A7A; font-size: 12px; font-weight: 500; margin-bottom: 1rem; font-family: 'Cairo', Inter, sans-serif;">العربية</span>
+            <a href="/ar" data-page-transition="false" dir="rtl" style="cursor: pointer; display: block; padding: 2rem 2.5rem; background: #fff; border: 2px solid rgba(196,154,122,0.15); text-align: center; text-decoration: none; font-family: 'Amiri', serif;">
+                <span style="display: block; color: #C49A7A; font-size: 12px; font-weight: 500; margin-bottom: 1rem; font-family: 'Cairo', sans-serif;">العربية</span>
                 <span style="display: block; font-size: 1.35rem; color: #3D2E2A; margin-bottom: 1.25rem;">المتابعة بالعربية</span>
-                <span style="display: block; color: #C49A7A; font-size: 14px;">&larr;</span>
+                <span style="display: block; color: #C49A7A; font-size: 14px;">←</span>
             </a>
 
-            <a href="{{ $localeUrls['it'] }}"
-               data-page-transition="false"
-               style="cursor: pointer; display: block; padding: 2rem 2.5rem; background: #fff; border: 2px solid rgba(196,154,122,0.15); text-align: center; text-decoration: none; transition: all 0.3s;">
-                <span style="display: block; color: #C49A7A; font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; font-weight: 600; font-style: italic; margin-bottom: 1rem; font-family: Inter, sans-serif;">Italiano</span>
-                <span style="display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; color: #3D2E2A; font-weight: 300; font-style: italic; margin-bottom: 1.25rem;">Continua in italiano</span>
-                <span style="display: block; color: #C49A7A; font-size: 14px;">&rarr;</span>
+            <a href="/it" data-page-transition="false" style="cursor: pointer; display: block; padding: 2rem 2.5rem; background: #fff; border: 2px solid rgba(196,154,122,0.15); text-align: center; text-decoration: none;">
+                <span style="display: block; color: #C49A7A; font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; font-weight: 600; font-style: italic; margin-bottom: 1rem; font-family: Inter, sans-serif;">ITALIANO</span>
+                <span style="display: block; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.35rem; color: #3D2E2A; font-weight: 300; font-style: italic; margin-bottom: 1.25rem;">Continua in italiano</span>
+                <span style="display: block; color: #C49A7A; font-size: 14px;">→</span>
             </a>
 
         </div>

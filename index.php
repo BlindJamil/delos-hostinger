@@ -21,7 +21,7 @@ define('LARAVEL_START', microtime(true));
  * marker, then it's a no-op forever. Safe to leave in place; remove in
  * a future cleanup commit if you want.
  */
-$purgeMarker = __DIR__ . '/laravel/storage/framework/.cache-purged-v2';
+$purgeMarker = __DIR__ . '/laravel/storage/framework/.cache-purged-v3';
 if (!file_exists($purgeMarker)) {
     $cacheDirs = [
         __DIR__ . '/laravel/bootstrap/cache',
