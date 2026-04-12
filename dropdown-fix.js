@@ -178,3 +178,40 @@
         setTimeout(function() { setOpen(true); }, 800);
     }
 })();
+
+/*
+ * RTL Animation Fix
+ * GSAP ScrollTrigger doesn't handle RTL scroll positions correctly,
+ * leaving data-motion elements stuck in their invisible pre-animation
+ * state (opacity:0, translateX off-screen). This forces all animated
+ * elements to their final visible state in RTL mode.
+ */
+(function() {
+    if (document.documentElement.getAttribute('dir') !== 'rtl') return;
+
+    function forceVisible() {
+        var els = document.querySelectorAll('[data-motion], [data-motion-group] > *');
+        for (var i = 0; i < els.length; i++) {
+            els[i].style.opacity = '1';
+            els[i].style.transform = 'none';
+            els[i].style.filter = 'none';
+            els[i].style.visibility = 'visible';
+            els[i].classList.add('is-visible');
+        }
+        // Also fix motion lines
+        var lines = document.querySelectorAll('[data-motion-line]');
+        for (var j = 0; j < lines.length; j++) {
+            lines[j].style.transform = 'scaleX(1)';
+            lines[j].style.opacity = '1';
+        }
+    }
+
+    // Run after page load + GSAP init so we override their initial states
+    if (document.readyState === 'complete') {
+        setTimeout(forceVisible, 500);
+    } else {
+        window.addEventListener('load', function() {
+            setTimeout(forceVisible, 500);
+        });
+    }
+})();
