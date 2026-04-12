@@ -225,3 +225,48 @@
         setTimeout(fixRtlMarquees, 1000);
     });
 })();
+
+/*
+ * Arabic Typography Scaling
+ * Cairo and Amiri render 10-15% visually smaller than Inter and Cormorant
+ * Garamond at the same CSS font-size due to different x-heights.
+ * Scoped to [lang="ar"] only — English and Italian are unaffected.
+ */
+(function() {
+    if (document.documentElement.lang !== 'ar') return;
+
+    var style = document.createElement('style');
+    style.textContent = [
+        /* Base body: 12% larger to compensate Cairo's smaller x-height */
+        '[lang="ar"] body { font-size: 1.12em !important; }',
+
+        /* Headings: 10% bump (Amiri vs Cormorant Garamond) */
+        '[lang="ar"] .text-heading-1 { font-size: clamp(3rem, 6vw, 6rem) !important; }',
+        '[lang="ar"] .text-heading-2 { font-size: clamp(2.5rem, 4.4vw, 3.6rem) !important; }',
+
+        /* Small UI text: proportionally bigger bump needed */
+        '[lang="ar"] .text-overline { font-size: 0.82rem !important; }',
+        '[lang="ar"] .text-overline-sm { font-size: 0.68rem !important; }',
+        '[lang="ar"] .text-btn { font-size: 0.75rem !important; }',
+
+        /* Tailwind arbitrary small sizes used in blade templates */
+        '[lang="ar"] [class*="text-\\[9px\\]"] { font-size: 11px !important; }',
+        '[lang="ar"] [class*="text-\\[10px\\]"] { font-size: 12px !important; }',
+        '[lang="ar"] [class*="text-\\[11px\\]"] { font-size: 13px !important; }',
+        '[lang="ar"] [class*="text-\\[12px\\]"] { font-size: 14px !important; }',
+
+        /* Inline font-family:Inter declarations in blade templates */
+        '[lang="ar"] [style*="Inter"] { font-size: 112% !important; }',
+
+        /* Pull quotes / blockquotes */
+        '[lang="ar"] .pull-quote { font-size: 1.15rem !important; }',
+
+        /* Stat numbers — keep proportional */
+        '[lang="ar"] .stat-number { font-size: 110% !important; }',
+
+        /* Serif text set via inline styles (headings in pages) */
+        '[lang="ar"] .font-serif { line-height: 1.3 !important; }'
+    ].join('\n');
+
+    document.head.appendChild(style);
+})();
