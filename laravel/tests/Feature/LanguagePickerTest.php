@@ -66,16 +66,14 @@ class LanguagePickerTest extends TestCase
         $response->assertSee('Scegli la tua lingua', false);
     }
 
-    public function test_language_switcher_is_present_in_all_three_variants(): void
+    public function test_language_switcher_is_present_in_mobile_and_footer(): void
     {
         $response = $this->withUnencryptedCookie('delos_locale_seen', '1')->get('/en/');
-        // Desktop dropdown toggle
-        $response->assertSee('data-lang-dropdown-toggle', false);
-        // Desktop dropdown + mobile drawer + footer links
+        // Mobile drawer + footer links (desktop globe is injected via static JS)
         $this->assertGreaterThanOrEqual(
-            3,
+            2,
             substr_count($response->getContent(), 'data-language-switch='),
-            'Expected at least 3 data-language-switch occurrences'
+            'Expected at least 2 data-language-switch occurrences (mobile + footer)'
         );
     }
 }

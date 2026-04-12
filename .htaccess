@@ -20,17 +20,6 @@
 
     RewriteEngine On
 
-    # First-time visitor language picker: if no delos_locale cookie is set,
-    # redirect to the static HTML picker page (bypasses PHP entirely).
-    # Excludes static assets, the picker page itself, and the purge script.
-    RewriteCond %{HTTP_COOKIE} !delos_locale
-    RewriteCond %{REQUEST_URI} !^/pick-language\.html
-    RewriteCond %{REQUEST_URI} !^/_purge\.php
-    RewriteCond %{REQUEST_URI} !^/build/
-    RewriteCond %{REQUEST_URI} !^/images/
-    RewriteCond %{REQUEST_URI} !^/videos/
-    RewriteRule ^.*$ /pick-language.html [L,R=302]
-
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
