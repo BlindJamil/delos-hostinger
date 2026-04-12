@@ -338,3 +338,29 @@
     window.addEventListener('load', function() { setTimeout(fixArabicStats, 1000); });
     setTimeout(fixArabicStats, 3000);
 })();
+
+/*
+ * Universal animation safety net — ALL languages.
+ * If any data-motion element is still invisible after 4 seconds
+ * (GSAP ScrollTrigger failed to fire), force it visible.
+ * This catches the employee cards and any other stuck sections.
+ */
+(function() {
+    function rescueStuckElements() {
+        var els = document.querySelectorAll('[data-motion], [data-motion-group] > *, [data-motion-line]');
+        for (var i = 0; i < els.length; i++) {
+            var el = els[i];
+            var op = window.getComputedStyle(el).opacity;
+            if (parseFloat(op) < 0.1) {
+                el.style.opacity = '1';
+                el.style.visibility = 'visible';
+                el.style.transform = 'none';
+                el.style.filter = 'none';
+                el.classList.add('is-visible');
+            }
+        }
+    }
+    window.addEventListener('load', function() {
+        setTimeout(rescueStuckElements, 4000);
+    });
+})();
