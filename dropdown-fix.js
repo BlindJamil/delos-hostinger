@@ -180,25 +180,48 @@
 })();
 
 /*
- * RTL Fix: Keep marquee animations identical to English.
- * The rtl.css rule reverses marquee direction which breaks the layout.
- * Brand names are the same in every language — no direction change needed.
+ * RTL Fix: Force all marquee/brand-strip sections to LTR.
+ * Brand names are Latin text — they should render identically
+ * to English regardless of the page's RTL setting.
  */
 (function() {
     if (document.documentElement.getAttribute('dir') !== 'rtl') return;
 
     function fixRtlMarquees() {
-        var marquees = document.querySelectorAll('.marquee-track, .brand-marquee');
-        for (var i = 0; i < marquees.length; i++) {
-            marquees[i].style.animationDirection = 'normal';
+        // Force LTR on all marquee wrappers, tracks, and brand strips
+        var selectors = [
+            '.marquee-track',
+            '.brand-marquee',
+            '.brand-marquee-wrapper',
+            '.brand-marquee-inner',
+            '.brand-strip-item'
+        ];
+        var els = document.querySelectorAll(selectors.join(','));
+        for (var i = 0; i < els.length; i++) {
+            els[i].style.direction = 'ltr';
+            els[i].style.unicodeBidi = 'bidi-override';
+            els[i].style.textAlign = 'left';
+            els[i].style.animationDirection = 'normal';
+            els[i].setAttribute('dir', 'ltr');
+        }
+
+        // Also force the parent wrapper to LTR so flexbox doesn't reverse
+        var wrappers = document.querySelectorAll('.brand-marquee-wrapper, .overflow-hidden');
+        for (var j = 0; j < wrappers.length; j++) {
+            var el = wrappers[j];
+            // Only target ones that contain brand marquees
+            if (el.querySelector('.brand-marquee') || el.classList.contains('brand-marquee-wrapper')) {
+                el.style.direction = 'ltr';
+                el.setAttribute('dir', 'ltr');
+            }
         }
     }
 
-    if (document.readyState === 'complete') {
-        fixRtlMarquees();
-    } else {
-        window.addEventListener('load', fixRtlMarquees);
-    }
-    // Also run immediately in case elements already exist
+    // Run immediately, on DOM ready, and on load to catch all render stages
     fixRtlMarquees();
+    document.addEventListener('DOMContentLoaded', fixRtlMarquees);
+    window.addEventListener('load', function() {
+        fixRtlMarquees();
+        setTimeout(fixRtlMarquees, 1000);
+    });
 })();
