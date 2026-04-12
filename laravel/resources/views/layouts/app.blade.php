@@ -286,7 +286,36 @@
 
     {{-- First-visit language picker modal --}}
     @if ($showLangPicker)
-        <x-language-picker />
+    <div id="lang-picker" style="position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#F8F4EF;overflow:auto;">
+        <div style="width:100%;max-width:48rem;margin:0 auto;padding:3rem 1.5rem;text-align:center;">
+            <div style="margin-bottom:3rem;">
+                <img src="{{ asset('images/delos-logo.jpg') }}" alt="Delos" style="width:80px;height:80px;border-radius:50%;border:2px solid rgba(196,154,122,0.3);margin:0 auto 1.5rem;display:block;object-fit:cover;">
+                <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:600;letter-spacing:0.3em;color:#3D2E2A;">DELOS</div>
+                <div style="font-size:9px;letter-spacing:0.5em;text-transform:uppercase;color:#C49A7A;font-weight:500;margin-top:4px;font-family:Inter,sans-serif;">INTERNATIONAL</div>
+            </div>
+            <div style="margin-bottom:3rem;">
+                <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;color:#3D2E2A;font-weight:300;margin:0 0 0.5rem;">Choose your language</p>
+                <p style="font-family:'Amiri','Cormorant Garamond',serif;font-size:1.75rem;color:#3D2E2A;font-weight:300;margin:0 0 0.5rem;" dir="rtl">اختر لغتك</p>
+                <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;color:#3D2E2A;font-weight:300;font-style:italic;margin:0;">Scegli la tua lingua</p>
+                <div style="width:48px;height:1px;background:#C49A7A;margin:2rem auto 0;"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:1rem;max-width:36rem;margin:0 auto;">
+                <a href="/en" data-page-transition="false" style="cursor:pointer;display:block;padding:1.75rem 2rem;background:#ffffff;border:2px solid rgba(196,154,122,0.2);text-align:center;text-decoration:none;color:#3D2E2A;">
+                    <span style="display:block;color:#C49A7A;font-size:10px;letter-spacing:0.5em;text-transform:uppercase;font-weight:600;margin-bottom:0.75rem;font-family:Inter,sans-serif;">ENGLISH</span>
+                    <span style="display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:300;">Continue in English</span>
+                </a>
+                <a href="/ar" data-page-transition="false" dir="rtl" style="cursor:pointer;display:block;padding:1.75rem 2rem;background:#ffffff;border:2px solid rgba(196,154,122,0.2);text-align:center;text-decoration:none;color:#3D2E2A;font-family:'Amiri',serif;">
+                    <span style="display:block;color:#C49A7A;font-size:12px;font-weight:500;margin-bottom:0.75rem;font-family:'Cairo',sans-serif;">العربية</span>
+                    <span style="display:block;font-size:1.25rem;">المتابعة بالعربية</span>
+                </a>
+                <a href="/it" data-page-transition="false" style="cursor:pointer;display:block;padding:1.75rem 2rem;background:#ffffff;border:2px solid rgba(196,154,122,0.2);text-align:center;text-decoration:none;color:#3D2E2A;">
+                    <span style="display:block;color:#C49A7A;font-size:10px;letter-spacing:0.5em;text-transform:uppercase;font-weight:600;font-style:italic;margin-bottom:0.75rem;font-family:Inter,sans-serif;">ITALIANO</span>
+                    <span style="display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:300;font-style:italic;">Continua in italiano</span>
+                </a>
+            </div>
+            <p style="color:#7A6B65;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;margin-top:3rem;font-family:Inter,sans-serif;">Italian Luxury Solutions</p>
+        </div>
+    </div>
     @endif
 
 </body>
