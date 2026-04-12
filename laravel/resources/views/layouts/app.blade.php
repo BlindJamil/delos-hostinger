@@ -42,6 +42,21 @@
     @endif
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- Inline overrides — guarantees these take effect even if OPcache
+         serves a stale Vite CSS bundle, since this is in the HTML itself --}}
+    <style>
+        #site-header {
+            -webkit-backdrop-filter: blur(14px) !important;
+            backdrop-filter: blur(14px) !important;
+            background: rgba(44, 34, 32, 0.5) !important;
+        }
+        #site-header.header-scrolled {
+            -webkit-backdrop-filter: blur(24px) saturate(1.2) !important;
+            backdrop-filter: blur(24px) saturate(1.2) !important;
+            background: rgba(44, 34, 32, 0.82) !important;
+        }
+    </style>
 </head>
 <body data-page="{{ request()->route()?->getName() ?? 'unknown' }}" class="bg-delos-cream text-delos-text antialiased">
 
