@@ -69,13 +69,12 @@ class LanguagePickerTest extends TestCase
     public function test_language_switcher_is_present_in_all_three_variants(): void
     {
         $response = $this->withUnencryptedCookie('delos_locale_seen', '1')->get('/en/');
-        // Desktop dropdown
-        $response->assertSee('data-lang-dropdown-toggle', false);
-        // Mobile drawer links + footer links (multiple data-language-switch attrs)
+        // Desktop inline links + mobile drawer links + footer links
+        // Each variant renders 3 locale links = 9 total data-language-switch attrs
         $this->assertGreaterThanOrEqual(
-            3,
+            9,
             substr_count($response->getContent(), 'data-language-switch='),
-            'Expected at least 3 data-language-switch occurrences (desktop + mobile + footer)'
+            'Expected at least 9 data-language-switch occurrences (3 variants × 3 locales)'
         );
     }
 }

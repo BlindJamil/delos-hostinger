@@ -79,36 +79,6 @@ export function initLanguageSwitcher() {
             const locale = link.getAttribute('data-language-switch');
             if (!locale) return;
             persistLocaleChoice(locale);
-            // Let the anchor navigate
         });
     });
-
-    // Desktop dropdown toggle
-    const dropdownToggle = document.querySelector('[data-lang-dropdown-toggle]');
-    const dropdownMenu = document.querySelector('[data-lang-dropdown-menu]');
-    if (dropdownToggle && dropdownMenu) {
-        const setOpen = (open) => {
-            dropdownMenu.classList.toggle('is-open', open);
-            dropdownToggle.setAttribute('aria-expanded', String(open));
-        };
-
-        dropdownToggle.addEventListener('click', (event) => {
-            event.stopPropagation();
-            const isOpen = dropdownMenu.classList.contains('is-open');
-            setOpen(!isOpen);
-        });
-
-        // Close on outside click or ESC
-        document.addEventListener('click', (event) => {
-            if (!dropdownMenu.contains(event.target) && event.target !== dropdownToggle) {
-                setOpen(false);
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                setOpen(false);
-            }
-        });
-    }
 }
