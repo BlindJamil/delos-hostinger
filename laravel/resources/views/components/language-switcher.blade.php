@@ -33,20 +33,20 @@
         </button>
 
         <div data-lang-dropdown-menu
-             class="lang-dropdown-menu absolute end-0 mt-2 min-w-[180px] bg-delos-dark-2 border border-delos-gold/30 shadow-2xl transition-all duration-200"
-             style="opacity: 0; visibility: hidden; transform: translateY(-4px); z-index: 9999;"
+             class="lang-dropdown-menu absolute right-0 top-full mt-2 min-w-[190px] rounded-lg overflow-hidden shadow-2xl transition-all duration-200"
+             style="opacity:0; visibility:hidden; transform:translateY(-4px); z-index:9999; background:rgba(44,34,32,0.92); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); border:1px solid rgba(196,154,122,0.25);"
              role="menu">
             @foreach ($localeChoices as $code => $labels)
                 @if ($code !== $locale)
                     <a href="{{ $localeUrls[$code] }}"
                        data-language-switch="{{ $code }}"
                        data-page-transition="false"
-                       style="cursor: pointer;"
-                       class="block px-5 py-3.5 text-xs tracking-[0.18em] uppercase text-delos-cream/80 hover:bg-delos-gold/15 hover:text-delos-gold transition-colors duration-200 border-b border-white/5 last:border-0"
-                       style="font-family: 'Inter', sans-serif;"
+                       style="cursor:pointer; font-family:'Inter',sans-serif; display:block; padding:0.875rem 1.25rem; font-size:12px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(248,244,239,0.8); text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.05); transition:all 0.2s;"
+                       onmouseover="this.style.background='rgba(196,154,122,0.15)';this.style.color='#C49A7A'"
+                       onmouseout="this.style.background='transparent';this.style.color='rgba(248,244,239,0.8)'"
                        role="menuitem">
-                        <span class="font-semibold">{{ $labels['code'] }}</span>
-                        <span class="text-delos-cream/50 normal-case tracking-normal ms-2">{{ $labels['native'] }}</span>
+                        <span style="font-weight:600;">{{ $labels['code'] }}</span>
+                        <span style="color:rgba(248,244,239,0.45); text-transform:none; letter-spacing:normal; margin-left:0.5rem;">{{ $labels['native'] }}</span>
                     </a>
                 @endif
             @endforeach
