@@ -1,15 +1,7 @@
 {{--
-    First-visit language picker modal.
-    Rendered by layouts/app.blade.php only when $showLangPicker is true
-    (i.e. the user does not yet have a delos_locale_seen cookie).
-
-    Design decisions locked in plan:
-    - No close button, no ESC dismissal — user MUST choose to proceed.
-    - Full-screen overlay, z-index 10000 (above page transition at 9999).
-    - Trilingual heading so every visitor recognizes their language.
-    - Three language cards side-by-side on desktop, stacked on mobile.
-    - Works without JS — anchors navigate directly. JS enhances with
-      focus trap, body scroll lock, and cookie persistence before nav.
+    First-visit language picker — full-page light design.
+    Matches Delos' cream/ivory brand aesthetic. No dark overlay.
+    No close button — user must pick to proceed.
 --}}
 
 @php
@@ -20,57 +12,60 @@
      role="dialog"
      aria-modal="true"
      aria-labelledby="lp-title"
-     aria-describedby="lp-sub"
-     aria-label="{{ $picker['aria_label'] }}"
-     class="fixed inset-0 z-[10000] flex items-center justify-center p-6 bg-delos-dark-2/95 backdrop-blur-md"
-     style="-webkit-backdrop-filter: blur(12px);">
+     class="fixed inset-0 z-[10000] flex items-center justify-center bg-delos-cream overflow-auto"
+     style="cursor: default;">
 
-    <div class="relative w-full max-w-2xl lg:max-w-4xl bg-delos-cream border border-delos-gold/30 shadow-2xl"
-         style="animation: lp-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);">
+    <div class="w-full max-w-3xl mx-auto px-6 py-12 lg:py-16">
 
-        {{-- Delos logo accent --}}
-        <div class="flex flex-col items-center pt-10 lg:pt-12">
-            <div class="w-14 h-14 lg:w-16 lg:h-16 overflow-hidden rounded-full border border-delos-gold/30 mb-6">
+        {{-- Logo --}}
+        <div class="flex flex-col items-center mb-12">
+            <div class="w-16 h-16 lg:w-20 lg:h-20 overflow-hidden rounded-full border-2 border-delos-gold/30 mb-6 shadow-lg">
                 <img src="{{ asset('images/delos-logo.jpg') }}" alt="Delos International" class="w-full h-full object-cover">
             </div>
-            <div class="w-16 h-px bg-delos-gold mb-6"></div>
+            <div class="flex flex-col items-center">
+                <span class="font-serif text-xl lg:text-2xl font-semibold tracking-[0.3em] text-delos-dark">DELOS</span>
+                <span class="text-[9px] tracking-[0.5em] uppercase text-delos-gold font-medium mt-1" style="font-family: 'Inter', sans-serif;">INTERNATIONAL</span>
+            </div>
         </div>
 
         {{-- Trilingual heading --}}
-        <div class="text-center px-6 lg:px-12 mb-8 lg:mb-10 space-y-3">
-            <p id="lp-title"
-               class="font-serif text-2xl lg:text-3xl text-delos-dark font-light leading-tight">
+        <div class="text-center mb-10 lg:mb-14">
+            <p id="lp-title" class="font-serif text-2xl lg:text-3xl text-delos-dark font-light leading-relaxed mb-2">
                 {{ $picker['heading_en'] }}
             </p>
             <p dir="rtl"
-               class="font-serif text-2xl lg:text-3xl text-delos-dark font-light leading-tight"
+               class="font-serif text-2xl lg:text-3xl text-delos-dark font-light leading-relaxed mb-2"
                style="font-family: 'Amiri', 'Cormorant Garamond', serif;">
                 {{ $picker['heading_ar'] }}
             </p>
-            <p class="font-serif text-2xl lg:text-3xl text-delos-dark italic font-light leading-tight">
+            <p class="font-serif text-2xl lg:text-3xl text-delos-dark italic font-light leading-relaxed">
                 {{ $picker['heading_it'] }}
             </p>
+            <div class="w-12 h-px bg-delos-gold mx-auto mt-8"></div>
         </div>
 
         {{-- Language cards --}}
-        <div id="lp-sub" class="sr-only">{{ $picker['sub_en'] }}</div>
-
-        <div class="grid gap-4 lg:grid-cols-3 px-6 lg:px-12 pb-10 lg:pb-12">
+        <div class="grid gap-5 lg:grid-cols-3 max-w-2xl mx-auto">
 
             {{-- English --}}
             <a href="{{ $localeUrls['en'] }}"
                data-locale="en"
                data-language-switch="en"
                data-page-transition="false"
-               class="lang-picker-card group flex flex-col items-center gap-3 p-6 lg:p-8 border border-delos-gold/20 hover:border-delos-gold hover:bg-delos-ivory focus:outline-none focus:border-delos-gold focus:bg-delos-ivory transition-all duration-300">
-                <span class="text-delos-gold text-[10px] tracking-[0.4em] uppercase font-medium"
+               onclick="(function(l){try{var d=365*24*60*60;var s=location.protocol==='https:'?';Secure':'';document.cookie='delos_locale='+l+';Max-Age='+d+';Path=/;SameSite=Lax'+s;document.cookie='delos_locale_seen=1;Max-Age='+d+';Path=/;SameSite=Lax'+s;localStorage.setItem('delos_locale',l)}catch(e){}})('en')"
+               style="cursor: pointer;"
+               class="group block p-8 lg:p-10 bg-white border-2 border-delos-gold/15 text-center
+                      hover:border-delos-gold hover:shadow-xl hover:shadow-delos-gold/10
+                      focus:border-delos-gold focus:shadow-xl focus:outline-none
+                      active:scale-[0.98] transition-all duration-300">
+                <span class="block text-delos-gold text-[10px] tracking-[0.5em] uppercase font-semibold mb-4"
                       style="font-family: 'Inter', sans-serif;">
                     {{ $picker['label_en'] }}
                 </span>
-                <span class="font-serif text-xl text-delos-dark font-light">
+                <span class="block font-serif text-xl lg:text-2xl text-delos-dark font-light mb-5">
                     {{ $picker['continue_en'] }}
                 </span>
-                <span class="text-delos-gold text-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300">
+                <span class="block text-delos-gold text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-300">
                     &rarr;
                 </span>
             </a>
@@ -79,18 +74,22 @@
             <a href="{{ $localeUrls['ar'] }}"
                data-locale="ar"
                data-language-switch="ar"
-               dir="rtl"
                data-page-transition="false"
-               class="lang-picker-card group flex flex-col items-center gap-3 p-6 lg:p-8 border border-delos-gold/20 hover:border-delos-gold hover:bg-delos-ivory focus:outline-none focus:border-delos-gold focus:bg-delos-ivory transition-all duration-300"
-               style="font-family: 'Amiri', 'Cairo', 'Cormorant Garamond', serif;">
-                <span class="text-delos-gold text-xs font-medium"
+               onclick="(function(l){try{var d=365*24*60*60;var s=location.protocol==='https:'?';Secure':'';document.cookie='delos_locale='+l+';Max-Age='+d+';Path=/;SameSite=Lax'+s;document.cookie='delos_locale_seen=1;Max-Age='+d+';Path=/;SameSite=Lax'+s;localStorage.setItem('delos_locale',l)}catch(e){}})('ar')"
+               dir="rtl"
+               style="cursor: pointer; font-family: 'Amiri', 'Cairo', serif;"
+               class="group block p-8 lg:p-10 bg-white border-2 border-delos-gold/15 text-center
+                      hover:border-delos-gold hover:shadow-xl hover:shadow-delos-gold/10
+                      focus:border-delos-gold focus:shadow-xl focus:outline-none
+                      active:scale-[0.98] transition-all duration-300">
+                <span class="block text-delos-gold text-xs font-medium mb-4"
                       style="font-family: 'Cairo', 'Inter', sans-serif;">
                     {{ $picker['label_ar'] }}
                 </span>
-                <span class="text-xl text-delos-dark font-normal">
+                <span class="block text-xl lg:text-2xl text-delos-dark font-normal mb-5">
                     {{ $picker['continue_ar'] }}
                 </span>
-                <span class="text-delos-gold text-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300">
+                <span class="block text-delos-gold text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-300">
                     &larr;
                 </span>
             </a>
@@ -100,30 +99,30 @@
                data-locale="it"
                data-language-switch="it"
                data-page-transition="false"
-               class="lang-picker-card group flex flex-col items-center gap-3 p-6 lg:p-8 border border-delos-gold/20 hover:border-delos-gold hover:bg-delos-ivory focus:outline-none focus:border-delos-gold focus:bg-delos-ivory transition-all duration-300">
-                <span class="text-delos-gold text-[10px] tracking-[0.4em] uppercase font-medium italic"
+               onclick="(function(l){try{var d=365*24*60*60;var s=location.protocol==='https:'?';Secure':'';document.cookie='delos_locale='+l+';Max-Age='+d+';Path=/;SameSite=Lax'+s;document.cookie='delos_locale_seen=1;Max-Age='+d+';Path=/;SameSite=Lax'+s;localStorage.setItem('delos_locale',l)}catch(e){}})('it')"
+               style="cursor: pointer;"
+               class="group block p-8 lg:p-10 bg-white border-2 border-delos-gold/15 text-center
+                      hover:border-delos-gold hover:shadow-xl hover:shadow-delos-gold/10
+                      focus:border-delos-gold focus:shadow-xl focus:outline-none
+                      active:scale-[0.98] transition-all duration-300">
+                <span class="block text-delos-gold text-[10px] tracking-[0.5em] uppercase font-semibold italic mb-4"
                       style="font-family: 'Inter', sans-serif;">
                     {{ $picker['label_it'] }}
                 </span>
-                <span class="font-serif text-xl text-delos-dark italic font-light">
+                <span class="block font-serif text-xl lg:text-2xl text-delos-dark italic font-light mb-5">
                     {{ $picker['continue_it'] }}
                 </span>
-                <span class="text-delos-gold text-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300">
+                <span class="block text-delos-gold text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-300">
                     &rarr;
                 </span>
             </a>
 
         </div>
 
+        {{-- Bottom tagline --}}
+        <p class="text-center text-delos-muted text-[10px] tracking-[0.4em] uppercase mt-12" style="font-family: 'Inter', sans-serif;">
+            Italian Luxury Solutions
+        </p>
+
     </div>
 </div>
-
-<style>
-    @keyframes lp-fade-in {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .reduced-motion #lang-picker > div {
-        animation: none !important;
-    }
-</style>
