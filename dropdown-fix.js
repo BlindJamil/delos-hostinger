@@ -261,10 +261,11 @@
         /* Pull quotes / blockquotes */
         '[lang="ar"] .pull-quote { font-size: 1.15rem !important; }',
 
-        /* Stat numbers + labels — significant bump for Arabic */
-        '[lang="ar"] .stat-number, [lang="ar"] [data-motion-counter] { font-size: clamp(3rem, 7vw, 4.5rem) !important; font-weight: 300 !important; color: #3D2E2A !important; }',
-        '[lang="ar"] .stat-suffix { font-size: 2rem !important; }',
-        '[lang="ar"] .text-overline { font-size: 0.85rem !important; color: #7A6B65 !important; }',
+        /* Stat numbers + labels — need significant bump for Arabic */
+        '[lang="ar"] .stat-number { font-size: clamp(3.5rem, 8vw, 5rem) !important; }',
+        '[lang="ar"] .stat-suffix { font-size: 1.8rem !important; }',
+        '[lang="ar"] .stat-divider { display: block !important; }',
+        '[lang="ar"] [data-motion-counter] { font-size: clamp(3.5rem, 8vw, 5rem) !important; }',
 
         /* Serif text set via inline styles (headings in pages) */
         '[lang="ar"] .font-serif { line-height: 1.3 !important; }'
