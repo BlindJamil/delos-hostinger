@@ -18,15 +18,15 @@
                 data-lang-dropdown-toggle
                 aria-expanded="false"
                 aria-label="{{ $switchAria }}"
-                class="flex items-center gap-1.5 h-9 px-3 border border-delos-gold/30 rounded-full hover:border-delos-gold transition-colors duration-300 group">
+                class="flex items-center gap-1.5 h-9 px-4 bg-delos-gold/15 border border-delos-gold/50 rounded-full hover:bg-delos-gold/25 hover:border-delos-gold transition-all duration-300 group backdrop-blur-sm">
             {{-- Globe icon --}}
             <svg class="w-4 h-4 text-delos-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.6 9h16.8M3.6 15h16.8M11.5 3a17 17 0 000 18M12.5 3a17 17 0 010 18"/>
             </svg>
-            <span class="text-[11px] tracking-[0.18em] uppercase font-medium text-delos-cream/90 group-hover:text-delos-gold transition-colors duration-300"
+            <span class="text-[11px] tracking-[0.18em] uppercase font-semibold text-delos-gold group-hover:text-delos-cream transition-colors duration-300"
                   style="font-family: 'Inter', sans-serif;">{{ $currentCode }}</span>
-            <svg class="w-3 h-3 text-delos-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3 h-3 text-delos-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
         </button>
