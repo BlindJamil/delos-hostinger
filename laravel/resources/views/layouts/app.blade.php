@@ -48,10 +48,10 @@
     {{-- ============================================================
          FIXED HEADER (Marquee + Nav combined)
     ============================================================ --}}
-    <header id="site-header" class="fixed top-0 left-0 right-0 z-50" style="-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);">
+    <header id="site-header" class="fixed top-0 left-0 right-0 z-50">
 
         {{-- Marquee Banner --}}
-        <div id="marquee-bar" class="overflow-hidden py-2.5 border-b border-white/5 transition-all duration-500" style="background:rgba(44,34,32,0.85);">
+        <div id="marquee-bar" class="bg-delos-dark-2 overflow-hidden py-2.5 border-b border-white/5 transition-all duration-500">
             <div class="marquee-track flex gap-12 whitespace-nowrap">
                 @for($j = 0; $j < 3; $j++)
                     <span class="text-overline text-delos-gold/60 font-medium">{{ __('common.marquee.tagline') }}
