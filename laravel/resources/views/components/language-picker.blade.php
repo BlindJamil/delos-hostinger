@@ -44,77 +44,33 @@
             <div class="w-12 h-px bg-delos-gold mx-auto mt-8"></div>
         </div>
 
-        {{-- Language cards --}}
+        {{-- Language cards — plain <a> tags, no inline JS.
+             Server middleware stamps cookies on landing. --}}
         <div class="grid gap-5 lg:grid-cols-3 max-w-2xl mx-auto">
 
-            {{-- English --}}
             <a href="{{ $localeUrls['en'] }}"
-               data-locale="en"
-               data-language-switch="en"
                data-page-transition="false"
-               onclick="(function(l){try{var d=365*24*60*60;var s=location.protocol==='https:'?';Secure':'';document.cookie='delos_locale='+l+';Max-Age='+d+';Path=/;SameSite=Lax'+s;document.cookie='delos_locale_seen=1;Max-Age='+d+';Path=/;SameSite=Lax'+s;localStorage.setItem('delos_locale',l)}catch(e){}})('en')"
-               style="cursor: pointer;"
-               class="group block p-8 lg:p-10 bg-white border-2 border-delos-gold/15 text-center
-                      hover:border-delos-gold hover:shadow-xl hover:shadow-delos-gold/10
-                      focus:border-delos-gold focus:shadow-xl focus:outline-none
-                      active:scale-[0.98] transition-all duration-300">
-                <span class="block text-delos-gold text-[10px] tracking-[0.5em] uppercase font-semibold mb-4"
-                      style="font-family: 'Inter', sans-serif;">
-                    {{ $picker['label_en'] }}
-                </span>
-                <span class="block font-serif text-xl lg:text-2xl text-delos-dark font-light mb-5">
-                    {{ $picker['continue_en'] }}
-                </span>
-                <span class="block text-delos-gold text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-300">
-                    &rarr;
-                </span>
+               style="cursor: pointer; display: block; padding: 2rem 2.5rem; background: #fff; border: 2px solid rgba(196,154,122,0.15); text-align: center; text-decoration: none; transition: all 0.3s;">
+                <span style="display: block; color: #C49A7A; font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; font-weight: 600; margin-bottom: 1rem; font-family: Inter, sans-serif;">English</span>
+                <span style="display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; color: #3D2E2A; font-weight: 300; margin-bottom: 1.25rem;">Continue in English</span>
+                <span style="display: block; color: #C49A7A; font-size: 14px;">&rarr;</span>
             </a>
 
-            {{-- Arabic --}}
             <a href="{{ $localeUrls['ar'] }}"
-               data-locale="ar"
-               data-language-switch="ar"
                data-page-transition="false"
-               onclick="(function(l){try{var d=365*24*60*60;var s=location.protocol==='https:'?';Secure':'';document.cookie='delos_locale='+l+';Max-Age='+d+';Path=/;SameSite=Lax'+s;document.cookie='delos_locale_seen=1;Max-Age='+d+';Path=/;SameSite=Lax'+s;localStorage.setItem('delos_locale',l)}catch(e){}})('ar')"
                dir="rtl"
-               style="cursor: pointer; font-family: 'Amiri', 'Cairo', serif;"
-               class="group block p-8 lg:p-10 bg-white border-2 border-delos-gold/15 text-center
-                      hover:border-delos-gold hover:shadow-xl hover:shadow-delos-gold/10
-                      focus:border-delos-gold focus:shadow-xl focus:outline-none
-                      active:scale-[0.98] transition-all duration-300">
-                <span class="block text-delos-gold text-xs font-medium mb-4"
-                      style="font-family: 'Cairo', 'Inter', sans-serif;">
-                    {{ $picker['label_ar'] }}
-                </span>
-                <span class="block text-xl lg:text-2xl text-delos-dark font-normal mb-5">
-                    {{ $picker['continue_ar'] }}
-                </span>
-                <span class="block text-delos-gold text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-300">
-                    &larr;
-                </span>
+               style="cursor: pointer; display: block; padding: 2rem 2.5rem; background: #fff; border: 2px solid rgba(196,154,122,0.15); text-align: center; text-decoration: none; transition: all 0.3s; font-family: 'Amiri', serif;">
+                <span style="display: block; color: #C49A7A; font-size: 12px; font-weight: 500; margin-bottom: 1rem; font-family: 'Cairo', Inter, sans-serif;">العربية</span>
+                <span style="display: block; font-size: 1.35rem; color: #3D2E2A; margin-bottom: 1.25rem;">المتابعة بالعربية</span>
+                <span style="display: block; color: #C49A7A; font-size: 14px;">&larr;</span>
             </a>
 
-            {{-- Italian --}}
             <a href="{{ $localeUrls['it'] }}"
-               data-locale="it"
-               data-language-switch="it"
                data-page-transition="false"
-               onclick="(function(l){try{var d=365*24*60*60;var s=location.protocol==='https:'?';Secure':'';document.cookie='delos_locale='+l+';Max-Age='+d+';Path=/;SameSite=Lax'+s;document.cookie='delos_locale_seen=1;Max-Age='+d+';Path=/;SameSite=Lax'+s;localStorage.setItem('delos_locale',l)}catch(e){}})('it')"
-               style="cursor: pointer;"
-               class="group block p-8 lg:p-10 bg-white border-2 border-delos-gold/15 text-center
-                      hover:border-delos-gold hover:shadow-xl hover:shadow-delos-gold/10
-                      focus:border-delos-gold focus:shadow-xl focus:outline-none
-                      active:scale-[0.98] transition-all duration-300">
-                <span class="block text-delos-gold text-[10px] tracking-[0.5em] uppercase font-semibold italic mb-4"
-                      style="font-family: 'Inter', sans-serif;">
-                    {{ $picker['label_it'] }}
-                </span>
-                <span class="block font-serif text-xl lg:text-2xl text-delos-dark italic font-light mb-5">
-                    {{ $picker['continue_it'] }}
-                </span>
-                <span class="block text-delos-gold text-sm opacity-50 group-hover:opacity-100 transition-opacity duration-300">
-                    &rarr;
-                </span>
+               style="cursor: pointer; display: block; padding: 2rem 2.5rem; background: #fff; border: 2px solid rgba(196,154,122,0.15); text-align: center; text-decoration: none; transition: all 0.3s;">
+                <span style="display: block; color: #C49A7A; font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; font-weight: 600; font-style: italic; margin-bottom: 1rem; font-family: Inter, sans-serif;">Italiano</span>
+                <span style="display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; color: #3D2E2A; font-weight: 300; font-style: italic; margin-bottom: 1.25rem;">Continua in italiano</span>
+                <span style="display: block; color: #C49A7A; font-size: 14px;">&rarr;</span>
             </a>
 
         </div>
