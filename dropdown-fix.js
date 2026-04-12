@@ -269,4 +269,21 @@
     ].join('\n');
 
     document.head.appendChild(style);
+
+    /* Force all scroll-animated elements visible in RTL.
+       GSAP ScrollTrigger doesn't fire correctly in RTL layouts,
+       leaving sections below the fold stuck at opacity:0. */
+    function forceVisible() {
+        var els = document.querySelectorAll('[data-motion], [data-motion-group] > *, [data-motion-line], [data-motion-hero]');
+        for (var i = 0; i < els.length; i++) {
+            var el = els[i];
+            el.style.opacity = '1';
+            el.style.visibility = 'visible';
+            el.style.transform = 'none';
+            el.style.filter = 'none';
+            el.classList.add('is-visible');
+        }
+    }
+    window.addEventListener('load', function() { setTimeout(forceVisible, 600); });
+    setTimeout(forceVisible, 2000);
 })();
