@@ -148,7 +148,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                 </svg>
                             </button>
-                            <div data-lang-dropdown-menu role="menu"
+                            <div id="langDropdown" role="menu"
                                  style="position:fixed; top:0; left:0; min-width:190px; border-radius:8px; overflow:hidden; opacity:0; visibility:hidden; transform:translateY(-4px); z-index:9999; background:rgba(44,34,32,0.92); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(196,154,122,0.25); box-shadow:0 20px 60px rgba(0,0,0,0.3); pointer-events:none; transition:opacity 0.2s, visibility 0.2s, transform 0.2s;">
                                 @php
                                     $ddLocales = ['en' => 'English', 'ar' => 'العربية', 'it' => 'Italiano'];
@@ -166,6 +166,30 @@
                                     @endif
                                 @endforeach
                             </div>
+                            <script>
+                            (function(){
+                                var btn=document.querySelector('[data-lang-dropdown-toggle]');
+                                var menu=document.getElementById('langDropdown');
+                                if(!btn||!menu)return;
+                                var open=false;
+                                function toggle(show){
+                                    open=show;
+                                    if(show){
+                                        var r=btn.getBoundingClientRect();
+                                        menu.style.top=(r.bottom+8)+'px';
+                                        menu.style.right=(window.innerWidth-r.right)+'px';
+                                        menu.style.left='auto';
+                                    }
+                                    menu.style.opacity=show?'1':'0';
+                                    menu.style.visibility=show?'visible':'hidden';
+                                    menu.style.transform=show?'translateY(0)':'translateY(-4px)';
+                                    menu.style.pointerEvents=show?'auto':'none';
+                                }
+                                btn.addEventListener('click',function(e){e.stopPropagation();toggle(!open);});
+                                document.addEventListener('click',function(e){if(open&&!menu.contains(e.target))toggle(false);});
+                                document.addEventListener('keydown',function(e){if(e.key==='Escape'&&open)toggle(false);});
+                            })();
+                            </script>
                         </div>
                         <a href="https://www.instagram.com/delos.international/" target="_blank" rel="noopener"
                            class="nav-social w-9 h-9 flex items-center justify-center border rounded-full hover:bg-delos-gold hover:border-delos-gold group transition-all duration-300" aria-label="Instagram">
