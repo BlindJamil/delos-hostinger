@@ -265,7 +265,9 @@
         '[lang="ar"] .stat-number { font-size: 110% !important; }',
 
         /* Serif text set via inline styles (headings in pages) */
-        '[lang="ar"] .font-serif { line-height: 1.3 !important; }'
+        /* Use Cairo for ALL Arabic text — consistent look across the page. */
+        '[lang="ar"] .font-serif, [lang="ar"] h1, [lang="ar"] h2, [lang="ar"] h3, [lang="ar"] blockquote, [lang="ar"] .pull-quote { font-family: "Cairo", sans-serif !important; line-height: 1.3 !important; }',
+        '[lang="ar"] [style*="Cormorant"], [lang="ar"] [style*="Amiri"] { font-family: "Cairo", sans-serif !important; }'
     ].join('\n');
 
     document.head.appendChild(style);
