@@ -33,7 +33,7 @@ return [
             'villa_classica' => [
                 'num' => '01',
                 'brand' => 'LUBE Kitchens',
-                'title' => 'Villa Classica Kitchen',
+                'title' => 'مطبخ ڤيلّا كلاسيكا',
                 'desc' => 'تحفة من الحِرفة الإيطالية، تمزج بين الأناقة الكلاسيكية والعملية العصرية.',
                 'img' => 'collection-lube-classic.jpg',
                 'alt' => 'مطبخ LUBE Agnese الكلاسيكي — فخامة إيطالية',
@@ -41,7 +41,7 @@ return [
             'nero_contemporary' => [
                 'num' => '02',
                 'brand' => 'CREO Kitchens',
-                'title' => 'Nero Contemporary',
+                'title' => 'نيرو المعاصر',
                 'desc' => 'بساطة أنيقة تلتقي بالدقّة الإيطالية في مجموعة المطابخ المعاصرة هذه.',
                 'img' => 'collection-lube-modern.jpg',
                 'alt' => 'مطبخ LUBE Clover العصري — تصميم إيطالي معاصر',
@@ -49,7 +49,7 @@ return [
             'eleganza_living' => [
                 'num' => '03',
                 'brand' => 'Frigerio',
-                'title' => 'Eleganza Living',
+                'title' => 'أناقة المعيشة',
                 'desc' => 'أثاث إيطالي راقٍ يرتقي بكلّ فضاء معيشة ويمنحه لمسة من الأناقة الخالدة.',
                 'img' => 'collection-vittoria.jpg',
                 'alt' => 'صالة Vittoria Frigerio الفاخرة — أناقة إيطالية',
@@ -57,7 +57,7 @@ return [
             'mediterranean_living' => [
                 'num' => '04',
                 'brand' => 'CANTORI',
-                'title' => 'Mediterranean Living',
+                'title' => 'المعيشة المتوسّطية',
                 'desc' => 'أناقة خارجية خالدة مستوحاة من دفء ساحل البحر المتوسّط.',
                 'img' => 'collection-cantori.jpg',
                 'alt' => 'مجموعة CANTORI للطعام في الهواء الطلق — حياة متوسّطية بجانب المسبح',
