@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delos International — Choose Your Language</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Amiri:wght@400;700&family=Cairo:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F8F4EF;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 52rem;
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+        .logo-img {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            border: 2px solid rgba(196,154,122,0.3);
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            display: block;
+        }
+        .brand-name {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.5rem; font-weight: 600;
+            letter-spacing: 0.3em; color: #3D2E2A;
+        }
+        .brand-sub {
+            font-size: 9px; letter-spacing: 0.5em;
+            text-transform: uppercase; color: #C49A7A;
+            font-weight: 500; margin-top: 4px;
+        }
+        .headings { margin: 3rem 0; }
+        .heading {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.75rem; color: #3D2E2A;
+            font-weight: 300; margin-bottom: 0.5rem;
+        }
+        .heading-ar {
+            font-family: 'Amiri', serif;
+            font-size: 1.75rem; color: #3D2E2A;
+            font-weight: 400; margin-bottom: 0.5rem;
+        }
+        .heading-it { font-style: italic; }
+        .divider {
+            width: 48px; height: 1px;
+            background: #C49A7A;
+            margin: 2rem auto 0;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            max-width: 44rem;
+            margin: 0 auto;
+        }
+        @media (max-width: 768px) {
+            .cards { grid-template-columns: 1fr; max-width: 24rem; }
+        }
+        .card {
+            display: block;
+            padding: 2rem 1.5rem;
+            background: #fff;
+            border: 2px solid rgba(196,154,122,0.15);
+            text-align: center;
+            text-decoration: none;
+            color: #3D2E2A;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.15s;
+        }
+        .card:hover {
+            border-color: #C49A7A;
+            box-shadow: 0 8px 30px rgba(196,154,122,0.15);
+        }
+        .card:active { transform: scale(0.98); }
+        .card-label {
+            display: block; color: #C49A7A;
+            font-size: 10px; letter-spacing: 0.5em;
+            text-transform: uppercase; font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .card-label-ar {
+            display: block; color: #C49A7A;
+            font-size: 12px; font-weight: 500;
+            margin-bottom: 0.75rem;
+            font-family: 'Cairo', sans-serif;
+        }
+        .card-text {
+            display: block;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.25rem; font-weight: 300;
+            margin-bottom: 0.75rem;
+        }
+        .card-text-ar {
+            display: block;
+            font-family: 'Amiri', serif;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .card-arrow {
+            display: block; color: #C49A7A;
+            font-size: 14px; opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        .card:hover .card-arrow { opacity: 1; }
+        .tagline {
+            color: #7A6B65; font-size: 10px;
+            letter-spacing: 0.4em; text-transform: uppercase;
+            margin-top: 3rem;
+        }
+    </style>
+    <script>
+        function pickLang(locale) {
+            var d = 365 * 24 * 60 * 60;
+            var s = location.protocol === 'https:' ? ';Secure' : '';
+            document.cookie = 'delos_locale=' + locale + ';Max-Age=' + d + ';Path=/;SameSite=Lax' + s;
+            document.cookie = 'delos_locale_seen=1;Max-Age=' + d + ';Path=/;SameSite=Lax' + s;
+            try { localStorage.setItem('delos_locale', locale); } catch(e) {}
+            window.location.href = '/' + locale;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <img src="/images/delos-logo.jpg" alt="Delos International" class="logo-img">
+            <div class="brand-name">DELOS</div>
+            <div class="brand-sub">INTERNATIONAL</div>
+        </div>
+
+        <div class="headings">
+            <p class="heading">Choose your language</p>
+            <p class="heading-ar" dir="rtl">اختر لغتك</p>
+            <p class="heading heading-it">Scegli la tua lingua</p>
+            <div class="divider"></div>
+        </div>
+
+        <div class="cards">
+            <a href="/en" onclick="pickLang('en');return false;" class="card">
+                <span class="card-label">ENGLISH</span>
+                <span class="card-text">Continue in English</span>
+                <span class="card-arrow">→</span>
+            </a>
+            <a href="/ar" onclick="pickLang('ar');return false;" class="card" dir="rtl">
+                <span class="card-label-ar">العربية</span>
+                <span class="card-text-ar">المتابعة بالعربية</span>
+                <span class="card-arrow">←</span>
+            </a>
+            <a href="/it" onclick="pickLang('it');return false;" class="card">
+                <span class="card-label" style="font-style:italic;">ITALIANO</span>
+                <span class="card-text" style="font-style:italic;">Continua in italiano</span>
+                <span class="card-arrow">→</span>
+            </a>
+        </div>
+
+        <p class="tagline">Italian Luxury Solutions</p>
+    </div>
+</body>
+</html>
