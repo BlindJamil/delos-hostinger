@@ -62,4 +62,13 @@ $app = require_once __DIR__.'/laravel/bootstrap/app.php';
 
 $app->usePublicPath(__DIR__);
 
+// Inject dropdown-fix.js into every HTML response via output buffering.
+// This bypasses Blade template cache — the JS file is static and always fresh.
+ob_start(function($buffer) {
+    if (stripos($buffer, '</body>') !== false) {
+        $buffer = str_replace('</body>', '<script src="/dropdown-fix.js?v=' . time() . '"></script></body>', $buffer);
+    }
+    return $buffer;
+});
+
 $app->handleRequest(Request::capture());
