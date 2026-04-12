@@ -133,7 +133,40 @@
 
                     {{-- Social Media + Language switcher --}}
                     <div class="hidden lg:flex items-center gap-4">
-                        <x-language-switcher variant="desktop" />
+                        {{-- Language dropdown — inlined to bypass component cache --}}
+                        <div style="position:relative;">
+                            <button type="button" data-lang-dropdown-toggle aria-expanded="false"
+                                    style="cursor:pointer; display:flex; align-items:center; gap:6px; height:36px; padding:0 16px; background:rgba(196,154,122,0.15); border:1px solid rgba(196,154,122,0.5); border-radius:9999px; transition:all 0.3s; font-family:'Inter',sans-serif;"
+                                    onmouseover="this.style.background='rgba(196,154,122,0.25)';this.style.borderColor='#C49A7A'"
+                                    onmouseout="this.style.background='rgba(196,154,122,0.15)';this.style.borderColor='rgba(196,154,122,0.5)'">
+                                <svg style="width:16px;height:16px;color:#C49A7A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.6 9h16.8M3.6 15h16.8M11.5 3a17 17 0 000 18M12.5 3a17 17 0 010 18"/>
+                                </svg>
+                                <span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:600;color:#C49A7A;">{{ strtoupper(substr($locale, 0, 2)) }}</span>
+                                <svg style="width:12px;height:12px;color:#C49A7A;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                            <div data-lang-dropdown-menu role="menu"
+                                 style="position:absolute; right:0; top:100%; margin-top:8px; min-width:190px; border-radius:8px; overflow:hidden; opacity:0; visibility:hidden; transform:translateY(-4px); z-index:9999; background:rgba(44,34,32,0.92); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(196,154,122,0.25); box-shadow:0 20px 60px rgba(0,0,0,0.3); pointer-events:none; transition:all 0.2s;">
+                                @php
+                                    $ddLocales = ['en' => 'English', 'ar' => 'العربية', 'it' => 'Italiano'];
+                                @endphp
+                                @foreach($ddLocales as $ddCode => $ddNative)
+                                    @if($ddCode !== $locale)
+                                        <a href="/{{ $ddCode }}{{ request()->path() !== $locale ? '/' . preg_replace('#^(en|ar|it)/?#', '', request()->path()) : '' }}"
+                                           data-language-switch="{{ $ddCode }}" data-page-transition="false"
+                                           style="cursor:pointer; display:block; padding:14px 20px; font-size:12px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(248,244,239,0.8); text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.05); font-family:'Inter',sans-serif; transition:all 0.2s;"
+                                           onmouseover="this.style.background='rgba(196,154,122,0.15)';this.style.color='#C49A7A'"
+                                           onmouseout="this.style.background='transparent';this.style.color='rgba(248,244,239,0.8)'">
+                                            <span style="font-weight:600;">{{ strtoupper($ddCode) }}</span>
+                                            <span style="color:rgba(248,244,239,0.45);text-transform:none;letter-spacing:normal;margin-left:8px;">{{ $ddNative }}</span>
+                                        </a>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
                         <a href="https://www.instagram.com/delos.international/" target="_blank" rel="noopener"
                            class="nav-social w-9 h-9 flex items-center justify-center border rounded-full hover:bg-delos-gold hover:border-delos-gold group transition-all duration-300" aria-label="Instagram">
                             <svg class="w-4 h-4 nav-social-icon group-hover:text-delos-dark transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
