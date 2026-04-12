@@ -261,8 +261,8 @@
         /* Pull quotes / blockquotes */
         '[lang="ar"] .pull-quote { font-size: 1.15rem !important; }',
 
-        /* Stat numbers — moderate 15% bump, don't override the counter animation */
-        '[lang="ar"] .stat-number { font-size: 115% !important; }',
+        /* Stat numbers — match English visual size */
+        '[lang="ar"] .stat-number { font-size: 130% !important; }',
 
         /* Serif text set via inline styles (headings in pages) */
         '[lang="ar"] .font-serif { line-height: 1.3 !important; }'
@@ -295,4 +295,37 @@
     }
     window.addEventListener('load', function() { setTimeout(forceVisible, 600); });
     setTimeout(forceVisible, 2000);
+
+    /* Manual counter animation for RTL — ScrollTrigger won't fire it */
+    function animateCounters() {
+        var counters = document.querySelectorAll('[data-motion-counter]');
+        for (var i = 0; i < counters.length; i++) {
+            (function(el) {
+                var target = parseInt(el.getAttribute('data-motion-counter'), 10);
+                if (isNaN(target)) return;
+                var duration = 2000;
+                var start = 0;
+                var startTime = null;
+                el.style.opacity = '1';
+                el.style.visibility = 'visible';
+                el.style.transform = 'none';
+                el.style.filter = 'none';
+                function step(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    var progress = Math.min((timestamp - startTime) / duration, 1);
+                    // Ease out cubic
+                    var ease = 1 - Math.pow(1 - progress, 3);
+                    var current = Math.round(start + (target - start) * ease);
+                    el.textContent = current.toLocaleString();
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        el.textContent = target.toLocaleString();
+                    }
+                }
+                requestAnimationFrame(step);
+            })(counters[i]);
+        }
+    }
+    window.addEventListener('load', function() { setTimeout(animateCounters, 800); });
 })();
