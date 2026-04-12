@@ -149,7 +149,7 @@
                                 </svg>
                             </button>
                             <div data-lang-dropdown-menu role="menu"
-                                 style="position:absolute; right:0; top:100%; margin-top:8px; min-width:190px; border-radius:8px; overflow:hidden; opacity:0; visibility:hidden; transform:translateY(-4px); z-index:9999; background:rgba(44,34,32,0.92); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(196,154,122,0.25); box-shadow:0 20px 60px rgba(0,0,0,0.3); pointer-events:none; transition:all 0.2s;">
+                                 style="position:fixed; top:0; left:0; min-width:190px; border-radius:8px; overflow:hidden; opacity:0; visibility:hidden; transform:translateY(-4px); z-index:9999; background:rgba(44,34,32,0.92); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(196,154,122,0.25); box-shadow:0 20px 60px rgba(0,0,0,0.3); pointer-events:none; transition:opacity 0.2s, visibility 0.2s, transform 0.2s;">
                                 @php
                                     $ddLocales = ['en' => 'English', 'ar' => 'العربية', 'it' => 'Italiano'];
                                 @endphp

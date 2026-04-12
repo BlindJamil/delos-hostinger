@@ -93,7 +93,16 @@ export function initLanguageSwitcher() {
         const setOpen = (open) => {
             isOpen = open;
             dropdownToggle.setAttribute('aria-expanded', String(open));
-            // Direct style manipulation — always wins CSS specificity
+
+            // Position the dropdown using fixed positioning + getBoundingClientRect
+            // to bypass the containing-block issue caused by backdrop-filter on #site-header
+            if (open) {
+                const rect = dropdownToggle.getBoundingClientRect();
+                dropdownMenu.style.top = (rect.bottom + 8) + 'px';
+                dropdownMenu.style.right = (window.innerWidth - rect.right) + 'px';
+                dropdownMenu.style.left = 'auto';
+            }
+
             dropdownMenu.style.opacity = open ? '1' : '0';
             dropdownMenu.style.visibility = open ? 'visible' : 'hidden';
             dropdownMenu.style.transform = open ? 'translateY(0)' : 'translateY(-4px)';
