@@ -7,9 +7,13 @@ const workspaceRoot = path.resolve(projectRoot, '..');
 const hostingerRoot = path.join(workspaceRoot, 'hostinger-Delos');
 
 const mappings = [
-    ['app/Http/Controllers/PageController.php', 'laravel/app/Http/Controllers/PageController.php'],
+    ['app', 'laravel/app'],
+    ['bootstrap/app.php', 'laravel/bootstrap/app.php'],
+    ['composer.json', 'laravel/composer.json'],
+    ['config/app.php', 'laravel/config/app.php'],
     ['docs', 'laravel/docs'],
     ['eslint.config.js', 'laravel/eslint.config.js'],
+    ['lang', 'laravel/lang'],
     ['package-lock.json', 'laravel/package-lock.json'],
     ['package.json', 'laravel/package.json'],
     ['playwright.config.js', 'laravel/playwright.config.js'],
@@ -19,6 +23,7 @@ const mappings = [
     ['routes/web.php', 'laravel/routes/web.php'],
     ['scripts', 'laravel/scripts'],
     ['tests/e2e', 'laravel/tests/e2e'],
+    ['tests/Feature', 'laravel/tests/Feature'],
     ['public/build', 'build'],
     ['public/images', 'images'],
     ['public/videos', 'videos'],
