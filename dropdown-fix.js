@@ -394,20 +394,10 @@
         }
     }
 
-    // Wait for fonts then check for stuck elements
-    function init() {
-        if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(function() {
-                setTimeout(setupFallbackReveals, 300);
-            });
-        } else {
-            setTimeout(setupFallbackReveals, 1500);
-        }
-    }
-
-    if (document.readyState === 'complete') {
-        init();
-    } else {
-        window.addEventListener('load', init);
-    }
+    // Run AFTER GSAP has initialized (load + 50ms) and had time to
+    // set opacity:0 on elements. 1.5s after load is safe — GSAP runs
+    // at load+50ms, so by 1.5s any element still at opacity:0 is stuck.
+    window.addEventListener('load', function() {
+        setTimeout(setupFallbackReveals, 1500);
+    });
 })();
