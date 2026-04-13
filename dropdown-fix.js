@@ -340,53 +340,74 @@
 })();
 
 /*
- * ScrollTrigger refresh — ALL languages.
- * On non-home pages, initMotion() fires after only 50ms (no page loader).
- * Arabic/Italian pages need more time for RTL reflow + web font loading.
- * This refreshes ScrollTrigger positions after fonts are ready, fixing
- * animations that never fire due to stale trigger calculations.
+ * Fallback scroll-reveal using IntersectionObserver.
+ *
+ * GSAP ScrollTrigger is imported as an ES module — not accessible from
+ * this static JS file. On non-home pages, initMotion() fires after just
+ * 50ms, before web fonts (Cairo/Amiri) load. Font loading causes layout
+ * shift, making ScrollTrigger's cached positions wrong — animations
+ * never fire on Arabic/Italian pages.
+ *
+ * This creates an independent IntersectionObserver that watches any
+ * data-motion element still invisible after fonts load. When such an
+ * element scrolls into view, it gets animated with CSS transitions.
+ * Only targets elements GSAP failed to animate — leaves working
+ * animations untouched.
  */
 (function() {
-    function refreshTriggers() {
-        if (window.ScrollTrigger && window.ScrollTrigger.refresh) {
-            window.ScrollTrigger.refresh();
-        }
-    }
+    if (!('IntersectionObserver' in window)) return;
 
-    // Primary: refresh after web fonts finish loading
-    if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(function() {
-            setTimeout(refreshTriggers, 100);
-        });
-    }
-
-    // Fallback: staggered refreshes after page load
-    window.addEventListener('load', function() {
-        setTimeout(refreshTriggers, 500);
-        setTimeout(refreshTriggers, 1500);
-    });
-
-    /*
-     * Last-resort rescue: if any element is STILL invisible after 5 seconds,
-     * force it visible. Catches edge cases where ScrollTrigger.refresh()
-     * alone isn't enough (e.g. horizontal scroll sections like employees).
-     */
-    function rescueStuckElements() {
+    function setupFallbackReveals() {
         var els = document.querySelectorAll('[data-motion], [data-motion-group] > *, [data-motion-line]');
+        var stuckEls = [];
+
         for (var i = 0; i < els.length; i++) {
             var el = els[i];
             if (el.hasAttribute('data-motion-counter')) continue;
+            if (el.classList.contains('is-visible')) continue;
             var op = window.getComputedStyle(el).opacity;
-            if (parseFloat(op) < 0.1) {
-                el.style.opacity = '1';
-                el.style.visibility = 'visible';
-                el.style.transform = 'none';
-                el.style.filter = 'none';
-                el.classList.add('is-visible');
+            if (parseFloat(op) < 0.15) {
+                // This element is stuck invisible — GSAP didn't animate it
+                el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out, filter 0.6s ease-out';
+                stuckEls.push(el);
             }
         }
+
+        if (!stuckEls.length) return;
+
+        var observer = new IntersectionObserver(function(entries) {
+            for (var j = 0; j < entries.length; j++) {
+                if (entries[j].isIntersecting) {
+                    var target = entries[j].target;
+                    target.style.opacity = '1';
+                    target.style.transform = 'none';
+                    target.style.filter = 'none';
+                    target.style.visibility = 'visible';
+                    target.classList.add('is-visible');
+                    observer.unobserve(target);
+                }
+            }
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        for (var k = 0; k < stuckEls.length; k++) {
+            observer.observe(stuckEls[k]);
+        }
     }
-    window.addEventListener('load', function() {
-        setTimeout(rescueStuckElements, 5000);
-    });
+
+    // Wait for fonts then check for stuck elements
+    function init() {
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(function() {
+                setTimeout(setupFallbackReveals, 300);
+            });
+        } else {
+            setTimeout(setupFallbackReveals, 1500);
+        }
+    }
+
+    if (document.readyState === 'complete') {
+        init();
+    } else {
+        window.addEventListener('load', init);
+    }
 })();
