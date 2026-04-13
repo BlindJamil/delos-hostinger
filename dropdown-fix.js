@@ -340,16 +340,42 @@
 })();
 
 /*
- * Universal animation safety net — ALL languages.
- * If any data-motion element is still invisible after 4 seconds
- * (GSAP ScrollTrigger failed to fire), force it visible.
- * This catches the employee cards and any other stuck sections.
+ * ScrollTrigger refresh — ALL languages.
+ * On non-home pages, initMotion() fires after only 50ms (no page loader).
+ * Arabic/Italian pages need more time for RTL reflow + web font loading.
+ * This refreshes ScrollTrigger positions after fonts are ready, fixing
+ * animations that never fire due to stale trigger calculations.
  */
 (function() {
+    function refreshTriggers() {
+        if (window.ScrollTrigger && window.ScrollTrigger.refresh) {
+            window.ScrollTrigger.refresh();
+        }
+    }
+
+    // Primary: refresh after web fonts finish loading
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function() {
+            setTimeout(refreshTriggers, 100);
+        });
+    }
+
+    // Fallback: staggered refreshes after page load
+    window.addEventListener('load', function() {
+        setTimeout(refreshTriggers, 500);
+        setTimeout(refreshTriggers, 1500);
+    });
+
+    /*
+     * Last-resort rescue: if any element is STILL invisible after 5 seconds,
+     * force it visible. Catches edge cases where ScrollTrigger.refresh()
+     * alone isn't enough (e.g. horizontal scroll sections like employees).
+     */
     function rescueStuckElements() {
         var els = document.querySelectorAll('[data-motion], [data-motion-group] > *, [data-motion-line]');
         for (var i = 0; i < els.length; i++) {
             var el = els[i];
+            if (el.hasAttribute('data-motion-counter')) continue;
             var op = window.getComputedStyle(el).opacity;
             if (parseFloat(op) < 0.1) {
                 el.style.opacity = '1';
@@ -361,6 +387,6 @@
         }
     }
     window.addEventListener('load', function() {
-        setTimeout(rescueStuckElements, 4000);
+        setTimeout(rescueStuckElements, 5000);
     });
 })();
