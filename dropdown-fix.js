@@ -269,32 +269,6 @@
 
     document.head.appendChild(style);
 
-    /* Force scroll-animated elements visible in RTL.
-       GSAP ScrollTrigger doesn't fire correctly in RTL layouts.
-       Skip counter elements so their count-up animation still works. */
-    function forceVisible() {
-        var els = document.querySelectorAll('[data-motion], [data-motion-group] > *, [data-motion-line], [data-motion-hero]');
-        for (var i = 0; i < els.length; i++) {
-            var el = els[i];
-            // Don't touch counter elements — let GSAP animate them
-            if (el.hasAttribute('data-motion-counter')) continue;
-            el.style.opacity = '1';
-            el.style.visibility = 'visible';
-            el.style.filter = 'none';
-            el.classList.add('is-visible');
-            // Only clear transform on non-counter parents
-            if (!el.querySelector('[data-motion-counter]')) {
-                el.style.transform = 'none';
-            }
-        }
-        // Manually trigger GSAP ScrollTrigger refresh for RTL
-        if (window.ScrollTrigger) {
-            window.ScrollTrigger.refresh();
-        }
-    }
-    window.addEventListener('load', function() { setTimeout(forceVisible, 600); });
-    setTimeout(forceVisible, 2000);
-
     /* Manual counter animation + sizing for Arabic stats.
        ScrollTrigger doesn't fire in RTL so we do it ourselves. */
     function fixArabicStats() {
