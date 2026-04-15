@@ -4,7 +4,6 @@ import Lenis from 'lenis';
 import { qs, qsa } from './runtime.js';
 
 const GROUP_STAGGER_MS = 90;
-const EMPLOYEE_PIN_MIN_TRAVEL = 60;
 const LINE_DURATION = 1.2;
 
 const MOTION_VARIANTS = {
@@ -817,18 +816,19 @@ function animateCounter(counter, targetValue, prefersReducedMotion) {
 }
 
 function initEmployeeShowcase(context) {
-    if (context.page !== 'home' || context.prefersReducedMotion || context.isTouchDevice) {
+    if (context.page !== 'home' || context.prefersReducedMotion) {
         return;
     }
 
     const section = qs('#employees-section');
+    const viewport = qs('#employee-viewport');
     const track = qs('#employee-track');
-    if (!section || !track) {
+    if (!section || !viewport || !track) {
         return;
     }
 
     const slides = qsa('.employee-slide', track);
-    if (slides.length < 2) {
+    if (slides.length < 1) {
         return;
     }
 
@@ -857,55 +857,139 @@ function initEmployeeShowcase(context) {
         clearProps: 'opacity,transform,filter',
     });
 
-    const getMetrics = () => {
-        const sectionWidth = section.clientWidth;
-        const maxTravel = Math.max(track.scrollWidth - sectionWidth, 0);
-        const snapStops = dedupeStops(slides.map((slide) => {
-            const slideCenter = slide.offsetLeft + (slide.offsetWidth / 2);
-            return clamp(slideCenter - (sectionWidth / 2), 0, maxTravel);
-        }));
-
-        return {
-            maxTravel,
-            snapStops,
-        };
-    };
-
-    if (getMetrics().maxTravel <= EMPLOYEE_PIN_MIN_TRAVEL) {
+    // Drag-to-pan with RAF-interpolated follow + momentum glide. Touch devices
+    // keep the native swipe + scroll-snap (handled in components.css).
+    if (context.isTouchDevice) {
         return;
     }
 
-    gsap.to(track, {
-        x: () => -getMetrics().maxTravel,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: section,
-            start: 'top top',
-            end: () => `+=${getMetrics().maxTravel}`,
-            scrub: 1.2,
-            pin: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-            snap: {
-                snapTo: (progress) => {
-                    const { maxTravel, snapStops } = getMetrics();
-                    if (maxTravel <= 0 || snapStops.length < 2) {
-                        return progress;
-                    }
+    const FOLLOW_EASE = 0.18;  // lerp factor while dragging (lower = smoother)
+    const FRICTION = 0.95;     // momentum decay per frame (higher = longer glide)
+    const DRAG_THRESHOLD = 5;
+    const REST_EPSILON = 0.25;
 
-                    return gsap.utils.snap(
-                        snapStops.map((stop) => stop / maxTravel),
-                        progress,
-                    );
-                },
-                duration: {
-                    min: 0.12,
-                    max: 0.28,
-                },
-                ease: 'power1.inOut',
-            },
-        },
+    let isDown = false;
+    let isDragging = false;
+    let startX = 0;
+    let startScroll = 0;
+    let targetScroll = 0;
+    let currentScroll = 0;
+    let lastX = 0;
+    let lastTime = 0;
+    let velocity = 0;
+    let rafId = null;
+
+    const maxScroll = () => Math.max(viewport.scrollWidth - viewport.clientWidth, 0);
+
+    const tick = () => {
+        if (isDragging) {
+            // Smoothly chase the cursor's implied scroll target.
+            const diff = targetScroll - currentScroll;
+            currentScroll += diff * FOLLOW_EASE;
+            viewport.scrollLeft = currentScroll;
+            rafId = requestAnimationFrame(tick);
+            return;
+        }
+
+        // Free-glide phase after release.
+        if (Math.abs(velocity) < REST_EPSILON) {
+            velocity = 0;
+            rafId = null;
+            return;
+        }
+        currentScroll -= velocity * 16;
+        const max = maxScroll();
+        if (currentScroll <= 0) {
+            currentScroll = 0;
+            velocity = 0;
+        } else if (currentScroll >= max) {
+            currentScroll = max;
+            velocity = 0;
+        }
+        viewport.scrollLeft = currentScroll;
+        velocity *= FRICTION;
+        rafId = requestAnimationFrame(tick);
+    };
+
+    const ensureTick = () => {
+        if (rafId === null) {
+            rafId = requestAnimationFrame(tick);
+        }
+    };
+
+    viewport.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'touch' || e.button !== 0) {
+            return;
+        }
+        if (rafId !== null) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+        }
+        isDown = true;
+        isDragging = false;
+        startX = e.clientX;
+        startScroll = viewport.scrollLeft;
+        currentScroll = startScroll;
+        targetScroll = startScroll;
+        lastX = e.clientX;
+        lastTime = performance.now();
+        velocity = 0;
     });
+
+    viewport.addEventListener('pointermove', (e) => {
+        if (!isDown) {
+            return;
+        }
+        const dx = e.clientX - startX;
+        if (!isDragging && Math.abs(dx) > DRAG_THRESHOLD) {
+            isDragging = true;
+            viewport.classList.add('is-dragging');
+            viewport.setPointerCapture?.(e.pointerId);
+            ensureTick();
+        }
+        if (!isDragging) {
+            return;
+        }
+        targetScroll = startScroll - dx;
+        const now = performance.now();
+        const dt = now - lastTime;
+        if (dt > 0) {
+            // EMA-smoothed velocity so tiny cursor jitters don't poison inertia.
+            velocity = (velocity * 0.6) + ((e.clientX - lastX) / dt) * 0.4;
+        }
+        lastX = e.clientX;
+        lastTime = now;
+    });
+
+    const endDrag = (e) => {
+        if (!isDown) {
+            return;
+        }
+        isDown = false;
+        if (!isDragging) {
+            return;
+        }
+        isDragging = false;
+        viewport.classList.remove('is-dragging');
+        viewport.releasePointerCapture?.(e.pointerId);
+
+        // Suppress the click that would otherwise fire right after drag release.
+        const suppressClick = (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            viewport.removeEventListener('click', suppressClick, true);
+        };
+        viewport.addEventListener('click', suppressClick, true);
+        setTimeout(() => viewport.removeEventListener('click', suppressClick, true), 50);
+
+        if (Math.abs(velocity) > 0.05) {
+            ensureTick();
+        }
+    };
+
+    viewport.addEventListener('pointerup', endDrag);
+    viewport.addEventListener('pointercancel', endDrag);
+    viewport.addEventListener('pointerleave', endDrag);
 }
 
 function prepareMotionGroups() {

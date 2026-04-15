@@ -91,4 +91,8 @@
             @endif
         @endforeach
     </div>
+
 @endif
+{{-- NOTE: the "floating" variant has been replaced by the JS-injected
+     globe at resources/js/site/language-globe.js — a direct port of the
+     long-running production implementation from dropdown-fix.js. --}}

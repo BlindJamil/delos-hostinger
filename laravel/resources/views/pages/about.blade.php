@@ -15,17 +15,17 @@
                     <div data-motion-group="hero" class="pt-10 lg:pt-6 lg:pr-4">
                         <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6">
                             <span class="w-8 h-px bg-delos-gold"></span>
-                            <span class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">{{ __('about.hero.overline') }}</span>
+                            <span class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.hero.overline') }}</span>
                         </div>
 
                         <h1 data-motion="fade-up" class="font-serif text-delos-dark text-4xl lg:text-5xl xl:text-[3.5rem] font-light leading-[1.08] mb-5">
                             {{ __('about.hero.heading_1') }}<br>
                             {{ __('about.hero.heading_2') }}<br>
-                            <em class="text-delos-gold not-italic">{{ __('about.hero.heading_accent') }}</em>
+                            <em class="text-delos-gold not-italic">{{ pcontent('about.hero.heading_accent') }}</em>
                         </h1>
 
                         <p data-motion="fade-up" class="text-delos-muted text-base lg:text-lg leading-relaxed max-w-md mb-8 lg:mb-10" style="font-family: 'Inter', sans-serif;">
-                            {{ __('about.hero.sub') }}
+                            {{ pcontent('about.hero.sub') }}
                         </p>
                     </div>
 
@@ -81,15 +81,15 @@
 
             <div data-motion-group="story">
                 <div data-motion-line class="w-16 h-px bg-delos-gold mb-5"></div>
-                <p data-motion="fade-up" class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">{{ __('about.story.overline') }}</p>
+                <p data-motion="fade-up" class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.story.overline') }}</p>
                 <h2 data-motion="fade-up" class="font-serif text-4xl lg:text-5xl font-light text-delos-dark leading-tight mb-8">
                     {{ __('about.story.heading_1') }}<br>
                     {{ __('about.story.heading_2') }}<br>
                     <em class="text-delos-gold not-italic">{{ __('about.story.heading_accent') }}</em>
                 </h2>
                 <div class="space-y-5">
-                    <p data-motion="fade-up" class="text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">{{ __('about.story.paragraph_1') }}</p>
-                    <p data-motion="fade-up" class="text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">{{ __('about.story.paragraph_2') }}</p>
+                    <p data-motion="fade-up" class="text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.story.paragraph_1') }}</p>
+                    <p data-motion="fade-up" class="text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.story.paragraph_2') }}</p>
                     <p data-motion="fade-up" class="text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">{{ __('about.story.paragraph_3') }}</p>
                 </div>
             </div>
@@ -131,7 +131,7 @@
         <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
             <div data-motion-group="philosophy">
                 <div data-motion-line class="w-16 h-px bg-delos-gold mb-5"></div>
-                <p data-motion="fade-up" class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">{{ __('about.philosophy.overline') }}</p>
+                <p data-motion="fade-up" class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.philosophy.overline') }}</p>
                 <h2 data-motion="fade-up" class="font-serif text-4xl lg:text-5xl font-light text-delos-dark leading-tight mb-8">
                     {{ __('about.philosophy.heading_1') }}<br>
                     {{ __('about.philosophy.heading_2') }}<br>

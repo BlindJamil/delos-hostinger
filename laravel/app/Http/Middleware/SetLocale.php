@@ -18,17 +18,12 @@ class SetLocale
         $locale = $this->resolver->resolve($request);
         App::setLocale($locale);
 
-        $localeUrls = $this->resolver->urlsForPath($request->path());
-        $hasLocaleCookie = $request->cookie(LocaleResolver::COOKIE_NAME) !== null;
-        $hasSeenCookie = $request->cookie(LocaleResolver::SEEN_COOKIE_NAME) !== null;
-
         View::share([
             'locale' => $locale,
             'isRtl' => $this->resolver->isRtl($locale),
             'dir' => $this->resolver->dir($locale),
             'supportedLocales' => LocaleResolver::SUPPORTED,
-            'localeUrls' => $localeUrls,
-            'showLangPicker' => !$hasSeenCookie,
+            'localeUrls' => $this->resolver->urlsForPath($request->path()),
         ]);
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */
@@ -55,28 +50,6 @@ class SetLocale
                 sameSite: Cookie::SAMESITE_LAX
             )
         );
-
-        // Stamp delos_locale_seen the moment the user visits any locale-prefixed
-        // page. This is the authoritative "user has committed to a locale" signal
-        // and works regardless of whether the client-side JS picker click handler
-        // succeeds. Once set, the picker never renders again on subsequent requests.
-        // It's only set when the URL already has a locale segment so that hitting
-        // the root `/` (which redirects) doesn't bypass the picker prematurely.
-        if (is_string($request->route('locale'))) {
-            $response->headers->setCookie(
-                Cookie::create(
-                    name: LocaleResolver::SEEN_COOKIE_NAME,
-                    value: '1',
-                    expire: $expireAt,
-                    path: '/',
-                    domain: null,
-                    secure: $isSecure,
-                    httpOnly: false,
-                    raw: false,
-                    sameSite: Cookie::SAMESITE_LAX
-                )
-            );
-        }
 
         return $response;
     }

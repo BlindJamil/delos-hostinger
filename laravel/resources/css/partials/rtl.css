@@ -122,9 +122,6 @@
  * inline so its internal layout flows correctly.
  * ------------------------------------------------------------------ */
 
-.lang-picker-card[dir="rtl"] {
-    text-align: right;
-}
 
 /* ------------------------------------------------------------------
  * Language picker cursor visibility
@@ -134,18 +131,3 @@
  * global `cursor: none !important` scoped to the picker only.
  * ------------------------------------------------------------------ */
 
-#lang-picker,
-#lang-picker a,
-#lang-picker .lang-picker-card,
-body.has-custom-cursor #lang-picker,
-body.has-custom-cursor #lang-picker a,
-body.has-custom-cursor #lang-picker .lang-picker-card {
-    cursor: default !important;
-}
-
-#lang-picker a,
-#lang-picker .lang-picker-card,
-body.has-custom-cursor #lang-picker a,
-body.has-custom-cursor #lang-picker .lang-picker-card {
-    cursor: pointer !important;
-}

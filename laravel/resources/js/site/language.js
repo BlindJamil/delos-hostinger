@@ -1,22 +1,17 @@
 /**
- * Language picker + switcher client-side behavior.
+ * Language switcher client-side behavior.
  *
- * Responsibilities:
- *   - First-visit modal: focus trap, body scroll lock, click-to-navigate
- *     with cookie+localStorage persistence BEFORE navigation.
- *   - Persistent switcher surfaces (desktop dropdown / mobile drawer /
- *     footer links): set cookies on click, then navigate.
+ * Persists the user's language choice to a cookie and localStorage the
+ * moment they click a switcher surface (desktop dropdown, mobile drawer,
+ * footer link, floating globe), so the choice survives the immediate
+ * navigation even before the server's Set-Cookie header is processed.
  *
- * The cookie is also set server-side by SetLocale middleware on every
- * request, but we set it client-side too so the choice survives the
- * immediate click even if the browser hasn't yet processed the Set-Cookie
- * header from the subsequent navigation.
+ * The server-side SetLocale middleware refreshes the same cookie on every
+ * request; client + server agree on format (plaintext, see bootstrap/app.php
+ * encryptCookies exception list).
  */
 
-import { trapFocus } from './focus-trap.js';
-
 const COOKIE_NAME = 'delos_locale';
-const SEEN_COOKIE_NAME = 'delos_locale_seen';
 const STORAGE_KEY = 'delos_locale';
 const ONE_YEAR_DAYS = 365;
 
@@ -29,48 +24,10 @@ function setCookie(name, value, days) {
 function persistLocaleChoice(locale) {
     try {
         setCookie(COOKIE_NAME, locale, ONE_YEAR_DAYS);
-        setCookie(SEEN_COOKIE_NAME, '1', ONE_YEAR_DAYS);
         window.localStorage?.setItem(STORAGE_KEY, locale);
     } catch (_) {
         // Ignore storage errors (cookies disabled, private mode, etc.)
     }
-}
-
-export function initLanguagePicker() {
-    const picker = document.getElementById('lang-picker');
-    if (!picker) return;
-
-    // Lock body scroll while picker is open
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
-    // Focus trap
-    const releaseFocusTrap = trapFocus(picker);
-
-    // Intercept card clicks to persist locale before navigation
-    picker.querySelectorAll('[data-locale]').forEach((card) => {
-        card.addEventListener('click', (event) => {
-            const locale = card.getAttribute('data-locale');
-            if (!locale) return;
-            persistLocaleChoice(locale);
-            // Let the click propagate normally — the <a href="..."> will navigate.
-            // We don't preventDefault; we just made sure cookies are set first.
-        });
-    });
-
-    // Block ESC and click-outside-to-dismiss per design decision:
-    // "No close button, must choose" (user confirmed in plan).
-    picker.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-            event.preventDefault();
-        }
-    });
-
-    // Clean up on page hide (for back/forward cache)
-    window.addEventListener('pagehide', () => {
-        document.body.style.overflow = previousOverflow;
-        releaseFocusTrap();
-    }, { once: true });
 }
 
 export function initLanguageSwitcher() {

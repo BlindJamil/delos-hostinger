@@ -22,6 +22,11 @@ return [
     ],
 
     'video' => [
+        // Media defaults — filenames map to public/videos and public/images.
+        // The admin editor recognizes these and renders the current asset
+        // as a preview; the public template also reads through pcontent_url().
+        'source' => 'delos-brand.mp4',
+        'poster' => 'video-poster.jpg',
         'overline' => 'Discover Delos',
         'watch' => 'Watch Our Story',
     ],

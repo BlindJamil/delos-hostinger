@@ -13,8 +13,8 @@
                 <img src="{{ asset('images/delos-logo.jpg') }}" alt="" class="w-full h-full object-cover">
             </div>
             <div class="flex flex-col items-center">
-                <span class="font-serif text-xl tracking-[0.3em] text-delos-cream font-semibold">{{ __('common.brand.name_primary') }}</span>
-                <span class="text-overline-sm text-delos-gold/70">{{ __('common.brand.name_secondary') }}</span>
+                <span class="font-serif text-xl tracking-[0.3em] text-delos-cream font-semibold">{{ pcontent('common.brand.name_primary') }}</span>
+                <span class="text-overline-sm text-delos-gold/70">{{ pcontent('common.brand.name_secondary') }}</span>
             </div>
         </div>
         <div class="loader-bar"></div>
@@ -46,7 +46,7 @@
     </div>
 
     <div data-motion="fade" data-hero-fade-out class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3">
-        <span class="text-overline-sm text-delos-cream/50">{{ __('home.hero.scroll_label') }}</span>
+        <span class="text-overline-sm text-delos-cream/50">{{ pcontent('home.hero.scroll_label') }}</span>
         <div class="w-px h-10 bg-delos-cream/25 relative overflow-hidden">
             <div class="scroll-line absolute top-0 left-0 w-full bg-delos-gold/60" style="height:30%"></div>
         </div>
@@ -59,17 +59,17 @@
         <div class="grid lg:grid-cols-12 gap-10 lg:gap-20 items-start">
             <div data-motion="slide-left" class="lg:col-span-5">
                 <div data-motion-line class="w-16 h-px bg-delos-gold mb-6"></div>
-                <p class="text-overline text-delos-gold mb-5">{{ __('home.about.overline') }}</p>
+                <p class="text-overline text-delos-gold mb-5">{{ pcontent('home.about.overline') }}</p>
                 <h2 class="text-heading-2 text-delos-dark leading-tight">
-                    {{ __('home.about.heading_1') }}<br>
-                    {{ __('home.about.heading_2') }} <em class="text-delos-gold not-italic">{{ __('home.about.heading_accent') }}</em>
+                    {{ pcontent('home.about.heading_1') }}<br>
+                    {{ pcontent('home.about.heading_2') }} <em class="text-delos-gold not-italic">{{ pcontent('home.about.heading_accent') }}</em>
                 </h2>
             </div>
             <div data-motion="slide-right" class="lg:col-span-7 lg:border-l lg:border-delos-gold/25 lg:pl-12">
-                <p class="scroll-text text-body text-delos-muted mb-8">{{ __('home.about.body') }}</p>
-                <blockquote class="pull-quote mb-10">{{ __('home.about.quote') }}</blockquote>
+                <p class="scroll-text text-body text-delos-muted mb-8">{{ pcontent('home.about.body') }}</p>
+                <blockquote class="pull-quote mb-10">{{ pcontent('home.about.quote') }}</blockquote>
                 <a href="{{ lroute('about') }}" class="btn-ripple inline-flex items-center gap-2 text-delos-dark text-btn hover:text-delos-gold transition-colors duration-300 group">
-                    {{ __('common.ctas.learn_more') }} <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    {{ pcontent('common.ctas.learn_more') }} <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
             </div>
         </div>
@@ -82,20 +82,23 @@
         <div data-motion="scale-in" class="relative w-full rounded-xl overflow-hidden shadow-2xl" style="aspect-ratio: 16 / 9;">
             <video id="delos-video" class="absolute inset-0 w-full h-full object-cover"
                    preload="metadata" playsinline muted
-                   poster="{{ asset('images/video-poster.jpg') }}">
-                <source src="{{ asset('videos/delos-brand.mp4') }}" type="video/mp4">
+                   poster="{{ pcontent_url('home.video.poster', asset('images/video-poster.jpg')) }}">
+                <source src="{{ pcontent_url('home.video.source', asset('videos/delos-brand.mp4')) }}" type="video/mp4">
             </video>
-            <div id="video-overlay" class="absolute inset-0 bg-delos-dark/65 z-[1] transition-opacity duration-700 cursor-pointer">
-                <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/80 via-delos-dark/30 to-delos-dark/50"></div>
+            <div id="video-overlay" class="absolute inset-0 z-[1] transition-opacity duration-700 cursor-pointer">
+                {{-- Soft radial vignette — darkens only around the play CTA
+                     so text stays legible, while the poster edges stay
+                     luminous. Matches the "less darkness" brand direction. --}}
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(26,26,30,0.45)_0%,rgba(26,26,30,0.15)_45%,rgba(26,26,30,0)_75%)]"></div>
                 <div class="absolute inset-0 flex flex-col items-center justify-center z-[2]">
-                    <p class="text-overline text-delos-gold mb-6">{{ __('home.video.overline') }}</p>
-                    <button id="video-play-btn" class="group relative w-20 h-20 lg:w-24 lg:h-24 rounded-full border-2 border-delos-gold/50 flex items-center justify-center hover:border-delos-gold hover:scale-110 transition-all duration-500 bg-delos-dark/40 backdrop-blur-md">
+                    <p class="text-overline text-delos-gold mb-6 [text-shadow:0_1px_12px_rgba(0,0,0,0.45)]">{{ pcontent('home.video.overline') }}</p>
+                    <button id="video-play-btn" class="group relative w-20 h-20 lg:w-24 lg:h-24 rounded-full border-2 border-delos-gold/70 flex items-center justify-center hover:border-delos-gold hover:scale-110 transition-all duration-500 bg-delos-dark/30 backdrop-blur-md shadow-[0_8px_40px_rgba(0,0,0,0.35)]">
                         <svg class="w-7 h-7 lg:w-8 lg:h-8 text-delos-gold ml-1 group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z"/>
                         </svg>
                         <span class="absolute inset-0 rounded-full border border-delos-gold/20 animate-ping"></span>
                     </button>
-                    <p class="font-serif text-delos-cream/60 text-sm mt-6 tracking-wide">{{ __('home.video.watch') }}</p>
+                    <p class="font-serif text-delos-cream/80 text-sm mt-6 tracking-wide [text-shadow:0_1px_12px_rgba(0,0,0,0.45)]">{{ pcontent('home.video.watch') }}</p>
                 </div>
             </div>
         </div>
@@ -108,8 +111,8 @@
         <div data-motion-group="featured-header" class="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-16 gap-6">
             <div>
                 <div data-motion-line class="w-16 h-px bg-delos-gold mb-5"></div>
-                <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">{{ __('home.collection.overline') }}</p>
-                <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark leading-tight">{{ __('home.collection.heading') }}</h2>
+                <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">{{ pcontent('home.collection.overline') }}</p>
+                <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark leading-tight">{{ pcontent('home.collection.heading') }}</h2>
             </div>
             <a href="{{ lroute('projects') }}" data-motion="fade-up" class="btn-ripple self-start inline-flex items-center gap-2 text-delos-muted text-btn font-medium hover:text-delos-gold transition-colors duration-300 group">
                 {{ __('common.ctas.view_all_projects') }} <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
@@ -144,23 +147,53 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion-group="employee-header" class="text-center mb-12 lg:mb-16">
             <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mb-5"></div>
-            <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">{{ __('home.employees.overline') }}</p>
-            <h2 data-motion="fade-up" class="text-heading-2 text-delos-cream">{{ __('home.employees.heading') }}</h2>
-            <p data-motion="fade-up" class="text-body text-delos-cream/40 mt-5 max-w-xl mx-auto">{{ __('home.employees.sub') }}</p>
+            <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">{{ pcontent('home.employees.overline') }}</p>
+            <h2 data-motion="fade-up" class="text-heading-2 text-delos-cream">{{ pcontent('home.employees.heading') }}</h2>
+            <p data-motion="fade-up" class="text-body text-delos-cream/40 mt-5 max-w-xl mx-auto">{{ pcontent('home.employees.sub') }}</p>
         </div>
     </div>
-    <div id="employee-track" class="flex gap-6 px-6 lg:px-12 lg:justify-center lg:mx-auto lg:max-w-[1400px]">
-        @foreach(__('home.employees.items') as $slug => $emp)
+    <div id="employee-viewport">
+    <div id="employee-track" class="flex gap-6 px-6 lg:px-12">
+        @forelse(($featuredEmployees ?? collect()) as $emp)
+            @php
+                $empName = $emp->localized('name');
+                $empRole = $emp->localized('role');
+                $empBranch = $emp->branch;
+                $empAchievement = $emp->localized('achievement');
+            @endphp
             <div data-motion="fade-up" class="employee-slide employee-card card-tilt group relative w-[350px] lg:w-[420px] aspect-[3/4] overflow-hidden bg-delos-dark-2 flex-shrink-0">
-                <x-responsive-image :src="$emp['img']" :alt="$emp['name'] . ' — ' . $emp['role']" sizes="(min-width: 1024px) 420px, 350px" class="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <x-admin-edit-pill :href="route('admin.employees.edit', $emp)" :label="'Edit ' . $empName" />
+                @if($emp->imageIsLegacy())
+                    <x-responsive-image :src="$emp->image" :alt="$empName . ' — ' . $empRole" sizes="(min-width: 1024px) 420px, 350px" class="absolute inset-0 w-full h-full object-cover opacity-60" />
+                @elseif($emp->image_url)
+                    <img src="{{ $emp->image_url }}" alt="{{ $empName }} — {{ $empRole }}" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover opacity-60">
+                @endif
                 <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3]">
-                    <p class="text-overline-sm text-delos-gold mb-3">{{ $emp['branch'] }}</p>
-                    <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $emp['name'] }}</h3>
-                    <p class="text-overline-sm text-delos-cream/50 mb-4">{{ $emp['role'] }}</p>
-                    <p class="text-body-sm text-delos-cream/40 leading-relaxed group-hover:text-delos-cream/60 transition-colors duration-500">&ldquo;{{ $emp['achievement'] }}&rdquo;</p>
+                    @if($empBranch)
+                        <p class="text-overline-sm text-delos-gold mb-3">{{ $empBranch }}</p>
+                    @endif
+                    <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $empName }}</h3>
+                    <p class="text-overline-sm text-delos-cream/50 mb-4">{{ $empRole }}</p>
+                    @if($empAchievement)
+                        <div class="text-body-sm text-delos-cream/40 leading-relaxed group-hover:text-delos-cream/60 transition-colors duration-500 employee-achievement">{!! $empAchievement !!}</div>
+                    @endif
                 </div>
             </div>
-        @endforeach
+        @empty
+            {{-- Fallback to legacy lang-file entries if DB is empty (safety net) --}}
+            @foreach(__('home.employees.items') as $slug => $emp)
+                <div data-motion="fade-up" class="employee-slide employee-card card-tilt group relative w-[350px] lg:w-[420px] aspect-[3/4] overflow-hidden bg-delos-dark-2 flex-shrink-0">
+                    <x-responsive-image :src="$emp['img']" :alt="$emp['name'] . ' — ' . $emp['role']" sizes="(min-width: 1024px) 420px, 350px" class="absolute inset-0 w-full h-full object-cover opacity-60" />
+                    <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3]">
+                        <p class="text-overline-sm text-delos-gold mb-3">{{ $emp['branch'] }}</p>
+                        <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $emp['name'] }}</h3>
+                        <p class="text-overline-sm text-delos-cream/50 mb-4">{{ $emp['role'] }}</p>
+                        <p class="text-body-sm text-delos-cream/40 leading-relaxed group-hover:text-delos-cream/60 transition-colors duration-500">&ldquo;{{ $emp['achievement'] }}&rdquo;</p>
+                    </div>
+                </div>
+            @endforeach
+        @endforelse
+    </div>
     </div>
 </section>
 
@@ -169,8 +202,8 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion-group="stats-header" class="text-center mb-16">
             <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mb-5"></div>
-            <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">{{ __('home.stats.overline') }}</p>
-            <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark">{{ __('home.stats.heading') }}</h2>
+            <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">{{ pcontent('home.stats.overline') }}</p>
+            <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark">{{ pcontent('home.stats.heading') }}</h2>
         </div>
         <div data-motion-group="stats-grid" class="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-16">
             @foreach(__('home.stats.items') as $i => $stat)
@@ -194,9 +227,9 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion-group="brands-intro" class="text-center mb-16">
             <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mb-5"></div>
-            <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">{{ __('home.brands.overline') }}</p>
-            <h2 data-motion="fade-up" class="text-heading-2 text-delos-cream">{{ __('home.brands.heading') }}</h2>
-            <p data-motion="fade-up" class="text-body text-delos-cream/40 mt-5 max-w-2xl mx-auto">{{ __('home.brands.sub') }}</p>
+            <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">{{ pcontent('home.brands.overline') }}</p>
+            <h2 data-motion="fade-up" class="text-heading-2 text-delos-cream">{{ pcontent('home.brands.heading') }}</h2>
+            <p data-motion="fade-up" class="text-body text-delos-cream/40 mt-5 max-w-2xl mx-auto">{{ pcontent('home.brands.sub') }}</p>
         </div>
         <div data-motion="fade-up" class="brand-marquee-wrapper overflow-hidden mb-12 border-t border-b border-delos-cream/5 py-8">
             <div class="brand-marquee flex whitespace-nowrap">
@@ -225,15 +258,15 @@
     </div>
     <div data-motion-group="cta" class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
         <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mb-8"></div>
-        <p data-motion="fade-up" class="text-overline text-delos-gold/50 mb-8">{{ __('home.cta.overline') }}
+        <p data-motion="fade-up" class="text-overline text-delos-gold/50 mb-8">{{ pcontent('home.cta.overline') }}
             <span class="italian-flag"><span class="flag-green"></span><span class="flag-white"></span><span class="flag-red"></span></span>
         </p>
-        <h2 data-motion="fade-up" class="font-serif text-delos-cream text-[clamp(2rem,4.5vw,3.8rem)] font-light leading-tight mb-10 max-w-2xl mx-auto">{{ __('home.cta.heading') }}</h2>
+        <h2 data-motion="fade-up" class="font-serif text-delos-cream text-[clamp(2rem,4.5vw,3.8rem)] font-light leading-tight mb-10 max-w-2xl mx-auto">{{ pcontent('home.cta.heading') }}</h2>
         <div data-motion="fade-up" class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="{{ lroute('contact') }}" class="magnetic-btn btn-ripple inline-flex items-center gap-3 px-9 py-4 bg-delos-gold text-delos-dark text-btn hover:bg-delos-gold-light transition-colors duration-300 group">
-                {{ __('common.ctas.book_consultation') }} <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                {{ pcontent('common.ctas.book_consultation') }} <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
-            <a href="tel:07501001701" class="magnetic-btn btn-ripple inline-flex items-center gap-3 px-9 py-4 border border-delos-cream/20 text-delos-cream text-btn font-medium hover:border-delos-gold hover:text-delos-gold transition-colors duration-300">
+            <a href="tel:{{ preg_replace('/\s+/', '', $settingPhone ?: '07501001701') }}" class="magnetic-btn btn-ripple inline-flex items-center gap-3 px-9 py-4 border border-delos-cream/20 text-delos-cream text-btn font-medium hover:border-delos-gold hover:text-delos-gold transition-colors duration-300">
                 {{ __('common.ctas.call_us') }}
             </a>
         </div>

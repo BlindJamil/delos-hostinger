@@ -10,8 +10,10 @@ import {
     initProjectFilters,
 } from './navigation.js';
 import { initMotion } from './motion.js';
+import { initIraqMap } from './iraq-map.js';
+import { initLanguageGlobe } from './language-globe.js';
 import { initViewportHeight } from './viewport.js';
-import { initLanguagePicker, initLanguageSwitcher } from './language.js';
+import { initLanguageSwitcher } from './language.js';
 
 export function initSite() {
     const context = createSiteContext();
@@ -30,11 +32,13 @@ export function initSite() {
     initPageTransitions(context);
     initProjectFilters();
     initMediaControls(context);
-    initLanguagePicker();
     initLanguageSwitcher();
+    initLanguageGlobe();
 
     initPageLoader(context, () => {
         initInteractiveEffects(context);
         initMotion(context);
+        // Iraq map is a no-op outside /branches; safe to call universally.
+        initIraqMap(context);
     });
 }

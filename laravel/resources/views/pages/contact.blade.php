@@ -19,12 +19,12 @@
     <div data-motion-group="hero" class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
         <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-5">
             <span class="w-8 h-px bg-delos-gold"></span>
-            <span class="text-overline text-delos-gold">{{ __('contact.hero.overline') }}</span>
+            <span class="text-overline text-delos-gold">{{ pcontent('contact.hero.overline') }}</span>
             <span class="w-8 h-px bg-delos-gold"></span>
         </div>
         <h1 data-motion="fade-up" class="font-serif text-delos-dark text-5xl lg:text-7xl font-light leading-tight">
-            {{ __('contact.hero.heading_1') }}<br>
-            <em class="text-delos-gold not-italic">{{ __('contact.hero.heading_accent') }}</em>
+            {{ pcontent('contact.hero.heading_1') }}<br>
+            <em class="text-delos-gold not-italic">{{ pcontent('contact.hero.heading_accent') }}</em>
         </h1>
     </div>
 </section>
@@ -36,7 +36,7 @@
         <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
             <div data-motion-group="contact-copy">
                 <div data-motion-line class="w-16 h-px bg-delos-gold mb-5"></div>
-                <p data-motion="fade-up" class="text-overline text-delos-gold mb-4">{{ __('contact.intro.overline') }}</p>
+                <p data-motion="fade-up" class="text-overline text-delos-gold mb-4">{{ pcontent('contact.intro.overline') }}</p>
                 <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark leading-tight mb-6">
                     {{ __('contact.intro.heading_1') }}<br>
                     <em class="text-delos-gold not-italic">{{ __('contact.intro.heading_accent') }}</em>
@@ -45,7 +45,7 @@
                     @endif
                 </h2>
                 <p data-motion="fade-up" class="text-body text-delos-muted">
-                    {{ __('contact.intro.body') }}
+                    {{ pcontent('contact.intro.body') }}
                 </p>
             </div>
 
@@ -62,12 +62,12 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.email') }}</label>
-                    <input type="email" name="email" class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ __('contact.form.email_placeholder') }}">
+                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ pcontent('contact.form.email') }}</label>
+                    <input type="email" name="email" class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ pcontent('contact.form.email_placeholder') }}">
                 </div>
                 <div>
-                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.phone') }}</label>
-                    <input type="tel" name="phone" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ __('contact.form.phone_placeholder') }}">
+                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ pcontent('contact.form.phone') }}</label>
+                    <input type="tel" name="phone" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ pcontent('contact.form.phone_placeholder') }}">
                 </div>
                 <div>
                     <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.branch') }}</label>
@@ -94,11 +94,11 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.message') }}</label>
-                    <textarea name="message" rows="4" class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 resize-none placeholder-delos-muted/50" placeholder="{{ __('contact.form.message_placeholder') }}"></textarea>
+                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ pcontent('contact.form.message') }}</label>
+                    <textarea name="message" rows="4" class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 resize-none placeholder-delos-muted/50" placeholder="{{ pcontent('contact.form.message_placeholder') }}"></textarea>
                 </div>
                 <button type="submit" class="btn-ripple w-full py-4 bg-delos-dark text-delos-cream text-[12px] tracking-[0.3em] uppercase font-medium hover:bg-delos-gold hover:text-delos-dark transition-all duration-300">
-                    {{ __('contact.form.submit') }}
+                    {{ pcontent('contact.form.submit') }}
                 </button>
             </form>
         </div>

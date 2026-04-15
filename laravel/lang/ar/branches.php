@@ -7,6 +7,14 @@ return [
         'heading_accent' => 'معيار واحد من التميّز.',
     ],
 
+    'map_caption' => 'خريطة العراق تُظهر :count من معارض ديلوس.',
+    'cartouche_showroom' => '{1} معرض|[2,*] معارض',
+    'directions_cta' => 'احصل على الاتجاهات',
+    'call_cta' => 'اتصل',
+    'whatsapp_cta' => 'واتساب',
+    'photo_pending' => 'صور المعرض قادمة',
+    'flagship_label' => 'المعرض الرئيسي',
+
     'items' => [
         'erbil' => [
             'city' => 'أربيل',

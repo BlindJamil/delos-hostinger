@@ -515,23 +515,415 @@ html.js .stat-suffix.is-visible {
     color: #7A6B65;
 }
 
+/* Employees: horizontal scroll is contained to a dedicated viewport so only
+   the cards slide — the section heading ("Best Employees of the Month")
+   stays anchored. Scales to any number of cards without hijacking vertical
+   scroll.
+   - Desktop: drag-to-pan with RAF-interpolated follow + momentum glide
+     (see motion.js). Cursor: grab → grabbing.
+   - Touch:   native swipe with per-card scroll-snap. */
+#employee-viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: pan-y;
+}
+
+#employee-viewport.is-dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+}
+
+#employee-viewport.is-dragging .employee-slide {
+    pointer-events: none;
+}
+
+#employee-viewport::-webkit-scrollbar {
+    display: none;
+}
+
+#employee-track {
+    width: max-content;
+    max-width: none !important;
+    padding-bottom: 1rem;
+    margin-inline: auto;
+}
+
+/* Touch devices: fall back to native swipe + snap. Drag-to-pan does not
+   run on touch (see motion.js guard). */
 @media (hover: none), (pointer: coarse) {
-    #employees-section {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+    #employee-viewport {
+        cursor: default;
         scroll-snap-type: x proximity;
-    }
-
-    #employees-section::-webkit-scrollbar {
-        display: none;
-    }
-
-    #employee-track {
-        width: max-content;
-        padding-bottom: 1rem;
+        touch-action: pan-x pan-y;
     }
 
     .employee-slide {
         scroll-snap-align: center;
     }
 }
+
+/* ============================================================
+   Admin-only UI: edit pills + floating admin bar.
+   Rendered server-side only when $isAdmin is true. Anonymous
+   visitors never receive the markup OR these style rules'
+   target elements — so nothing leaks. Pills sit inside each
+   content card; the bar is fixed at bottom-left mirroring the
+   language globe at bottom-right.
+
+   SPECIFICITY NOTE: the pill uses `a.admin-edit-pill[data-page-transition]`
+   to out-specificity the site's two broad rules:
+     1. `[data-page-transition]` — applies `position: fixed; z-index: 9998`
+        to ANY element with that attribute (the attr is how we tell the
+        page-transition JS to skip clicks on pills — see navigation.js:251)
+     2. `body.has-custom-cursor a` — applies `cursor: none` site-wide to hide
+        the native cursor in favour of the custom gold dot
+   Both are beaten by the attribute-qualified selectors below.
+   ============================================================ */
+
+/* --- Edit pill ---------------------------------------------- */
+
+/* Base — targets plain `.admin-edit-pill` */
+.admin-edit-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-delos-gold, #C49A7A);
+    color: var(--color-delos-dark, #3D2E2A);
+    box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+    opacity: 0.55;
+    transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+    text-decoration: none;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    position: absolute;
+    z-index: 5;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+/* High-specificity override: defeats [data-page-transition] AND body.has-custom-cursor a */
+a.admin-edit-pill[data-page-transition="false"] {
+    position: absolute !important;
+    inset: auto !important;
+    z-index: 5 !important;
+    background: var(--color-delos-gold, #C49A7A) !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease !important;
+}
+
+.admin-edit-pill:hover,
+.admin-edit-pill:focus-visible {
+    opacity: 1;
+    transform: scale(1.08);
+    background: var(--color-delos-gold-light, #D4AE8E);
+    outline: none;
+}
+
+.admin-edit-pill:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-delos-cream, #F8F4EF), 0 0 0 4px var(--color-delos-gold, #C49A7A);
+}
+
+.admin-edit-pill__icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.admin-edit-pill__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Corner variants — logical properties flip cleanly in RTL.
+   Use the same high-specificity selector as the base override so these
+   win against `[data-page-transition] { inset: 0 }`. */
+a.admin-edit-pill[data-page-transition="false"].admin-edit-pill--top-right {
+    inset-block-start: 12px !important;
+    inset-inline-end: 12px !important;
+}
+a.admin-edit-pill[data-page-transition="false"].admin-edit-pill--top-left {
+    inset-block-start: 12px !important;
+    inset-inline-start: 12px !important;
+}
+a.admin-edit-pill[data-page-transition="false"].admin-edit-pill--bottom-right {
+    inset-block-end: 12px !important;
+    inset-inline-end: 12px !important;
+}
+a.admin-edit-pill[data-page-transition="false"].admin-edit-pill--bottom-left {
+    inset-block-end: 12px !important;
+    inset-inline-start: 12px !important;
+}
+
+/* On touch devices there is no hover — always show at full opacity */
+@media (hover: none), (pointer: coarse) {
+    .admin-edit-pill {
+        opacity: 1;
+    }
+}
+
+/* Card-hover bump: inside any parent at full card-level hover, brighten pill */
+.employee-slide:hover .admin-edit-pill,
+.project-item:hover .admin-edit-pill,
+.brand-card:hover .admin-edit-pill,
+.service-card:hover .admin-edit-pill,
+[data-admin-editable]:hover > .admin-edit-pill {
+    opacity: 1;
+}
+
+/* Global off-switch driven by the admin bar toggle */
+html.no-edit-pills .admin-edit-pill {
+    display: none !important;
+}
+
+/* --- Admin bar ---------------------------------------------- */
+
+.admin-bar {
+    position: fixed;
+    bottom: 24px;
+    inset-inline-start: 24px;
+    z-index: 60;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Defeat `body.has-custom-cursor a|button` (specificity 0,1,2) with 0,2,2.
+   These rules also defeat the site's body { cursor: none }. */
+body.has-custom-cursor .admin-bar,
+body.has-custom-cursor .admin-bar * {
+    cursor: default !important;
+}
+body.has-custom-cursor .admin-bar a,
+body.has-custom-cursor .admin-bar button,
+body.has-custom-cursor .admin-bar label.admin-bar__toggle,
+body.has-custom-cursor .admin-bar label.admin-bar__toggle * {
+    cursor: pointer !important;
+}
+
+.admin-bar__trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-delos-dark-2, #2C2220);
+    color: var(--color-delos-gold, #C49A7A);
+    border: 1px solid rgba(196, 154, 122, 0.35);
+    box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.5);
+    position: relative;
+    transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    padding: 0;
+}
+
+.admin-bar__trigger:hover {
+    background: var(--color-delos-dark, #3D2E2A);
+    border-color: var(--color-delos-gold, #C49A7A);
+    transform: translateY(-1px);
+}
+
+.admin-bar--expanded .admin-bar__trigger {
+    background: var(--color-delos-gold, #C49A7A);
+    color: var(--color-delos-dark, #3D2E2A);
+    border-color: var(--color-delos-gold, #C49A7A);
+}
+
+.admin-bar__gear {
+    width: 20px;
+    height: 20px;
+}
+
+.admin-bar__dot {
+    position: absolute;
+    top: 6px;
+    inset-inline-end: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ef4444;
+    border: 2px solid var(--color-delos-dark-2, #2C2220);
+}
+
+.admin-bar__menu {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    inset-inline-start: 0;
+    min-width: 220px;
+    background: var(--color-delos-dark-2, #2C2220);
+    border: 1px solid rgba(196, 154, 122, 0.25);
+    border-radius: 12px;
+    box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    color: var(--color-delos-cream, #F8F4EF);
+}
+
+.admin-bar__header {
+    padding: 8px 10px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 6px;
+}
+
+.admin-bar__label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(248, 244, 239, 0.5);
+    margin-bottom: 2px;
+}
+
+.admin-bar__name {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-delos-gold, #C49A7A);
+}
+
+.admin-bar__links {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-bar__link {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: rgba(248, 244, 239, 0.82);
+    text-decoration: none;
+    background: transparent;
+    border: 0;
+    width: 100%;
+    text-align: start;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-bar__link svg {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.admin-bar__link-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.admin-bar__link-title {
+    font-size: 12.5px;
+    line-height: 1.2;
+    color: rgba(248, 244, 239, 0.9);
+}
+
+.admin-bar__link-sub {
+    font-size: 10px;
+    line-height: 1.3;
+    color: rgba(248, 244, 239, 0.42);
+    letter-spacing: 0.02em;
+}
+
+.admin-bar__link:hover .admin-bar__link-title {
+    color: var(--color-delos-cream, #F8F4EF);
+}
+
+.admin-bar__link:hover {
+    background: rgba(196, 154, 122, 0.12);
+    color: var(--color-delos-cream, #F8F4EF);
+}
+
+.admin-bar__link--danger:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+}
+
+.admin-bar__divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+    margin: 6px 0;
+}
+
+.admin-bar__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    user-select: none;
+}
+
+.admin-bar__toggle:hover {
+    background: rgba(196, 154, 122, 0.08);
+}
+
+.admin-bar__toggle-label {
+    font-size: 12.5px;
+    color: rgba(248, 244, 239, 0.82);
+}
+
+.admin-bar__switch {
+    position: relative;
+    display: inline-block;
+    width: 32px;
+    height: 18px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+}
+
+.admin-bar__switch.is-on {
+    background: var(--color-delos-gold, #C49A7A);
+}
+
+.admin-bar__switch-thumb {
+    position: absolute;
+    top: 2px;
+    inset-inline-start: 2px;
+    width: 14px;
+    height: 14px;
+    background: var(--color-delos-cream, #F8F4EF);
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+}
+
+.admin-bar__switch-thumb.is-on {
+    transform: translateX(14px);
+}
+
+/* RTL: swap the logical translation direction for the thumb */
+[dir="rtl"] .admin-bar__switch-thumb.is-on {
+    transform: translateX(-14px);
+}
+
+.admin-bar__logout-form {
+    margin: 0;
+}
+
+[x-cloak] { display: none !important; }
+
+/* NOTE: the floating language globe is a JS-injected element with inline
+   styles — see resources/js/site/language-globe.js. It's intentionally
+   self-contained (no CSS here) so it behaves identically to the
+   long-running production version. */
+
+

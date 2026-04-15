@@ -21,7 +21,9 @@ export function createSiteContext() {
         finePointerMedia,
         hoverMedia,
         isTouchDevice,
-        page: document.body.dataset.page ?? 'unknown',
+        // Strip the `l.` locale-route prefix so page name checks (e.g. `=== 'home'`)
+        // work regardless of whether a locale is in the URL.
+        page: (document.body.dataset.page ?? 'unknown').replace(/^l\./, ''),
         reducedMotionMedia,
         transitionStorageKey: TRANSITION_STORAGE_KEY,
         get hasFinePointer() {

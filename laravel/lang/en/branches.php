@@ -7,6 +7,14 @@ return [
         'heading_accent' => 'One standard of excellence.',
     ],
 
+    'map_caption' => 'Map of Iraq showing :count Delos showrooms.',
+    'cartouche_showroom' => '{1} showroom|[2,*] showrooms',
+    'directions_cta' => 'Get Directions',
+    'call_cta' => 'Call',
+    'whatsapp_cta' => 'WhatsApp',
+    'photo_pending' => 'Showroom photography forthcoming',
+    'flagship_label' => 'Flagship',
+
     'items' => [
         'erbil' => [
             'city' => 'Erbil',

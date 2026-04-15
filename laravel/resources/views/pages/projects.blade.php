@@ -7,22 +7,44 @@
 
 {{-- Hero: Magazine Editorial --}}
 <section data-motion-hero class="relative min-h-dvh overflow-hidden bg-delos-cream">
+    {{-- Admin: jump to the featured-projects filter in the admin panel --}}
+    <x-admin-edit-pill :href="route('admin.projects.index', ['featured' => 'yes'])" label="Manage featured" />
     @php
-        $heroProjectsRaw = __('projects.hero.slides');
-        $heroProjects = array_values(is_array($heroProjectsRaw) ? $heroProjectsRaw : []);
+        // $heroProjects comes from PageController::projects() — DB-driven,
+        // filtered to active + featured. Falls back to empty if none are
+        // flagged, so the page still renders (just without a hero carousel).
+        $heroProjects = ($heroProjects ?? collect())->values();
     @endphp
 
     {{-- Full-bleed project image --}}
     <div id="project-slideshow" class="absolute inset-0">
         @foreach($heroProjects as $i => $p)
-            <x-responsive-image
-                :src="$p['img']"
-                :alt="$p['title']"
-                sizes="100vw"
-                class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
+            @php
+                $pTitle = $p->localized('title');
+                $pBrand = $p->brand;
+                $pCity = $p->city;
+                $pYear = $p->year;
+            @endphp
+            @if($p->imageIsLegacy())
+                <x-responsive-image
+                    :src="$p->image"
+                    :alt="$pTitle"
+                    sizes="100vw"
+                    class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
                 :loading="$i === 0 ? 'eager' : 'lazy'"
                 :fetchpriority="$i === 0 ? 'high' : null"
-                data-meta="{{ $p['brand'] }} · {{ $p['city'] }} · {{ $p['year'] }}" />
+                data-meta="{{ trim(collect([$pBrand, $pCity, $pYear])->filter()->join(' · ')) }}" />
+            @elseif($p->image_url)
+                <img
+                    src="{{ $p->image_url }}"
+                    alt="{{ $pTitle }}"
+                    sizes="100vw"
+                    class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
+                    loading="{{ $i === 0 ? 'eager' : 'lazy' }}"
+                    @if($i === 0) fetchpriority="high" @endif
+                    decoding="async"
+                    data-meta="{{ trim(collect([$pBrand, $pCity, $pYear])->filter()->join(' · ')) }}">
+            @endif
         @endforeach
     </div>
 
@@ -33,20 +55,24 @@
 
                 <div data-motion="fade-up" class="flex items-center gap-6 lg:gap-10">
                     <div>
-                        <p id="project-hero-title" class="font-serif text-delos-dark text-lg lg:text-xl font-light leading-tight">{{ $heroProjects[0]['title'] ?? '' }}</p>
-                        <p id="project-hero-meta" class="text-delos-muted text-[9px] tracking-[0.3em] uppercase mt-0.5" style="font-family: 'Inter', sans-serif;">{{ ($heroProjects[0]['brand'] ?? '') . ' · ' . ($heroProjects[0]['city'] ?? '') . ' · ' . ($heroProjects[0]['year'] ?? '') }}</p>
+                        @php
+                            $firstHero = $heroProjects->first();
+                            $firstMeta = $firstHero ? trim(collect([$firstHero->brand, $firstHero->city, $firstHero->year])->filter()->join(' · ')) : '';
+                        @endphp
+                        <p id="project-hero-title" class="font-serif text-delos-dark text-lg lg:text-xl font-light leading-tight">{{ $firstHero?->localized('title') }}</p>
+                        <p id="project-hero-meta" class="text-delos-muted text-[9px] tracking-[0.3em] uppercase mt-0.5" style="font-family: 'Inter', sans-serif;">{{ $firstMeta }}</p>
                     </div>
                 </div>
 
                 <div data-motion="fade" class="flex items-center gap-3">
-                    @for($i = 0; $i < count($heroProjects); $i++)
+                    @for($i = 0; $i < $heroProjects->count(); $i++)
                         <button class="hero-dot w-2 h-2 rounded-full transition-all duration-500 {{ $i === 0 ? 'bg-delos-gold w-6' : 'bg-delos-dark/20 hover:bg-delos-dark/40' }}"
                                 aria-label="Slide {{ $i + 1 }}" data-slide="{{ $i }}"></button>
                     @endfor
                 </div>
 
                 <div data-motion="fade-up" class="hidden sm:block">
-                    <span class="text-delos-muted text-[9px] tracking-[0.4em] uppercase" style="font-family: 'Inter', sans-serif;">{{ __('projects.hero.counter') }}</span>
+                    <span class="text-delos-muted text-[9px] tracking-[0.4em] uppercase" style="font-family: 'Inter', sans-serif;">{{ pcontent('projects.hero.counter') }}</span>
                 </div>
             </div>
         </div>
@@ -60,8 +86,10 @@
 
         {{-- Filter tabs --}}
         @php
-            $filters = __('projects.filters');
-            // Map filter key to data-filter value for JS compatibility (lowercase English)
+            // $filters comes from the controller: ['all' => <localized>, '<type_key>' => <localized label>, ...]
+            $filters = $filters ?? collect(['all' => pcontent('projects.filters.all')]);
+            // DB type values are the data-filter values themselves, so the map
+            // is a no-op for everything except the virtual "all" entry.
             $filterDataMap = [
                 'all' => 'all',
                 'kitchens' => 'kitchens',
@@ -85,25 +113,36 @@
 
         {{-- Projects Grid --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="projects-grid">
-            @foreach(__('projects.grid') as $slug => $project)
-                @php $i = $loop->index; @endphp
+            @foreach($projects as $project)
+                @php
+                    $i = $loop->index;
+                    $projTitle = $project->localized('title');
+                    $projTypeLabel = $project->localized('type_label') ?: ucfirst($project->type ?? '');
+                @endphp
                 <div data-motion="fade-up" class="project-item group relative aspect-[4/3] overflow-hidden bg-delos-dark cursor-pointer"
-                     data-type="{{ $project['type'] }}"
+                     data-type="{{ $project->type }}"
                      style="--motion-delay: {{ ($i % 3) * 100 }}ms;">
-                    <x-responsive-image :src="$project['img']" :alt="$project['title']"
-                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700" />
+                    <x-admin-edit-pill :href="route('admin.projects.edit', $project)" :label="'Edit ' . $projTitle" />
+                    @if($project->imageIsLegacy())
+                        <x-responsive-image :src="$project->image" :alt="$projTitle"
+                            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                            class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700" />
+                    @elseif($project->image_url)
+                        <img src="{{ $project->image_url }}" alt="{{ $projTitle }}" loading="lazy" decoding="async"
+                            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                            class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700">
+                    @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/20 to-transparent"></div>
 
                     <div class="absolute bottom-0 left-0 right-0 p-6 lg:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                         <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase mb-1" style="font-family: 'Inter', sans-serif;">
-                            {{ $project['city'] }} · {{ $project['year'] }}
+                            {{ trim(collect([$project->city, $project->year])->filter()->join(' · ')) }}
                         </p>
                         <h3 class="font-serif text-delos-cream text-xl font-light group-hover:text-delos-gold transition-colors duration-300">
-                            {{ $project['title'] }}
+                            {{ $projTitle }}
                         </h3>
                         <p class="text-delos-cream/50 text-[11px] tracking-[0.2em] uppercase mt-2 opacity-0 group-hover:opacity-100 transition-all duration-300" style="font-family: 'Inter', sans-serif;">
-                            {{ $project['type_label'] }}
+                            {{ $projTypeLabel }}
                         </p>
                     </div>
                 </div>
@@ -118,8 +157,18 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion-group="project-stats" class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             @foreach(__('projects.stats') as $i => $s)
+                @php
+                    // Split values like "500+", "100%", "4" into the numeric
+                    // part that animates (via data-motion-counter) and the
+                    // trailing suffix that fades in after the count completes.
+                    preg_match('/^(\d+)(.*)$/u', (string) $s['value'], $m);
+                    $statNumber = $m[1] ?? $s['value'];
+                    $statSuffix = trim($m[2] ?? '');
+                @endphp
                 <div data-motion="fade-up">
-                    <p class="font-serif text-delos-gold text-5xl lg:text-6xl font-light mb-3">{{ $s['value'] }}</p>
+                    <p class="font-serif text-delos-gold text-5xl lg:text-6xl font-light mb-3">
+                        <span data-motion-counter="{{ $statNumber }}">0</span>@if($statSuffix)<span class="stat-suffix">{{ $statSuffix }}</span>@endif
+                    </p>
                     <p class="text-delos-cream/50 text-[11px] tracking-[0.3em] uppercase" style="font-family: 'Inter', sans-serif;">{{ $s['label'] }}</p>
                 </div>
             @endforeach
@@ -132,8 +181,8 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion-group="projects-cta">
             <h2 data-motion="fade-up" class="font-serif text-delos-dark text-4xl lg:text-5xl font-light mb-8">
-                {{ __('projects.cta.heading_1') }}<br>
-                <em class="text-delos-gold not-italic">{{ __('projects.cta.heading_accent') }}</em>
+                {{ pcontent('projects.cta.heading_1') }}<br>
+                <em class="text-delos-gold not-italic">{{ pcontent('projects.cta.heading_accent') }}</em>
             </h2>
             <a href="{{ lroute('contact') }}"
                data-motion="fade-up"

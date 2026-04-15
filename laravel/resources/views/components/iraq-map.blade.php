@@ -1,0 +1,126 @@
+@props([
+    /** Collection|array of Branch models with latitude + longitude set. */
+    'branches' => [],
+])
+
+@php
+    use App\Support\Cartography;
+
+    // Load the SVG inline so we can animate individual paths via JS.
+    // The file is tiny (~1.5KB) and only read once per render.
+    $svgPath = resource_path('svg/iraq-map.svg');
+    $svgMarkup = file_exists($svgPath) ? file_get_contents($svgPath) : '';
+
+    // Pre-project each branch to viewBox coordinates server-side. Keeps the
+    // blade loop free of math and means no JS is needed for positioning.
+    $pins = collect($branches)
+        ->filter(fn ($b) => $b->latitude && $b->longitude)
+        ->map(function ($branch) {
+            $projected = Cartography::projectLatLng((float) $branch->latitude, (float) $branch->longitude);
+            return [
+                'branch' => $branch,
+                'x' => $projected['x'] ?? null,
+                'y' => $projected['y'] ?? null,
+            ];
+        })
+        ->filter(fn ($p) => $p['x'] !== null)
+        ->values();
+@endphp
+
+<figure class="iraq-map" data-iraq-map>
+    <figcaption class="sr-only">
+        {{ __('branches.map_caption', ['count' => $pins->count()]) }}
+    </figcaption>
+
+    {{-- Editorial cartouche: top-left --}}
+    <div class="iraq-map__cartouche iraq-map__cartouche--top-left" aria-hidden="true">
+        <span class="iraq-map__cartouche-rule"></span>
+        <span class="iraq-map__cartouche-text">
+            <span class="iraq-map__cartouche-brand">Delos</span>
+            <span class="iraq-map__cartouche-dot">·</span>
+            <span class="iraq-map__cartouche-meta">{{ $pins->count() }} {{ trans_choice('branches.cartouche_showroom', $pins->count()) }}</span>
+        </span>
+    </div>
+
+    {{-- Compass rose: bottom-right --}}
+    <svg class="iraq-map__compass" viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="18" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.35"/>
+        <circle cx="24" cy="24" r="12" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.2"/>
+        <path d="M24 5 L27 24 L24 21 L21 24 Z" fill="currentColor" opacity="0.9"/>
+        <path d="M24 43 L27 24 L24 27 L21 24 Z" fill="currentColor" opacity="0.25"/>
+        <text x="24" y="3" text-anchor="middle" font-size="4" fill="currentColor" opacity="0.6" font-family="'Cormorant Garamond', serif" letter-spacing="0.3">N</text>
+    </svg>
+
+    <div class="iraq-map__canvas">
+        {{-- Pure geography layer (inlined SVG) --}}
+        {!! $svgMarkup !!}
+
+        {{-- Pins + labels overlay — uses the SAME viewBox so coordinates line up --}}
+        <svg
+            class="iraq-map__pins"
+            viewBox="0 0 {{ Cartography::VIEWBOX_WIDTH }} {{ Cartography::VIEWBOX_HEIGHT }}"
+            preserveAspectRatio="xMidYMid meet"
+            aria-hidden="true"
+        >
+            @foreach($pins as $i => $pin)
+                @php
+                    $b = $pin['branch'];
+                    $name = $b->localized('name');
+                    // All showrooms render identically — the `is_flagship`
+                    // field remains in the DB for admin sort priority, but
+                    // the public map treats every branch equally.
+                    $radius = 8;
+                    // Place labels to the right of pins for most; flip to left for
+                    // the far-east pins so text doesn't spill off the viewBox.
+                    $labelAnchor = $pin['x'] > 780 ? 'end' : 'start';
+                    $labelDx = $pin['x'] > 780 ? -14 : 14;
+                @endphp
+
+                <g
+                    class="iraq-map__pin-group"
+                    data-branch-key="{{ $b->city_key }}"
+                    data-pin-index="{{ $i }}"
+                    transform="translate({{ $pin['x'] }} {{ $pin['y'] }})"
+                >
+                    {{-- Pulse halos — CSS animation handles timing --}}
+                    <circle class="iraq-map__pin-halo iraq-map__pin-halo--outer" r="{{ $radius * 3.5 }}" />
+                    <circle class="iraq-map__pin-halo iraq-map__pin-halo--inner" r="{{ $radius * 2 }}" />
+
+                    {{-- Connector line from pin to label (thin, decorative) --}}
+                    <line
+                        class="iraq-map__pin-connector"
+                        x1="0" y1="0"
+                        x2="{{ $labelDx * 0.7 }}" y2="0"
+                    />
+
+                    {{-- The pin dot itself, wrapped in <a> for keyboard nav --}}
+                    <a
+                        href="#branch-{{ $b->city_key }}"
+                        class="iraq-map__pin-link"
+                        aria-label="{{ $name }} — jump to branch details"
+                    >
+                        <circle class="iraq-map__pin" r="{{ $radius }}" />
+                    </a>
+
+                    {{-- City label (Cormorant, positioned outside pin) --}}
+                    <text
+                        class="iraq-map__pin-label"
+                        x="{{ $labelDx }}"
+                        y="4"
+                        text-anchor="{{ $labelAnchor }}"
+                    >{{ $name }}</text>
+
+                    {{-- Sub-label: established year, smaller --}}
+                    @if($b->localized('established'))
+                        <text
+                            class="iraq-map__pin-sublabel"
+                            x="{{ $labelDx }}"
+                            y="20"
+                            text-anchor="{{ $labelAnchor }}"
+                        >{{ $b->localized('established') }}</text>
+                    @endif
+                </g>
+            @endforeach
+        </svg>
+    </div>
+</figure>

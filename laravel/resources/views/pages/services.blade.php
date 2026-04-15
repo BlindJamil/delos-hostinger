@@ -15,7 +15,7 @@
     <div class="absolute inset-0 flex items-center z-[1] overflow-hidden">
         <div class="brand-marquee flex whitespace-nowrap">
             @for($i = 0; $i < 6; $i++)
-                <span class="font-serif text-[clamp(6rem,15vw,14rem)] font-light text-delos-dark/[0.05] tracking-wide leading-none flex-shrink-0 px-4 select-none">{{ __('services.hero.marquee_bg_label') }}</span>
+                <span class="font-serif text-[clamp(6rem,15vw,14rem)] font-light text-delos-dark/[0.05] tracking-wide leading-none flex-shrink-0 px-4 select-none">{{ pcontent('services.hero.marquee_bg_label') }}</span>
                 <span class="font-serif text-[clamp(6rem,15vw,14rem)] font-light text-delos-gold/[0.07] tracking-wide leading-none flex-shrink-0 px-8 select-none">—</span>
             @endfor
         </div>
@@ -28,14 +28,14 @@
         <div class="text-center mb-10 lg:mb-14">
             <div data-motion="fade" class="inline-flex items-center gap-3 mb-5">
                 <span class="w-8 h-px bg-delos-gold/50"></span>
-                <span class="text-delos-gold text-[10px] tracking-[0.5em] uppercase font-semibold" style="font-family: 'Inter', sans-serif;">{{ __('services.hero.overline') }}</span>
+                <span class="text-delos-gold text-[10px] tracking-[0.5em] uppercase font-semibold" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.hero.overline') }}</span>
                 <span class="w-8 h-px bg-delos-gold/50"></span>
             </div>
             <h1 data-motion="fade-up" class="font-serif text-delos-dark text-4xl lg:text-6xl xl:text-7xl font-light leading-[1.08] mb-2">
-                {{ __('services.hero.heading_1_before') }} <em class="text-delos-gold not-italic">{{ __('services.hero.heading_1_accent') }}</em>
+                {{ pcontent('services.hero.heading_1_before') }} <em class="text-delos-gold not-italic">{{ pcontent('services.hero.heading_1_accent') }}</em>
             </h1>
             <h1 data-motion="fade-up" class="font-serif text-delos-dark text-4xl lg:text-6xl xl:text-7xl font-light leading-[1.08]">
-                {{ __('services.hero.heading_2') }}
+                {{ pcontent('services.hero.heading_2') }}
             </h1>
         </div>
 
@@ -73,14 +73,14 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion-group="services-info" class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 lg:gap-20 text-center sm:text-left">
             <p data-motion="slide-left" class="text-delos-muted text-sm leading-relaxed max-w-xs" style="font-family: 'Inter', sans-serif;">
-                {{ __('services.info_row.blurb') }}
+                {{ pcontent('services.info_row.blurb') }}
             </p>
             <div data-motion="fade-up" class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-delos-gold"></span>
-                <span class="text-delos-muted text-[10px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">{{ __('services.info_row.est') }}</span>
+                <span class="text-delos-muted text-[10px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.info_row.est') }}</span>
             </div>
             <a data-motion="slide-right" href="{{ lroute('contact') }}" class="magnetic-btn btn-ripple inline-flex items-center gap-3 px-7 py-3 bg-delos-gold text-delos-dark text-[11px] tracking-[0.25em] uppercase font-medium hover:bg-delos-gold-light transition-all duration-300 group" style="font-family: 'Inter', sans-serif;">
-                {{ __('common.ctas.book_consultation') }}
+                {{ pcontent('common.ctas.book_consultation') }}
                 <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
         </div>
@@ -93,43 +93,63 @@
 
         <div data-motion-group="services-intro" class="text-center mb-20 lg:mb-24">
             <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mb-5"></div>
-            <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">{{ __('services.intro.overline') }}</p>
-            <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark">{{ __('services.intro.heading_1') }}<br><em class="text-delos-gold not-italic">{{ __('services.intro.heading_accent') }}</em></h2>
+            <p data-motion="fade-up" class="text-overline text-delos-gold mb-5">{{ pcontent('services.intro.overline') }}</p>
+            <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark">{{ pcontent('services.intro.heading_1') }}<br><em class="text-delos-gold not-italic">{{ pcontent('services.intro.heading_accent') }}</em></h2>
         </div>
 
         <div class="space-y-24">
-            @foreach(__('services.items') as $slug => $s)
-                @php $i = $loop->index; @endphp
-                <div id="service-{{ $s['num'] }}" data-motion="fade-up" class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center {{ $i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : '' }}">
+            @foreach(($services ?? collect()) as $s)
+                @php
+                    $i = $loop->index;
+                    $sName = $s->localized('name');
+                    $sDesc = $s->localized('description');
+                    $sFeatures = $s->{"features_" . app()->getLocale()} ?: $s->features_en ?: [];
+                @endphp
+                <div id="service-{{ $s->num ?: $s->slug }}" data-motion="fade-up" class="relative grid lg:grid-cols-2 gap-12 lg:gap-20 items-center {{ $i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : '' }}">
+                    <x-admin-edit-pill :href="route('admin.services.edit', $s)" :label="'Edit ' . $sName" />
 
                     {{-- Image --}}
                     <div class="relative aspect-[4/3] overflow-hidden bg-delos-dark">
-                        <x-responsive-image :src="$s['img']" :alt="$s['name']"
-                            sizes="(min-width: 1024px) 50vw, 100vw"
-                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                        @if($s->imageIsLegacy())
+                            <x-responsive-image :src="$s->image" :alt="$sName"
+                                sizes="(min-width: 1024px) 50vw, 100vw"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                        @elseif($s->image_url)
+                            <img src="{{ $s->image_url }}" alt="{{ $sName }}" loading="lazy" decoding="async"
+                                sizes="(min-width: 1024px) 50vw, 100vw"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                        @endif
                     </div>
 
                     {{-- Text --}}
                     <div>
-                        <span class="text-delos-gold text-[11px] tracking-[0.3em] font-medium mb-4 block" style="font-family: 'Inter', sans-serif;">{{ $s['num'] }}</span>
+                        @if($s->num)
+                            <span class="text-delos-gold text-[11px] tracking-[0.3em] font-medium mb-4 block" style="font-family: 'Inter', sans-serif;">{{ $s->num }}</span>
+                        @endif
                         <h2 class="font-serif text-delos-dark text-3xl lg:text-4xl font-light leading-tight mb-6">
-                            {{ $s['name'] }}
+                            {{ $sName }}
                         </h2>
-                        <p class="text-delos-muted text-base leading-relaxed mb-8" style="font-family: 'Inter', sans-serif;">
-                            {{ $s['desc'] }}
-                        </p>
-                        <ul class="space-y-3 mb-8">
-                            @foreach($s['features'] as $feat)
-                                <li class="flex items-center gap-3 text-delos-muted text-sm" style="font-family: 'Inter', sans-serif;">
-                                    <span class="w-1 h-1 rounded-full bg-delos-gold flex-shrink-0"></span>
-                                    {{ $feat }}
-                                </li>
-                            @endforeach
-                        </ul>
-                        <p class="text-delos-gold text-[11px] tracking-[0.3em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">{{ $s['brand'] }}</p>
+                        @if($sDesc)
+                            <p class="text-delos-muted text-base leading-relaxed mb-8" style="font-family: 'Inter', sans-serif;">
+                                {{ $sDesc }}
+                            </p>
+                        @endif
+                        @if(!empty($sFeatures))
+                            <ul class="space-y-3 mb-8">
+                                @foreach($sFeatures as $feat)
+                                    <li class="flex items-center gap-3 text-delos-muted text-sm" style="font-family: 'Inter', sans-serif;">
+                                        <span class="w-1 h-1 rounded-full bg-delos-gold flex-shrink-0"></span>
+                                        {{ $feat }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                        @if($s->brand)
+                            <p class="text-delos-gold text-[11px] tracking-[0.3em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">{{ $s->brand }}</p>
+                        @endif
                         <a href="{{ lroute('contact') }}"
                            class="inline-flex items-center gap-2 text-delos-dark text-[12px] tracking-[0.2em] uppercase font-medium hover:text-delos-gold transition-colors duration-300 group border-b border-delos-dark/20 pb-1 hover:border-delos-gold" style="font-family: 'Inter', sans-serif;">
-                            {{ __('services.item_cta') }}
+                            {{ pcontent('services.item_cta') }}
                             <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                             </svg>
@@ -150,15 +170,15 @@
 <section class="py-24 lg:py-32 bg-delos-dark text-center">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion-group="services-cta">
-        <p data-motion="fade-up" class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">{{ __('services.cta.overline') }}</p>
+        <p data-motion="fade-up" class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.cta.overline') }}</p>
         <h2 data-motion="fade-up" class="font-serif text-delos-cream text-4xl lg:text-6xl font-light leading-tight mb-8">
-            {{ __('services.cta.heading_1') }}<br>
-            <em class="text-delos-gold not-italic">{{ __('services.cta.heading_accent') }}</em>
+            {{ pcontent('services.cta.heading_1') }}<br>
+            <em class="text-delos-gold not-italic">{{ pcontent('services.cta.heading_accent') }}</em>
         </h2>
         <a href="{{ lroute('contact') }}"
            data-motion="fade-up"
            class="inline-flex items-center gap-3 px-10 py-4 bg-delos-gold text-delos-dark text-[12px] tracking-[0.25em] uppercase font-medium hover:bg-delos-gold-light transition-all duration-300 group">
-            {{ __('services.cta.button') }}
+            {{ pcontent('services.cta.button') }}
             <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>

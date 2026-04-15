@@ -9,7 +9,6 @@ class LocaleResolver
     public const SUPPORTED = ['en', 'ar', 'it'];
     public const DEFAULT_LOCALE = 'en';
     public const COOKIE_NAME = 'delos_locale';
-    public const SEEN_COOKIE_NAME = 'delos_locale_seen';
 
     public function resolve(?Request $request = null): string
     {

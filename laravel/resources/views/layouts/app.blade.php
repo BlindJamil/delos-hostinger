@@ -22,10 +22,34 @@
         <meta property="og:locale:alternate" content="{{ $ogLocales[$alt] }}">
     @endforeach
 
+    @if ($isAdmin ?? false)
+        {{-- Admin-authenticated responses must never be indexed or leak admin
+             URLs via Referer. The PreventAdminCaching middleware sets the
+             response headers; these meta tags provide in-HTML backup. --}}
+        <meta name="robots" content="noindex, nofollow">
+        <meta name="referrer" content="same-origin">
+    @endif
+
     <script>
         document.documentElement.classList.add('js');
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.documentElement.classList.add('reduced-motion');
+        }
+
+        // Always start the page at the top on reload. Scroll-triggered animations
+        // initialise from scroll position 0 — restoring a mid-page position leaves
+        // sections stuck at opacity:0 because their triggers never fire. Anchor
+        // links (e.g. /en/#brands-section) still work because we only force-reset
+        // when there is no hash in the URL.
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        if (!window.location.hash) {
+            // Belt-and-suspenders: also reset scroll once the DOM is ready, in
+            // case the browser restored before scrollRestoration took effect.
+            document.addEventListener('DOMContentLoaded', function () {
+                window.scrollTo(0, 0);
+            });
         }
     </script>
 
@@ -69,7 +93,7 @@
         <div id="marquee-bar" class="bg-delos-dark-2 overflow-hidden py-2.5 border-b border-white/5 transition-all duration-500">
             <div class="marquee-track flex gap-12 whitespace-nowrap">
                 @for($j = 0; $j < 3; $j++)
-                    <span class="text-overline text-delos-gold/60 font-medium">{{ __('common.marquee.tagline') }}
+                    <span class="text-overline text-delos-gold/60 font-medium">{{ pcontent('common.marquee.tagline') }}
                         <span class="italian-flag">
                             <span class="flag-green"></span>
                             <span class="flag-white"></span>
@@ -100,8 +124,8 @@
                             <img src="{{ asset('images/delos-logo.jpg') }}" alt="Delos International" class="w-full h-full object-cover">
                         </div>
                         <div class="flex flex-col">
-                            <span class="font-serif text-lg lg:text-xl font-semibold tracking-[0.2em] nav-logo-text leading-none transition-colors duration-300">{{ __('common.brand.name_primary') }}</span>
-                            <span class="text-overline-sm nav-logo-sub transition-colors duration-300">{{ __('common.brand.name_secondary') }}</span>
+                            <span class="font-serif text-lg lg:text-xl font-semibold tracking-[0.2em] nav-logo-text leading-none transition-colors duration-300">{{ pcontent('common.brand.name_primary') }}</span>
+                            <span class="text-overline-sm nav-logo-sub transition-colors duration-300">{{ pcontent('common.brand.name_secondary') }}</span>
                         </div>
                     </a>
 
@@ -109,13 +133,13 @@
                     <div class="hidden lg:flex items-center gap-7">
                         @php
                             $links = [
-                                ['label' => __('common.nav.home'),     'route' => 'home'],
-                                ['label' => __('common.nav.brands'),   'route' => 'brands'],
-                                ['label' => __('common.nav.services'), 'route' => 'services'],
-                                ['label' => __('common.nav.projects'), 'route' => 'projects'],
-                                ['label' => __('common.nav.about'),    'route' => 'about'],
-                                ['label' => __('common.nav.branches'), 'route' => 'branches'],
-                                ['label' => __('common.nav.contact'),  'route' => 'contact'],
+                                ['label' => pcontent('common.nav.home'),     'route' => 'home'],
+                                ['label' => pcontent('common.nav.brands'),   'route' => 'brands'],
+                                ['label' => pcontent('common.nav.services'), 'route' => 'services'],
+                                ['label' => pcontent('common.nav.projects'), 'route' => 'projects'],
+                                ['label' => pcontent('common.nav.about'),    'route' => 'about'],
+                                ['label' => pcontent('common.nav.branches'), 'route' => 'branches'],
+                                ['label' => pcontent('common.nav.contact'),  'route' => 'contact'],
                             ];
                         @endphp
                         @foreach($links as $link)
@@ -133,11 +157,11 @@
 
                     {{-- Social Media --}}
                     <div class="hidden lg:flex items-center gap-4">
-                        <a href="https://www.instagram.com/delos.international/" target="_blank" rel="noopener"
+                        <a href="{{ $settingInstagram ?: 'https://www.instagram.com/delos.international/' }}" target="_blank" rel="noopener"
                            class="nav-social w-9 h-9 flex items-center justify-center border rounded-full hover:bg-delos-gold hover:border-delos-gold group transition-all duration-300" aria-label="Instagram">
                             <svg class="w-4 h-4 nav-social-icon group-hover:text-delos-dark transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
                         </a>
-                        <a href="https://www.facebook.com/delos.int.erbil/" target="_blank" rel="noopener"
+                        <a href="{{ $settingFacebook ?: 'https://www.facebook.com/delos.int.erbil/' }}" target="_blank" rel="noopener"
                            class="nav-social w-9 h-9 flex items-center justify-center border rounded-full hover:bg-delos-gold hover:border-delos-gold group transition-all duration-300" aria-label="Facebook">
                             <svg class="w-4 h-4 nav-social-icon group-hover:text-delos-dark transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                         </a>
@@ -170,11 +194,11 @@
                     <x-language-switcher variant="mobile" />
 
                     <div class="flex items-center gap-4 mt-4 pt-4 border-t border-white/10">
-                        <a href="https://www.instagram.com/delos.international/" target="_blank" rel="noopener"
+                        <a href="{{ $settingInstagram ?: 'https://www.instagram.com/delos.international/' }}" target="_blank" rel="noopener"
                            class="w-10 h-10 flex items-center justify-center border border-delos-gold/30 rounded-full hover:bg-delos-gold group transition-all duration-300" aria-label="Instagram">
                             <svg class="w-4.5 h-4.5 text-delos-gold group-hover:text-delos-dark transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
                         </a>
-                        <a href="https://www.facebook.com/delos.int.erbil/" target="_blank" rel="noopener"
+                        <a href="{{ $settingFacebook ?: 'https://www.facebook.com/delos.int.erbil/' }}" target="_blank" rel="noopener"
                            class="w-10 h-10 flex items-center justify-center border border-delos-gold/30 rounded-full hover:bg-delos-gold group transition-all duration-300" aria-label="Facebook">
                             <svg class="w-4.5 h-4.5 text-delos-gold group-hover:text-delos-dark transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                         </a>
@@ -208,21 +232,21 @@
                             <img src="{{ asset('images/delos-logo.jpg') }}" alt="Delos International" class="w-full h-full object-cover">
                         </div>
                         <div class="flex flex-col">
-                            <span class="font-serif text-lg font-semibold tracking-[0.2em] text-delos-cream leading-none">{{ __('common.brand.name_primary') }}</span>
-                            <span class="text-overline-sm text-delos-gold">{{ __('common.brand.name_secondary') }}</span>
+                            <span class="font-serif text-lg font-semibold tracking-[0.2em] text-delos-cream leading-none">{{ pcontent('common.brand.name_primary') }}</span>
+                            <span class="text-overline-sm text-delos-gold">{{ pcontent('common.brand.name_secondary') }}</span>
                         </div>
                     </div>
                     <p class="font-sans text-delos-muted text-sm leading-relaxed mb-6">
-                        {{ __('common.footer.tagline_long') }}
+                        {{ pcontent('common.footer.tagline_long') }}
                     </p>
                     <p class="text-overline text-delos-gold text-[10px]">
-                        {{ __('common.footer.lion_motto') }}
+                        {{ pcontent('common.footer.lion_motto') }}
                     </p>
                     <div class="flex items-center gap-4 mt-5">
-                        <a href="https://www.instagram.com/delos.international/" target="_blank" rel="noopener" class="text-delos-muted hover:text-delos-gold transition-colors duration-300" aria-label="Instagram">
+                        <a href="{{ $settingInstagram ?: 'https://www.instagram.com/delos.international/' }}" target="_blank" rel="noopener" class="text-delos-muted hover:text-delos-gold transition-colors duration-300" aria-label="Instagram">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
                         </a>
-                        <a href="https://www.facebook.com/delos.int.erbil/" target="_blank" rel="noopener" class="text-delos-muted hover:text-delos-gold transition-colors duration-300" aria-label="Facebook">
+                        <a href="{{ $settingFacebook ?: 'https://www.facebook.com/delos.int.erbil/' }}" target="_blank" rel="noopener" class="text-delos-muted hover:text-delos-gold transition-colors duration-300" aria-label="Facebook">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                         </a>
                     </div>
@@ -230,7 +254,7 @@
 
                 {{-- Navigation Column --}}
                 <div data-motion="fade-up">
-                    <h4 class="text-overline text-delos-cream text-[10px] mb-6">{{ __('common.footer.nav_heading') }}</h4>
+                    <h4 class="text-overline text-delos-cream text-[10px] mb-6">{{ pcontent('common.footer.nav_heading') }}</h4>
                     <ul class="space-y-3">
                         @foreach($links as $link)
                         <li>
@@ -244,7 +268,7 @@
 
                 {{-- Branches Column --}}
                 <div data-motion="fade-up">
-                    <h4 class="text-overline text-delos-cream text-[10px] mb-6">{{ __('common.footer.showrooms_heading') }}</h4>
+                    <h4 class="text-overline text-delos-cream text-[10px] mb-6">{{ pcontent('common.footer.showrooms_heading') }}</h4>
                     <ul class="space-y-4">
                         <li>
                             <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ __('common.footer.showroom_erbil_soran.title') }}</p>
@@ -264,7 +288,7 @@
 
                 {{-- Italian Partners Column --}}
                 <div data-motion="fade-up">
-                    <h4 class="text-overline text-delos-cream text-[10px] mb-6">{{ __('common.footer.partners_heading') }}</h4>
+                    <h4 class="text-overline text-delos-cream text-[10px] mb-6">{{ pcontent('common.footer.partners_heading') }}</h4>
                     <ul class="space-y-3">
                         @foreach(['LUBE','Frigerio','Vittoria Frigerio','CANTORI','SKEMA'] as $brand)
                         <li class="font-sans text-delos-muted text-sm hover:text-delos-gold transition-colors duration-300 cursor-default">
@@ -281,14 +305,14 @@
         <div class="border-t border-white/8">
             <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p class="font-sans text-delos-muted/60 text-[11px] tracking-wide">
-                    &copy; {{ date('Y') }} {{ __('common.footer.copyright') }}
+                    &copy; {{ date('Y') }} {{ pcontent('common.footer.copyright') }}
                 </p>
 
                 {{-- Footer language switcher --}}
                 <x-language-switcher variant="footer" />
 
                 <p class="font-sans text-delos-muted/60 text-[11px] tracking-[0.2em] uppercase">
-                    {{ __('common.footer.bottom_tagline') }}
+                    {{ pcontent('common.footer.bottom_tagline') }}
                 </p>
             </div>
         </div>
@@ -299,37 +323,13 @@
     <div data-page-transition class="page-transition-overlay"></div>
 
     {{-- First-visit language picker modal --}}
-    @if ($showLangPicker)
-    <div id="lang-picker" style="position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#F8F4EF;overflow:auto;">
-        <div style="width:100%;max-width:48rem;margin:0 auto;padding:3rem 1.5rem;text-align:center;">
-            <div style="margin-bottom:3rem;">
-                <img src="{{ asset('images/delos-logo.jpg') }}" alt="Delos" style="width:80px;height:80px;border-radius:50%;border:2px solid rgba(196,154,122,0.3);margin:0 auto 1.5rem;display:block;object-fit:cover;">
-                <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:600;letter-spacing:0.3em;color:#3D2E2A;">DELOS</div>
-                <div style="font-size:9px;letter-spacing:0.5em;text-transform:uppercase;color:#C49A7A;font-weight:500;margin-top:4px;font-family:Inter,sans-serif;">INTERNATIONAL</div>
-            </div>
-            <div style="margin-bottom:3rem;">
-                <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;color:#3D2E2A;font-weight:300;margin:0 0 0.5rem;">Choose your language</p>
-                <p style="font-family:'Amiri','Cormorant Garamond',serif;font-size:1.75rem;color:#3D2E2A;font-weight:300;margin:0 0 0.5rem;" dir="rtl">اختر لغتك</p>
-                <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;color:#3D2E2A;font-weight:300;font-style:italic;margin:0;">Scegli la tua lingua</p>
-                <div style="width:48px;height:1px;background:#C49A7A;margin:2rem auto 0;"></div>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:1rem;max-width:36rem;margin:0 auto;">
-                <a href="/en" data-page-transition="false" style="cursor:pointer;display:block;padding:1.75rem 2rem;background:#ffffff;border:2px solid rgba(196,154,122,0.2);text-align:center;text-decoration:none;color:#3D2E2A;">
-                    <span style="display:block;color:#C49A7A;font-size:10px;letter-spacing:0.5em;text-transform:uppercase;font-weight:600;margin-bottom:0.75rem;font-family:Inter,sans-serif;">ENGLISH</span>
-                    <span style="display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:300;">Continue in English</span>
-                </a>
-                <a href="/ar" data-page-transition="false" dir="rtl" style="cursor:pointer;display:block;padding:1.75rem 2rem;background:#ffffff;border:2px solid rgba(196,154,122,0.2);text-align:center;text-decoration:none;color:#3D2E2A;font-family:'Amiri',serif;">
-                    <span style="display:block;color:#C49A7A;font-size:12px;font-weight:500;margin-bottom:0.75rem;font-family:'Cairo',sans-serif;">العربية</span>
-                    <span style="display:block;font-size:1.25rem;">المتابعة بالعربية</span>
-                </a>
-                <a href="/it" data-page-transition="false" style="cursor:pointer;display:block;padding:1.75rem 2rem;background:#ffffff;border:2px solid rgba(196,154,122,0.2);text-align:center;text-decoration:none;color:#3D2E2A;">
-                    <span style="display:block;color:#C49A7A;font-size:10px;letter-spacing:0.5em;text-transform:uppercase;font-weight:600;font-style:italic;margin-bottom:0.75rem;font-family:Inter,sans-serif;">ITALIANO</span>
-                    <span style="display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:300;font-style:italic;">Continua in italiano</span>
-                </a>
-            </div>
-            <p style="color:#7A6B65;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;margin-top:3rem;font-family:Inter,sans-serif;">Italian Luxury Solutions</p>
-        </div>
-    </div>
+    {{-- First-visit language picker removed — locale is resolved from
+         Accept-Language on the root redirect, and the floating globe
+         switcher below handles every subsequent change. --}}
+
+    {{-- Floating admin bar — only for logged-in admins. Fixed at bottom-left. --}}
+    @if ($isAdmin ?? false)
+        <x-admin-bar />
     @endif
 
 </body>

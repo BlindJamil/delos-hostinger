@@ -11,6 +11,14 @@ const mappings = [
     ['bootstrap/app.php', 'laravel/bootstrap/app.php'],
     ['composer.json', 'laravel/composer.json'],
     ['config/app.php', 'laravel/config/app.php'],
+    // Page Content Editor registry — new in April 2026. Drives which
+    // lang keys admins can edit from /admin/page-content.
+    ['config/editable_pages.php', 'laravel/config/editable_pages.php'],
+    // Database migrations + seeders need to travel with the code so
+    // production can run `php artisan migrate` and the PageContent
+    // seeder after deploy.
+    ['database/migrations', 'laravel/database/migrations'],
+    ['database/seeders', 'laravel/database/seeders'],
     ['docs', 'laravel/docs'],
     ['eslint.config.js', 'laravel/eslint.config.js'],
     ['lang', 'laravel/lang'],
@@ -27,6 +35,9 @@ const mappings = [
     ['public/build', 'build'],
     ['public/images', 'images'],
     ['public/videos', 'videos'],
+    // Raised PHP upload limits so admins can replace the homepage
+    // brand video (~42MB) from the page-content editor.
+    ['public/.user.ini', '.user.ini'],
 ];
 
 for (const [sourceRelativePath, destinationRelativePath] of mappings) {
