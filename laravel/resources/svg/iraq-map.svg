@@ -1,0 +1,53 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1000 800"
+    preserveAspectRatio="xMidYMid meet"
+    fill="none"
+    role="img"
+    aria-labelledby="iraq-map-title"
+>
+    <title id="iraq-map-title">Outline of Iraq showing Delos showroom locations</title>
+
+    <!--
+        Iraq country outline, derived from the world-atlas Natural Earth 50m
+        dataset (public domain, via Mike Bostock / D3). Simplified with
+        Douglas-Peucker (tolerance 0.6 SVG units) — preserves the real shape
+        (Turkey zigzag, Zagros jags on the Iran border, Shatt al-Arab tongue
+        to the Persian Gulf, Saudi southern arc) while keeping file size
+        under 15KB.
+
+        Regenerate any time with:
+            cd delos-website && node scripts/generate-iraq-svg.mjs
+
+        Coordinate system matches App\Support\Cartography:
+            x = ((lng - 38.5) / 10.3) * 1000
+            y = 800 - ((lat - 29) / 8.5) * 800
+    -->
+    <g class="iraq-map__geography">
+        <path
+            class="iraq-map__outline"
+            d="M 374.74 36.76 L 384.18 34.96 L 401.65 23.52 L 411.79 13.07 L 414.93 12.09 L 424.02 15.52 L 430.66 16.5 L 446.04 12.41 L 462.47 17.32 L 466.66 17.48 L 486.94 24.01 L 502.66 25.65 L 518.04 25.98 L 528.18 21.73 L 535.17 17.48 L 544.96 18.62 L 549.15 20.42 L 552.64 23.52 L 554.04 27.94 L 553.69 42.15 L 555.09 45.91 L 557.89 48.69 L 561.38 49.18 L 572.92 41.5 L 592.84 30.55 L 605.07 31.53 L 608.22 33.65 L 611.36 41.01 L 619.4 66.01 L 629.19 71.72 L 633.03 75.48 L 634.43 79.24 L 634.08 91.66 L 636.18 96.72 L 642.12 102.6 L 651.21 103.75 L 654.35 107.67 L 666.24 139.69 L 670.78 140.84 L 678.12 140.35 L 685.46 143.29 L 693.85 147.86 L 701.19 156.52 L 706.43 157.99 L 722.51 156.69 L 744.53 157.99 L 754.67 162.57 L 753.62 165.18 L 731.95 171.88 L 727.75 178.09 L 725.31 185.93 L 725.66 190.34 L 729.15 195.25 L 738.94 205.05 L 743.13 216.81 L 741.04 223.35 L 720.41 232.66 L 697 254.23 L 695.25 258.97 L 695.25 271.71 L 692.8 275.47 L 679.52 274.65 L 679.52 279.23 L 675.68 285.11 L 673.58 290.34 L 682.32 302.59 L 683.71 309.13 L 682.32 315.01 L 669.73 332.17 L 670.78 333.64 L 677.07 336.41 L 702.59 366.8 L 710.98 364.68 L 714.12 364.84 L 716.57 366.15 L 717.97 368.76 L 717.97 372.2 L 715.87 377.26 L 726.36 379.22 L 730.2 384.45 L 742.43 401.93 L 741.73 407.16 L 736.14 415.33 L 737.19 425.79 L 738.94 427.58 L 757.11 428.24 L 764.8 430.2 L 783.33 439.18 L 837.15 473.66 L 852.88 473.01 L 857.42 474.8 L 861.27 477.74 L 874.9 503.4 L 882.59 509.44 L 905.66 537.05 L 891.33 574.14 L 891.33 611.56 L 923.48 612.7 L 923.83 662.05 L 928.73 662.86 L 936.77 666.62 L 939.91 672.5 L 944.45 675.61 L 949.35 676.1 L 954.59 679.04 L 959.48 684.27 L 961.23 688.19 L 959.83 690.8 L 960.88 695.54 L 964.38 702.4 L 975.21 709.43 L 966.47 711.72 L 956.69 709.92 L 936.07 702.08 L 929.43 701.75 L 920.69 704.85 L 920.34 707.47 L 898.32 698.65 L 890.63 696.85 L 875.25 696.85 L 857.42 698.32 L 846.94 701.91 L 839.6 705.84 L 835.06 711.55 L 816.18 749.46 L 802.9 767.27 L 779.83 790.96 L 762.71 794.06 L 603.67 781.81 L 600.88 780.99 L 422.97 659.27 L 347.13 604.21 L 192.29 527.74 L 181.46 523.33 L 62.62 505.85 L 76.95 494.74 L 72.41 484.61 L 52.48 488.86 L 46.89 473.17 L 54.23 471.21 L 26.62 388.53 L 212.56 298.18 L 236.33 292.95 L 241.57 289.03 L 261.5 257.01 L 263.59 208.15 L 266.74 195.08 L 277.22 174.99 L 276.88 159.14 L 266.39 134.3 L 268.14 115.51 L 271.28 105.06 L 277.22 97.54 L 283.17 92.8 L 319.17 84.96 L 347.83 63.39 L 373.69 41.33 L 374.74 36.76 Z"
+            vector-effect="non-scaling-stroke"
+        />
+
+        <!--
+            Tigris + Euphrates schematic — hand-drawn Bezier curves, decorative
+            only (not cartographically precise). Adds depth to the country
+            outline so it doesn't read as a silhouette.
+        -->
+        <path
+            class="iraq-map__river"
+            d="M 500 6.6
+               Q 475 180 580 330
+               Q 650 480 830 660"
+            vector-effect="non-scaling-stroke"
+        />
+        <path
+            class="iraq-map__river"
+            d="M 271.8 64
+               Q 330 240 480 420
+               Q 600 560 830 660"
+            vector-effect="non-scaling-stroke"
+        />
+    </g>
+</svg>

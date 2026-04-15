@@ -31,6 +31,11 @@ const mappings = [
     ['playwright.config.js', 'laravel/playwright.config.js'],
     ['resources/css', 'laravel/resources/css'],
     ['resources/js', 'laravel/resources/js'],
+    // Inline SVG assets read by blade components (notably the accurate
+    // Iraq outline used by x-iraq-map on the branches page). Without
+    // this mapping, file_get_contents() returns '' and the map renders
+    // with branch pins but no geography.
+    ['resources/svg', 'laravel/resources/svg'],
     ['resources/views', 'laravel/resources/views'],
     ['routes/web.php', 'laravel/routes/web.php'],
     ['scripts', 'laravel/scripts'],
