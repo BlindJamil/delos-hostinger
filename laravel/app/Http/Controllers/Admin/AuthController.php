@@ -25,11 +25,19 @@ class AuthController extends Controller
     {
         $ip = $request->ip();
 
-        // Block if locked out
-        if (AdminLoginAttempt::isLockedOut($ip)) {
-            throw ValidationException::withMessages([
-                'email' => 'Too many failed attempts. Please try again in 15 minutes.',
-            ]);
+        // Attempt tracking is best-effort — if the admin_login_attempts
+        // table is missing (fresh deploy pre-migration) we don't want
+        // login to 500. Skip lockout check in that case.
+        try {
+            if (AdminLoginAttempt::isLockedOut($ip)) {
+                throw ValidationException::withMessages([
+                    'email' => 'Too many failed attempts. Please try again in 15 minutes.',
+                ]);
+            }
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Throwable) {
+            // Table missing or DB error — skip throttling gracefully.
         }
 
         $credentials = $request->validate([
@@ -42,29 +50,41 @@ class AuthController extends Controller
         if (Auth::guard('admin')->attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            $user = Auth::guard('admin')->user();
-            $user->last_login_at = now();
-            $user->last_login_ip = $ip;
-            $user->save();
+            try {
+                $user = Auth::guard('admin')->user();
+                $user->last_login_at = now();
+                $user->last_login_ip = $ip;
+                $user->save();
+            } catch (\Throwable) {
+                // Timestamp update is non-critical — don't block the login.
+            }
 
-            AdminLoginAttempt::create([
-                'ip' => $ip,
-                'email' => $credentials['email'],
-                'success' => true,
-                'user_agent' => substr((string) $request->userAgent(), 0, 500),
-                'attempted_at' => now(),
-            ]);
+            try {
+                AdminLoginAttempt::create([
+                    'ip' => $ip,
+                    'email' => $credentials['email'],
+                    'success' => true,
+                    'user_agent' => substr((string) $request->userAgent(), 0, 500),
+                    'attempted_at' => now(),
+                ]);
+            } catch (\Throwable) {
+                // Skip attempt log if table missing.
+            }
 
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        AdminLoginAttempt::create([
-            'ip' => $ip,
-            'email' => $credentials['email'],
-            'success' => false,
-            'user_agent' => substr((string) $request->userAgent(), 0, 500),
-            'attempted_at' => now(),
-        ]);
+        try {
+            AdminLoginAttempt::create([
+                'ip' => $ip,
+                'email' => $credentials['email'],
+                'success' => false,
+                'user_agent' => substr((string) $request->userAgent(), 0, 500),
+                'attempted_at' => now(),
+            ]);
+        } catch (\Throwable) {
+            // Skip attempt log if table missing.
+        }
 
         throw ValidationException::withMessages([
             'email' => 'These credentials do not match our records.',
