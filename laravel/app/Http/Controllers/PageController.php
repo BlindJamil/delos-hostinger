@@ -7,12 +7,29 @@ use App\Models\Brand;
 use App\Models\Employee;
 use App\Models\Project;
 use App\Models\Service;
+use Illuminate\Support\Collection;
 
 class PageController extends Controller
 {
+    /**
+     * Run an Eloquent query, returning an empty collection if the table
+     * doesn't exist yet. Protects the public site from 500-ing on a
+     * fresh deploy before `php artisan migrate` has been run.
+     */
+    private function safeQuery(callable $fn): Collection
+    {
+        try {
+            return $fn();
+        } catch (\Throwable) {
+            return collect();
+        }
+    }
+
     public function home()
     {
-        $featuredEmployees = Employee::query()->active()->ordered()->get();
+        $featuredEmployees = $this->safeQuery(
+            fn () => Employee::query()->active()->ordered()->get()
+        );
 
         return view('pages.home', compact('featuredEmployees'));
     }
@@ -24,14 +41,18 @@ class PageController extends Controller
 
     public function services()
     {
-        $services = Service::query()->active()->ordered()->get();
+        $services = $this->safeQuery(
+            fn () => Service::query()->active()->ordered()->get()
+        );
 
         return view('pages.services', compact('services'));
     }
 
     public function projects()
     {
-        $projects = Project::query()->active()->ordered()->get();
+        $projects = $this->safeQuery(
+            fn () => Project::query()->active()->ordered()->get()
+        );
         $heroProjects = $projects->where('featured', true)->values();
 
         // Derive filter options from the project types that actually exist in
@@ -48,17 +69,18 @@ class PageController extends Controller
 
     public function brands()
     {
-        $brands = Brand::query()->active()->ordered()->get();
+        $brands = $this->safeQuery(
+            fn () => Brand::query()->active()->ordered()->get()
+        );
 
         return view('pages.brands', compact('brands'));
     }
 
     public function branches()
     {
-        $branches = Branch::query()
-            ->active()
-            ->ordered()
-            ->get();
+        $branches = $this->safeQuery(
+            fn () => Branch::query()->active()->ordered()->get()
+        );
 
         return view('pages.branches', compact('branches'));
     }

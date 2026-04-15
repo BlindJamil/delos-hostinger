@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 
 class SiteSetting extends Model
 {
@@ -28,11 +29,31 @@ class SiteSetting extends Model
     {
         $locale ??= app()->getLocale();
 
+        // Guard against a fresh deploy where the site_settings table
+        // hasn't been migrated yet — the view composer calls value() on
+        // every rendered view, so an unhandled exception here 500s the
+        // whole public site until the admin runs migrations.
+        static $tableExists = null;
+        if ($tableExists === null) {
+            try {
+                $tableExists = Schema::hasTable('site_settings');
+            } catch (\Throwable) {
+                $tableExists = false;
+            }
+        }
+        if (!$tableExists) {
+            return $default;
+        }
+
         $values = Cache::remember(
             "site_setting:{$key}",
             now()->addMinutes(10),
             function () use ($key) {
-                $setting = static::where('key', $key)->first();
+                try {
+                    $setting = static::where('key', $key)->first();
+                } catch (\Throwable) {
+                    return null;
+                }
                 return $setting ? [
                     'value_en' => $setting->value_en,
                     'value_ar' => $setting->value_ar,

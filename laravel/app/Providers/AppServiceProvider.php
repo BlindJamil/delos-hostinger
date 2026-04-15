@@ -19,12 +19,28 @@ class AppServiceProvider extends ServiceProvider
         // we never execute a DB query if the key doesn't exist. SiteSetting
         // caches each key for 10 min and busts on save.
         View::composer('*', function ($view) {
+            // Every piece below is wrapped in its own guard because this
+            // composer fires on every rendered view — a single failure
+            // here 500s the entire public site. Common culprits on a
+            // fresh deploy: missing auth guard (admin) in config, or
+            // missing DB tables (site_settings) before migrations run.
+            $isAdmin = false;
+            $adminUser = null;
+            try {
+                if (config('auth.guards.admin')) {
+                    $isAdmin = auth('admin')->check();
+                    $adminUser = auth('admin')->user();
+                }
+            } catch (\Throwable) {
+                // Swallow — fall through to the anonymous view.
+            }
+
             $view->with([
-                // Admin presence — drives the edit pills and floating admin bar
-                // on public pages. Auth check is cheap (cookie lookup + session
-                // read) and happens once per request per view via this composer.
-                'isAdmin' => auth('admin')->check(),
-                'adminUser' => auth('admin')->user(),
+                // Admin presence — drives the edit pills and floating admin
+                // bar on public pages. Cheap check (cookie + session read)
+                // via the admin guard.
+                'isAdmin' => $isAdmin,
+                'adminUser' => $adminUser,
 
                 'settingInstagram' => SiteSetting::value('social_instagram'),
                 'settingFacebook' => SiteSetting::value('social_facebook'),
