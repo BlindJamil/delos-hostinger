@@ -11,6 +11,10 @@ const mappings = [
     ['bootstrap/app.php', 'laravel/bootstrap/app.php'],
     ['composer.json', 'laravel/composer.json'],
     ['config/app.php', 'laravel/config/app.php'],
+    // Admin panel requires the 'admin' guard + 'admin_users' provider
+    // to be registered. Without syncing auth.php the AppServiceProvider
+    // view composer (auth('admin')->check()) 500s on every request.
+    ['config/auth.php', 'laravel/config/auth.php'],
     // Page Content Editor registry — new in April 2026. Drives which
     // lang keys admins can edit from /admin/page-content.
     ['config/editable_pages.php', 'laravel/config/editable_pages.php'],
