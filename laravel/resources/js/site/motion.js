@@ -12,7 +12,7 @@ const MOTION_VARIANTS = {
         ease: 'power2.out',
         from: {
             opacity: 0,
-            filter: 'blur(4px)',
+            filter: 'blur(2px)',
         },
     },
     'fade-up': {
@@ -22,7 +22,7 @@ const MOTION_VARIANTS = {
             y: 32,
             opacity: 0,
             scale: 0.97,
-            filter: 'blur(8px)',
+            filter: 'blur(4px)',
         },
     },
     'slide-left': {
@@ -34,7 +34,7 @@ const MOTION_VARIANTS = {
             opacity: 0,
             rotation: -3,
             scale: 0.95,
-            filter: 'blur(8px)',
+            filter: 'blur(4px)',
         },
     },
     'slide-right': {
@@ -46,7 +46,7 @@ const MOTION_VARIANTS = {
             opacity: 0,
             rotation: 3,
             scale: 0.95,
-            filter: 'blur(8px)',
+            filter: 'blur(4px)',
         },
     },
     'slide-up': {
@@ -56,7 +56,7 @@ const MOTION_VARIANTS = {
             y: 60,
             opacity: 0,
             scale: 0.9,
-            filter: 'blur(10px)',
+            filter: 'blur(5px)',
         },
     },
     'scale-in': {
@@ -66,7 +66,7 @@ const MOTION_VARIANTS = {
             y: 20,
             opacity: 0,
             scale: 0.88,
-            filter: 'blur(10px)',
+            filter: 'blur(5px)',
         },
     },
 };
@@ -173,7 +173,7 @@ function initHeroMotion() {
                 y: 30,
                 opacity: 0,
                 scale: 0.95,
-                filter: 'blur(8px)',
+                filter: 'blur(4px)',
             }, {
                 y: 0,
                 opacity: 1,
@@ -500,7 +500,7 @@ function initBrandShowcase(context) {
             x: from.x,
             scale: from.scale,
             rotation: from.rotation,
-            filter: 'blur(10px)',
+            filter: 'blur(5px)',
         });
     });
 
@@ -837,7 +837,7 @@ function initEmployeeShowcase(context) {
         y: 36,
         scale: 0.92,
         rotateY: 8,
-        filter: 'blur(8px)',
+        filter: 'blur(4px)',
     }, {
         opacity: 1,
         y: 0,

@@ -320,7 +320,7 @@ body.reduced-motion .stat-suffix {
 }
 
 @keyframes svcCountUp {
-    from { transform: translateY(100%); opacity: 0; filter: blur(4px); }
+    from { transform: translateY(100%); opacity: 0; filter: blur(2px); }
     to   { transform: translateY(0); opacity: 1; filter: blur(0); }
 }
 
