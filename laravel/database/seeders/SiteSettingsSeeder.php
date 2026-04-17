@@ -103,6 +103,14 @@ class SiteSettingsSeeder extends Seeder
                 'value_en' => '',
                 'sort_order' => 40,
             ],
+            [
+                'key' => 'social_pinterest',
+                'group' => 'social',
+                'type' => 'url',
+                'label' => 'Pinterest URL',
+                'value_en' => '',
+                'sort_order' => 50,
+            ],
         ];
 
         foreach ($settings as $row) {

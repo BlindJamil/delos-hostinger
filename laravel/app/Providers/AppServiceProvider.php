@@ -46,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
                 'settingFacebook' => SiteSetting::value('social_facebook'),
                 'settingYoutube' => SiteSetting::value('social_youtube'),
                 'settingTiktok' => SiteSetting::value('social_tiktok'),
+                'settingPinterest' => SiteSetting::value('social_pinterest'),
                 'settingPhone' => SiteSetting::value('contact_phone'),
                 'settingWhatsapp' => SiteSetting::value('contact_whatsapp'),
                 'settingEmail' => SiteSetting::value('contact_email'),
