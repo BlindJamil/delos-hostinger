@@ -261,38 +261,36 @@
         <input type="hidden" name="values[{{ $key }}][ar]" value="{{ $values['ar'] }}">
         <input type="hidden" name="values[{{ $key }}][it]" value="{{ $values['it'] }}">
     @else
-        {{-- Text / textarea / rich — one input per locale, toggled by the tab bar --}}
-        @foreach(['en', 'ar', 'it'] as $code)
-            @php
-                $dir = $code === 'ar' ? 'rtl' : 'ltr';
-                $style = $code === 'ar' ? "font-family: 'Cairo', sans-serif;" : '';
-            @endphp
-            {{-- EN inputs render visible by default (no hidden class, no
-                 display:none). AR/IT start hidden. Alpine takes over on
-                 init and manages visibility via the locale tabs. If Alpine
-                 never evaluates, EN still shows — the admin can always
-                 edit at least the primary language. --}}
-            <div x-show="activeLocale === '{{ $code }}'"
-                 @if($code !== 'en') style="display:none" @endif
-                 class="space-y-1">
-                @if($type === 'textarea')
-                    <textarea name="values[{{ $key }}][{{ $code }}]"
-                              rows="4"
-                              dir="{{ $dir }}"
-                              style="{{ $style }}"
-                              placeholder="{{ $defaults[$code] ?? '' }}"
-                              class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all resize-y">{{ $values[$code] }}</textarea>
-                @else
-                    <input type="text"
-                           name="values[{{ $key }}][{{ $code }}]"
-                           value="{{ $values[$code] }}"
-                           dir="{{ $dir }}"
-                           style="{{ $style }}"
-                           placeholder="{{ $defaults[$code] ?? '' }}"
-                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
-                @endif
-            </div>
-        @endforeach
+        {{-- Text / textarea / rich — all 3 locales shown together.
+             Each locale gets a labelled input so the admin always sees
+             and can edit every language without JS dependency. --}}
+        <div class="space-y-2">
+            @foreach(['en' => 'EN', 'ar' => 'AR', 'it' => 'IT'] as $code => $localeLabel)
+                @php
+                    $dir = $code === 'ar' ? 'rtl' : 'ltr';
+                    $style = $code === 'ar' ? "font-family: 'Cairo', sans-serif;" : '';
+                @endphp
+                <div class="flex items-start gap-2">
+                    <span class="flex-shrink-0 mt-2 w-7 text-center text-[9px] tracking-[0.1em] uppercase font-bold text-delos-muted/70 select-none">{{ $localeLabel }}</span>
+                    @if($type === 'textarea')
+                        <textarea name="values[{{ $key }}][{{ $code }}]"
+                                  rows="3"
+                                  dir="{{ $dir }}"
+                                  style="{{ $style }}"
+                                  placeholder="{{ $defaults[$code] ?? '' }}"
+                                  class="flex-1 px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all resize-y">{{ $values[$code] }}</textarea>
+                    @else
+                        <input type="text"
+                               name="values[{{ $key }}][{{ $code }}]"
+                               value="{{ $values[$code] }}"
+                               dir="{{ $dir }}"
+                               style="{{ $style }}"
+                               placeholder="{{ $defaults[$code] ?? '' }}"
+                               class="flex-1 px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
+                    @endif
+                </div>
+            @endforeach
+        </div>
     @endif
 </div>
 
