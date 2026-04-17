@@ -72,7 +72,7 @@ if (!function_exists('pcontent')) {
         }
 
         if (!$tableExists) {
-            return $default ?? __($key);
+            return $default ?? pcontent_lang_resolve($key);
         }
 
         try {
@@ -84,7 +84,56 @@ if (!function_exists('pcontent')) {
             // Fall through to default/lang fallback on any DB failure.
         }
 
-        return $default ?? __($key);
+        return $default ?? pcontent_lang_resolve($key);
+    }
+}
+
+if (!function_exists('pcontent_lang_resolve')) {
+    /**
+     * Resolve a dotted lang key using direct file inclusion + data_get().
+     *
+     * Laravel's __() / Lang::get() cannot resolve numeric array indices
+     * in dot paths (e.g. 'home.stats.items.0.value' returns the key
+     * itself). This helper loads the raw PHP array from the lang file
+     * and uses data_get() which handles numeric indices correctly.
+     *
+     * Falls back to __($key) for non-numeric keys (which work fine in
+     * Laravel's translator and benefit from its caching).
+     */
+    function pcontent_lang_resolve(string $key): string
+    {
+        // Fast path: try __() first. If it returns something other than
+        // the key, it resolved correctly — no need for the file dance.
+        $translated = __($key);
+        if ($translated !== $key) {
+            return is_string($translated) ? $translated : $key;
+        }
+
+        // __() returned the key itself. Likely a numeric index issue.
+        // Load the raw lang array and try data_get().
+        $dotPos = strpos($key, '.');
+        if ($dotPos === false) {
+            return $key;
+        }
+
+        $group = substr($key, 0, $dotPos);
+        $path = substr($key, $dotPos + 1);
+        $locale = app()->getLocale();
+
+        static $fileCache = [];
+        $cacheKey = "{$locale}/{$group}";
+        if (!isset($fileCache[$cacheKey])) {
+            $file = lang_path("{$locale}/{$group}.php");
+            $fileCache[$cacheKey] = file_exists($file) ? include $file : [];
+        }
+
+        $value = data_get($fileCache[$cacheKey], $path);
+
+        if ($value !== null && !is_array($value)) {
+            return (string) $value;
+        }
+
+        return $key;
     }
 }
 

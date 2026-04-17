@@ -174,11 +174,41 @@ class PageContentController extends Controller
             foreach ($section['fields'] ?? [] as $field) {
                 $key = $field['key'];
                 foreach (['en', 'ar', 'it'] as $locale) {
-                    $value = Lang::get($key, [], $locale);
-                    $defaults[$key][$locale] = (is_array($value) || $value === $key) ? null : (string) $value;
+                    $defaults[$key][$locale] = $this->readLangValue($key, $locale);
                 }
             }
         }
         return $defaults;
+    }
+
+    /**
+     * Read a lang value using direct file inclusion + data_get() instead
+     * of Lang::get(). Laravel's translator cannot resolve numeric array
+     * indices in dot paths (e.g. 'home.stats.items.0.value' returns the
+     * key itself). data_get() handles them correctly.
+     */
+    private function readLangValue(string $key, string $locale): ?string
+    {
+        $dotPos = strpos($key, '.');
+        if ($dotPos === false) {
+            return null;
+        }
+        $group = substr($key, 0, $dotPos);
+        $path = substr($key, $dotPos + 1);
+
+        static $fileCache = [];
+        $cacheKey = "{$locale}/{$group}";
+        if (!isset($fileCache[$cacheKey])) {
+            $file = lang_path("{$locale}/{$group}.php");
+            $fileCache[$cacheKey] = file_exists($file) ? include $file : [];
+        }
+
+        $value = data_get($fileCache[$cacheKey], $path);
+
+        if ($value === null || is_array($value)) {
+            return null;
+        }
+
+        return (string) $value;
     }
 }

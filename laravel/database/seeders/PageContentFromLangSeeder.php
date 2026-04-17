@@ -77,17 +77,36 @@ class PageContentFromLangSeeder extends Seeder
     }
 
     /**
-     * Read a nested lang value via dot-notation key + locale override.
+     * Read a nested lang value by loading the raw PHP array and walking
+     * the dot-path with data_get(). This bypasses Laravel's Lang::get()
+     * which CANNOT resolve numeric array indices in dot notation
+     * (e.g. 'home.stats.items.0.value' returns the key itself).
+     *
+     * data_get() handles numeric indices correctly because it uses
+     * Arr::get() under the hood, which explicitly casts each segment.
      */
     private function readLangValue(string $key, string $locale): ?string
     {
-        $value = Lang::get($key, [], $locale);
-
-        if ($value === $key) {
+        // Split 'home.stats.items.0.value' → group='home', path='stats.items.0.value'
+        $dotPos = strpos($key, '.');
+        if ($dotPos === false) {
             return null;
         }
+        $group = substr($key, 0, $dotPos);
+        $path = substr($key, $dotPos + 1);
 
-        if (is_array($value)) {
+        // Cache loaded files within a single seeder run to avoid
+        // re-including the same file hundreds of times.
+        static $fileCache = [];
+        $cacheKey = "{$locale}/{$group}";
+        if (!isset($fileCache[$cacheKey])) {
+            $file = lang_path("{$locale}/{$group}.php");
+            $fileCache[$cacheKey] = file_exists($file) ? include $file : [];
+        }
+
+        $value = data_get($fileCache[$cacheKey], $path);
+
+        if ($value === null || is_array($value)) {
             return null;
         }
 
