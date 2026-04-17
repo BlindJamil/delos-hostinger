@@ -267,7 +267,14 @@
                 $dir = $code === 'ar' ? 'rtl' : 'ltr';
                 $style = $code === 'ar' ? "font-family: 'Cairo', sans-serif;" : '';
             @endphp
-            <div x-show="activeLocale === '{{ $code }}'" class="space-y-1">
+            {{-- EN inputs render visible by default (no hidden class, no
+                 display:none). AR/IT start hidden. Alpine takes over on
+                 init and manages visibility via the locale tabs. If Alpine
+                 never evaluates, EN still shows — the admin can always
+                 edit at least the primary language. --}}
+            <div x-show="activeLocale === '{{ $code }}'"
+                 @if($code !== 'en') style="display:none" @endif
+                 class="space-y-1">
                 @if($type === 'textarea')
                     <textarea name="values[{{ $key }}][{{ $code }}]"
                               rows="4"
