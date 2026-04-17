@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', __('seo.projects.title'))
-@section('description', __('seo.projects.description'))
+@section('title', pcontent('seo.projects.title'))
+@section('description', pcontent('seo.projects.description'))
 
 @section('content')
 
@@ -156,20 +156,22 @@
 <section class="py-20 bg-delos-dark">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion-group="project-stats" class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            @foreach(__('projects.stats') as $i => $s)
+            @foreach([0,1,2,3] as $i)
                 @php
+                    $statValue = pcontent("projects.stats.{$i}.value");
+                    $statLabel = pcontent("projects.stats.{$i}.label");
                     // Split values like "500+", "100%", "4" into the numeric
                     // part that animates (via data-motion-counter) and the
                     // trailing suffix that fades in after the count completes.
-                    preg_match('/^(\d+)(.*)$/u', (string) $s['value'], $m);
-                    $statNumber = $m[1] ?? $s['value'];
+                    preg_match('/^(\d+)(.*)$/u', (string) $statValue, $m);
+                    $statNumber = $m[1] ?? $statValue;
                     $statSuffix = trim($m[2] ?? '');
                 @endphp
                 <div data-motion="fade-up">
                     <p class="font-serif text-delos-gold text-5xl lg:text-6xl font-light mb-3">
                         <span data-motion-counter="{{ $statNumber }}">0</span>@if($statSuffix)<span class="stat-suffix">{{ $statSuffix }}</span>@endif
                     </p>
-                    <p class="text-delos-cream/50 text-[11px] tracking-[0.3em] uppercase" style="font-family: 'Inter', sans-serif;">{{ $s['label'] }}</p>
+                    <p class="text-delos-cream/50 text-[11px] tracking-[0.3em] uppercase" style="font-family: 'Inter', sans-serif;">{{ $statLabel }}</p>
                 </div>
             @endforeach
         </div>
@@ -187,7 +189,7 @@
             <a href="{{ lroute('contact') }}"
                data-motion="fade-up"
                class="inline-flex items-center gap-3 px-10 py-4 bg-delos-dark text-delos-cream text-[12px] tracking-[0.25em] uppercase font-medium hover:bg-delos-gold hover:text-delos-dark transition-all duration-300 group">
-                {{ __('common.ctas.start_project') }}
+                {{ pcontent('common.ctas.start_project') }}
                 <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>

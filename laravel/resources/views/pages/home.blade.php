@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', __('seo.home.title'))
-@section('description', __('seo.home.description'))
+@section('title', pcontent('seo.home.title'))
+@section('description', pcontent('seo.home.description'))
 
 @section('content')
 
@@ -24,11 +24,10 @@
 {{-- 1. HERO SLIDESHOW --}}
 <section id="hero" data-motion-hero class="relative min-h-dvh flex flex-col overflow-hidden bg-delos-dark">
     <div id="hero-slideshow" class="absolute inset-0">
-        @php $heroSlides = __('home.hero.slides'); @endphp
-        @foreach($heroSlides as $i => $slide)
+        @foreach([0,1,2,3,4] as $i)
             <x-responsive-image
-                :src="$slide['img']"
-                :alt="$slide['alt']"
+                :src="pcontent('home.hero.slides.' . $i . '.img')"
+                :alt="pcontent('home.hero.slides.' . $i . '.alt')"
                 sizes="100vw"
                 class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
                 :loading="$i === 0 ? 'eager' : 'lazy'"
@@ -39,7 +38,7 @@
     <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-delos-dark/50 to-transparent z-[1] pointer-events-none"></div>
 
     <div class="absolute bottom-24 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3">
-        @for($i = 0; $i < count($heroSlides); $i++)
+        @for($i = 0; $i < 5; $i++)
             <button class="hero-dot w-2 h-2 rounded-full transition-all duration-500 {{ $i === 0 ? 'bg-delos-gold w-6' : 'bg-delos-cream/40 hover:bg-delos-cream/60' }}"
                     aria-label="Slide {{ $i + 1 }}" data-slide="{{ $i }}"></button>
         @endfor
@@ -115,25 +114,24 @@
                 <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark leading-tight">{{ pcontent('home.collection.heading') }}</h2>
             </div>
             <a href="{{ lroute('projects') }}" data-motion="fade-up" class="btn-ripple self-start inline-flex items-center gap-2 text-delos-muted text-btn font-medium hover:text-delos-gold transition-colors duration-300 group">
-                {{ __('common.ctas.view_all_projects') }} <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                {{ pcontent('common.ctas.view_all_projects') }} <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             @php
-                $collectionItems = __('home.collection.items');
+                $collectionSlugs = ['villa_classica', 'nero_contemporary', 'eleganza_living', 'mediterranean_living'];
                 $motionVariants = ['slide-left', 'slide-right', 'slide-left', 'slide-up'];
             @endphp
-            @foreach($collectionItems as $slug => $item)
-                @php $idx = $loop->index; @endphp
+            @foreach($collectionSlugs as $idx => $slug)
                 <a href="{{ lroute('projects') }}" data-motion="{{ $motionVariants[$idx] }}" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                    <x-responsive-image :src="$item['img']" :alt="$item['alt']" sizes="(min-width: 768px) 50vw, 100vw" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" />
+                    <x-responsive-image :src="pcontent('home.collection.items.' . $slug . '.img')" :alt="pcontent('home.collection.items.' . $slug . '.title')" sizes="(min-width: 768px) 50vw, 100vw" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" />
                     <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
-                    <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">{{ $item['num'] }}</span>
+                    <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">{{ pcontent("home.collection.items.{$slug}.num") }}</span>
                     <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                        <p class="text-overline-sm text-delos-gold mb-2">{{ $item['brand'] }}</p>
-                        <h3 class="font-serif text-delos-cream text-2xl lg:text-3xl font-light mb-3 group-hover:text-delos-gold transition-colors duration-300">{{ $item['title'] }}</h3>
-                        <p class="text-body-sm text-delos-cream/0 group-hover:text-delos-cream/60 transition-all duration-500 max-w-sm leading-relaxed">{{ $item['desc'] }}</p>
+                        <p class="text-overline-sm text-delos-gold mb-2">{{ pcontent("home.collection.items.{$slug}.brand") }}</p>
+                        <h3 class="font-serif text-delos-cream text-2xl lg:text-3xl font-light mb-3 group-hover:text-delos-gold transition-colors duration-300">{{ pcontent("home.collection.items.{$slug}.title") }}</h3>
+                        <p class="text-body-sm text-delos-cream/0 group-hover:text-delos-cream/60 transition-all duration-500 max-w-sm leading-relaxed">{{ pcontent("home.collection.items.{$slug}.desc") }}</p>
                     </div>
                     <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
                 </a>
@@ -181,7 +179,7 @@
             </div>
         @empty
             {{-- Fallback to legacy lang-file entries if DB is empty (safety net) --}}
-            @foreach(__('home.employees.items') as $slug => $emp)
+            @foreach(pcontent('home.employees.items') as $slug => $emp)
                 <div data-motion="fade-up" class="employee-slide employee-card card-tilt group relative w-[350px] lg:w-[420px] aspect-[3/4] overflow-hidden bg-delos-dark-2 flex-shrink-0">
                     <x-responsive-image :src="$emp['img']" :alt="$emp['name'] . ' — ' . $emp['role']" sizes="(min-width: 1024px) 420px, 350px" class="absolute inset-0 w-full h-full object-cover opacity-60" />
                     <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3]">
@@ -206,15 +204,15 @@
             <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark">{{ pcontent('home.stats.heading') }}</h2>
         </div>
         <div data-motion-group="stats-grid" class="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-16">
-            @foreach(__('home.stats.items') as $i => $stat)
+            @foreach([0,1,2,3] as $i)
                 <div data-motion="fade-up" class="text-center">
-                    <span class="stat-number" data-motion-counter="{{ $stat['value'] }}">{{ $stat['value'] }}</span>
-                    @if($stat['suffix'])
-                        <span class="stat-suffix font-serif text-2xl text-delos-gold font-light">{{ $stat['suffix'] }}</span>
+                    <span class="stat-number" data-motion-counter="{{ pcontent("home.stats.items.{$i}.value") }}">{{ pcontent("home.stats.items.{$i}.value") }}</span>
+                    @if(pcontent("home.stats.items.{$i}.suffix"))
+                        <span class="stat-suffix font-serif text-2xl text-delos-gold font-light">{{ pcontent("home.stats.items.{$i}.suffix") }}</span>
                     @endif
-                    <p class="text-overline text-delos-muted mt-3">{{ $stat['label'] }}</p>
+                    <p class="text-overline text-delos-muted mt-3">{{ pcontent("home.stats.items.{$i}.label") }}</p>
                 </div>
-                @if(!$loop->last)
+                @if($i < 3)
                     <div class="stat-divider"></div>
                 @endif
             @endforeach
@@ -245,7 +243,7 @@
         </div>
         <div data-motion="fade-up" class="text-center">
             <a href="{{ lroute('brands') }}" class="btn-ripple inline-flex items-center gap-2 text-delos-gold text-btn font-medium hover:text-delos-gold-light transition-colors duration-300 group">
-                {{ __('common.ctas.explore_partners') }} <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                {{ pcontent('common.ctas.explore_partners') }} <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
         </div>
     </div>
@@ -267,7 +265,7 @@
                 {{ pcontent('common.ctas.book_consultation') }} <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
             <a href="tel:{{ preg_replace('/\s+/', '', $settingPhone ?: '07501001701') }}" class="magnetic-btn btn-ripple inline-flex items-center gap-3 px-9 py-4 border border-delos-cream/20 text-delos-cream text-btn font-medium hover:border-delos-gold hover:text-delos-gold transition-colors duration-300">
-                {{ __('common.ctas.call_us') }}
+                {{ pcontent('common.ctas.call_us') }}
             </a>
         </div>
     </div>

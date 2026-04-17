@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', __('seo.branches.title'))
-@section('description', __('seo.branches.description'))
+@section('title', pcontent('seo.branches.title'))
+@section('description', pcontent('seo.branches.description'))
 
 @section('content')
 

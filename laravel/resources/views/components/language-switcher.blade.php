@@ -8,7 +8,7 @@
         'it' => ['code' => 'IT', 'native' => 'Italiano'],
     ];
     $currentCode = $localeChoices[$locale]['code'] ?? 'EN';
-    $switchAria = __('common.language_switcher.aria_label');
+    $switchAria = pcontent('common.language_switcher.aria_label');
 @endphp
 
 @if ($variant === 'desktop')
@@ -57,7 +57,7 @@
     {{-- Mobile drawer variant — three text links stacked --}}
     <div class="flex flex-col gap-3 mt-6 pt-4 border-t border-white/10">
         <p class="text-delos-gold text-[9px] tracking-[0.4em] uppercase font-medium"
-           style="font-family: 'Inter', sans-serif;">{{ __('common.language_switcher.switch_to') }}</p>
+           style="font-family: 'Inter', sans-serif;">{{ pcontent('common.language_switcher.switch_to') }}</p>
         <div class="flex items-center gap-3 flex-wrap">
             @foreach ($localeChoices as $code => $labels)
                 <a href="{{ $localeUrls[$code] }}"

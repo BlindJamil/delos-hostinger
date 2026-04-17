@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', __('seo.contact.title'))
-@section('description', __('seo.contact.description'))
+@section('title', pcontent('seo.contact.title'))
+@section('description', pcontent('seo.contact.description'))
 
 @section('content')
 
@@ -38,10 +38,10 @@
                 <div data-motion-line class="w-16 h-px bg-delos-gold mb-5"></div>
                 <p data-motion="fade-up" class="text-overline text-delos-gold mb-4">{{ pcontent('contact.intro.overline') }}</p>
                 <h2 data-motion="fade-up" class="text-heading-2 text-delos-dark leading-tight mb-6">
-                    {{ __('contact.intro.heading_1') }}<br>
-                    <em class="text-delos-gold not-italic">{{ __('contact.intro.heading_accent') }}</em>
-                    @if(__('contact.intro.heading_2'))
-                        <br>{{ __('contact.intro.heading_2') }}
+                    {{ pcontent('contact.intro.heading_1') }}<br>
+                    <em class="text-delos-gold not-italic">{{ pcontent('contact.intro.heading_accent') }}</em>
+                    @if(pcontent('contact.intro.heading_2'))
+                        <br>{{ pcontent('contact.intro.heading_2') }}
                     @endif
                 </h2>
                 <p data-motion="fade-up" class="text-body text-delos-muted">
@@ -53,12 +53,12 @@
                 @csrf
                 <div class="grid grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.first_name') }}</label>
-                        <input type="text" name="first_name" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ __('contact.form.first_name_placeholder') }}">
+                        <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ pcontent('contact.form.first_name') }}</label>
+                        <input type="text" name="first_name" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ pcontent('contact.form.first_name_placeholder') }}">
                     </div>
                     <div>
-                        <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.last_name') }}</label>
-                        <input type="text" name="last_name" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ __('contact.form.last_name_placeholder') }}">
+                        <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ pcontent('contact.form.last_name') }}</label>
+                        <input type="text" name="last_name" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ pcontent('contact.form.last_name_placeholder') }}">
                     </div>
                 </div>
                 <div>
@@ -70,24 +70,24 @@
                     <input type="tel" name="phone" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 placeholder-delos-muted/50" placeholder="{{ pcontent('contact.form.phone_placeholder') }}">
                 </div>
                 <div>
-                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.branch') }}</label>
+                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ pcontent('contact.form.branch') }}</label>
                     <div style="position: relative;">
                         <select name="showroom" required class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 cursor-pointer" style="-webkit-appearance: none; -moz-appearance: none; appearance: none; border-radius: 0; padding-right: 2.5rem;">
-                            <option value="">{{ __('contact.form.branch_placeholder') }}</option>
-                            @foreach(__('contact.form.cities') as $city)
-                                <option>{{ $city }}</option>
+                            <option value="">{{ pcontent('contact.form.branch_placeholder') }}</option>
+                            @foreach([0,1,2,3] as $i)
+                                <option>{{ pcontent("contact.form.cities.{$i}") }}</option>
                             @endforeach
                         </select>
                         <svg style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); pointer-events: none;" class="w-4 h-4 text-delos-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/></svg>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ __('contact.form.service') }}</label>
+                    <label class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-2">{{ pcontent('contact.form.service') }}</label>
                     <div style="position: relative;">
                         <select name="service" class="w-full px-4 py-3 bg-transparent border border-delos-dark/20 text-delos-dark text-sm focus:border-delos-gold focus:outline-none transition-colors duration-300 cursor-pointer" style="-webkit-appearance: none; -moz-appearance: none; appearance: none; border-radius: 0; padding-right: 2.5rem;">
-                            <option value="">{{ __('contact.form.service_placeholder') }}</option>
-                            @foreach(__('contact.form.service_options') as $opt)
-                                <option>{{ $opt }}</option>
+                            <option value="">{{ pcontent('contact.form.service_placeholder') }}</option>
+                            @foreach([0,1,2,3,4,5] as $i)
+                                <option>{{ pcontent("contact.form.service_options.{$i}") }}</option>
                             @endforeach
                         </select>
                         <svg style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); pointer-events: none;" class="w-4 h-4 text-delos-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/></svg>

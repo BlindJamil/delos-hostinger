@@ -1,14 +1,12 @@
 @extends('layouts.app')
 
-@section('title', __('seo.brands.title'))
-@section('description', __('seo.brands.description'))
+@section('title', pcontent('seo.brands.title'))
+@section('description', pcontent('seo.brands.description'))
 
 @section('content')
 
 {{-- Hero: Brand Gallery --}}
 <section id="brand-showcase" class="bg-delos-cream pt-28 lg:pt-32 pb-16 lg:pb-24">
-    @php $showcaseBrands = __('brands.showcase'); @endphp
-
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         {{-- Header --}}
         <div data-motion-group="brands-hero-header" class="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-12 lg:mb-16 gap-6">

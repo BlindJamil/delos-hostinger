@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', __('seo.default.title'))</title>
-    <meta name="description" content="@yield('description', __('seo.default.description'))">
+    <title>@yield('title', pcontent('seo.default.title'))</title>
+    <meta name="description" content="@yield('description', pcontent('seo.default.description'))">
 
     {{-- hreflang + canonical --}}
     <link rel="canonical" href="{{ url()->current() }}">
@@ -101,13 +101,13 @@
                         </span>
                     </span>
                     <span class="text-delos-gold/25 text-[8px]">◆</span>
-                    <span class="text-overline text-delos-gold/60 font-medium">{{ __('common.marquee.showrooms') }}</span>
+                    <span class="text-overline text-delos-gold/60 font-medium">{{ pcontent('common.marquee.showrooms') }}</span>
                     <span class="text-delos-gold/25 text-[8px]">◆</span>
-                    <span class="text-overline text-delos-gold/60 font-medium">{{ __('common.marquee.lion') }}</span>
+                    <span class="text-overline text-delos-gold/60 font-medium">{{ pcontent('common.marquee.lion') }}</span>
                     <span class="text-delos-gold/25 text-[8px]">◆</span>
-                    <span class="text-overline text-delos-gold/60 font-medium">{{ __('common.marquee.turnkey') }}</span>
+                    <span class="text-overline text-delos-gold/60 font-medium">{{ pcontent('common.marquee.turnkey') }}</span>
                     <span class="text-delos-gold/25 text-[8px]">◆</span>
-                    <span class="text-overline text-delos-gold/60 font-medium">{{ __('common.marquee.cities') }}</span>
+                    <span class="text-overline text-delos-gold/60 font-medium">{{ pcontent('common.marquee.cities') }}</span>
                     <span class="text-delos-gold/25 text-[8px]">◆</span>
                 @endfor
             </div>
@@ -169,7 +169,7 @@
 
                     {{-- Mobile Hamburger --}}
                     <button id="mobile-menu-btn" class="lg:hidden flex flex-col gap-1.5 p-2"
-                            aria-label="{{ __('common.nav.menu_toggle') }}"
+                            aria-label="{{ pcontent('common.nav.menu_toggle') }}"
                             aria-expanded="false"
                             aria-controls="mobile-menu">
                         <span class="hamburger-line block w-6 h-px transition-all duration-300"></span>
@@ -271,17 +271,17 @@
                     <h4 class="text-overline text-delos-cream text-[10px] mb-6">{{ pcontent('common.footer.showrooms_heading') }}</h4>
                     <ul class="space-y-4">
                         <li>
-                            <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ __('common.footer.showroom_erbil_soran.title') }}</p>
-                            <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ __('common.footer.showroom_erbil_soran.address') }}</p>
-                            <p class="font-sans text-delos-muted text-xs">{{ __('common.footer.showroom_erbil_soran.phone') }}</p>
+                            <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.showroom_erbil_soran.title') }}</p>
+                            <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ pcontent('common.footer.showroom_erbil_soran.address') }}</p>
+                            <p class="font-sans text-delos-muted text-xs">{{ pcontent('common.footer.showroom_erbil_soran.phone') }}</p>
                         </li>
                         <li>
-                            <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ __('common.footer.showroom_erbil_gulan.title') }}</p>
-                            <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ __('common.footer.showroom_erbil_gulan.address') }}</p>
-                            <p class="font-sans text-delos-muted text-xs">{{ __('common.footer.showroom_erbil_gulan.phone') }}</p>
+                            <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.showroom_erbil_gulan.title') }}</p>
+                            <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ pcontent('common.footer.showroom_erbil_gulan.address') }}</p>
+                            <p class="font-sans text-delos-muted text-xs">{{ pcontent('common.footer.showroom_erbil_gulan.phone') }}</p>
                         </li>
                         <li>
-                            <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ __('common.footer.other_cities') }}</p>
+                            <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.other_cities') }}</p>
                         </li>
                     </ul>
                 </div>

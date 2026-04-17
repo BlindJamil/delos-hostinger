@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', __('seo.services.title'))
-@section('description', __('seo.services.description'))
+@section('title', pcontent('seo.services.title'))
+@section('description', pcontent('seo.services.description'))
 
 @section('content')
 
@@ -61,7 +61,7 @@
 
             {{-- Brand label --}}
             <div class="relative z-[2] text-center mt-5">
-                <p id="svc-arch-label" class="text-delos-gold text-[10px] tracking-[0.5em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">{{ __('services.arch_carousel.default_label') }}</p>
+                <p id="svc-arch-label" class="text-delos-gold text-[10px] tracking-[0.5em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.arch_carousel.default_label') }}</p>
             </div>
         </div>
 
