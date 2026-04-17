@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\PageContent;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Lang;
 
 /**
@@ -12,13 +11,13 @@ use Illuminate\Support\Facades\Lang;
  *
  * For each declared field:
  *   - reads the current EN/AR/IT lang-file values
- *   - stores them as the initial DB values
+ *   - creates the row if it doesn't exist
+ *   - backfills empty locale values if the row exists but has blanks
+ *   - keeps page/section/type metadata in sync with the registry
+ *   - NEVER overwrites admin-edited values
  *
- * Idempotent via firstOrCreate on `key` — re-running never overwrites
- * admin edits. Safe to run repeatedly during development.
- *
- * After this runs once, admins visiting /admin/page-content see every
- * page pre-populated with its current copy, ready to edit.
+ * Safe to run repeatedly — on each deploy, empty fields get filled from
+ * lang files, admin edits are preserved, and metadata stays current.
  */
 class PageContentFromLangSeeder extends Seeder
 {
@@ -27,57 +26,67 @@ class PageContentFromLangSeeder extends Seeder
         $registry = config('editable_pages', []);
         $locales = ['en', 'ar', 'it'];
         $created = 0;
-        $skipped = 0;
+        $backfilled = 0;
+        $current = 0;
 
         foreach ($registry as $pageKey => $page) {
             foreach ($page['sections'] ?? [] as $sectionKey => $section) {
                 foreach ($section['fields'] ?? [] as $sortIndex => $field) {
                     $langKey = $field['key'];
 
-                    // Read each locale's current lang-file value for this key.
-                    $values = [];
+                    $row = PageContent::firstOrNew(['key' => $langKey]);
+                    $isNew = !$row->exists;
+
+                    // Always sync metadata so registry changes propagate
+                    // (e.g. a field moved from one page/section to another).
+                    $row->page = $pageKey;
+                    $row->section = $sectionKey;
+                    $row->sort_order = $sortIndex;
+                    $row->type = $field['type'] ?? 'text';
+
+                    // Backfill each locale: only write when the DB value
+                    // is currently empty. This preserves admin edits while
+                    // filling in blanks that slipped through due to stale
+                    // config cache or missing lang resolution on first deploy.
+                    $didBackfill = false;
                     foreach ($locales as $locale) {
-                        $values["value_{$locale}"] = $this->readLangValue($langKey, $locale);
+                        $col = "value_{$locale}";
+                        if ($row->$col === null || $row->$col === '') {
+                            $langValue = $this->readLangValue($langKey, $locale);
+                            if ($langValue !== null) {
+                                $row->$col = $langValue;
+                                $didBackfill = true;
+                            }
+                        }
                     }
 
-                    $existed = PageContent::where('key', $langKey)->exists();
+                    $row->save();
 
-                    PageContent::firstOrCreate(
-                        ['key' => $langKey],
-                        array_merge([
-                            'page' => $pageKey,
-                            'section' => $sectionKey,
-                            'sort_order' => $sortIndex,
-                            'type' => $field['type'] ?? 'text',
-                        ], $values)
-                    );
-
-                    $existed ? $skipped++ : $created++;
+                    if ($isNew) {
+                        $created++;
+                    } elseif ($didBackfill) {
+                        $backfilled++;
+                    } else {
+                        $current++;
+                    }
                 }
             }
         }
 
-        // Cache was invalidated by each save() — good. Log the summary.
-        $this->command?->info("PageContent seeded: {$created} created, {$skipped} already existed.");
+        $this->command?->info("PageContent seeded: {$created} created, {$backfilled} backfilled, {$current} already current.");
     }
 
     /**
      * Read a nested lang value via dot-notation key + locale override.
-     * Uses Laravel's translator so we get the same result as __() would,
-     * including the lang-loader's group/file resolution.
      */
     private function readLangValue(string $key, string $locale): ?string
     {
         $value = Lang::get($key, [], $locale);
 
-        // Lang::get returns the key itself when missing. Treat that as null
-        // so we don't store the literal key as the "current value".
         if ($value === $key) {
             return null;
         }
 
-        // For nested-array keys (shouldn't happen with our registry but be
-        // defensive), return null rather than an array.
         if (is_array($value)) {
             return null;
         }

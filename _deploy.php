@@ -45,13 +45,22 @@ function runArtisan($kernel, string $command, array $params = []): string
     }
 }
 
-// --- 3. Migrations -----------------------------------------------------
-echo "[1/5] MIGRATIONS\n";
+// --- 3. Clear stale caches FIRST so migrations + seeders see fresh config
+echo "[1/6] CLEAR STALE CACHES\n";
+echo str_repeat('-', 60) . "\n";
+foreach (['config:clear', 'cache:clear', 'view:clear'] as $cmd) {
+    echo "- {$cmd}: " . runArtisan($kernel, $cmd, []) . "\n";
+}
+if (function_exists('opcache_reset')) { opcache_reset(); echo "- OPcache reset\n"; }
+echo "\n";
+
+// --- 4. Migrations -----------------------------------------------------
+echo "[2/6] MIGRATIONS\n";
 echo str_repeat('-', 60) . "\n";
 echo runArtisan($kernel, 'migrate', ['--force' => true]) . "\n\n";
 
-// --- 4. Seeders --------------------------------------------------------
-echo "[2/5] SEEDERS\n";
+// --- 5. Seeders --------------------------------------------------------
+echo "[3/6] SEEDERS\n";
 echo str_repeat('-', 60) . "\n";
 $seeders = [
     'Database\\Seeders\\SiteSettingsSeeder',
@@ -81,7 +90,7 @@ foreach ($seeders as $seederClass) {
 echo "\n";
 
 // --- 5. Storage symlink -----------------------------------------------
-echo "[3/5] STORAGE SYMLINK\n";
+echo "[4/6] STORAGE SYMLINK\n";
 echo str_repeat('-', 60) . "\n";
 // Hostinger's document root is the top-level folder (this script's dir).
 // Laravel's `storage:link` command creates laravel/public/storage -> ../
@@ -111,7 +120,7 @@ if (!is_dir($uploadsDir)) {
 echo "\n";
 
 // --- 6. Clear Laravel caches -----------------------------------------
-echo "[4/5] CLEAR CACHES\n";
+echo "[5/6] CLEAR POST-SEED CACHES\n";
 echo str_repeat('-', 60) . "\n";
 foreach (['view:clear', 'config:clear', 'route:clear', 'cache:clear'] as $cmd) {
     $r = runArtisan($kernel, $cmd, []);
@@ -120,7 +129,7 @@ foreach (['view:clear', 'config:clear', 'route:clear', 'cache:clear'] as $cmd) {
 echo "\n";
 
 // --- 7. OPcache reset --------------------------------------------------
-echo "[5/5] OPCACHE RESET\n";
+echo "[6/6] OPCACHE RESET\n";
 echo str_repeat('-', 60) . "\n";
 if (function_exists('opcache_reset')) {
     opcache_reset();

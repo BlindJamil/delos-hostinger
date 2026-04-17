@@ -56,11 +56,12 @@ class PageContentController extends Controller
     {
         $pageConfig = $this->pageOrAbort($page);
 
-        // Load every DB row for this page keyed by lang-key for O(1) lookup
-        // in the blade template.
-        $rows = PageContent::where('page', $page)
-            ->get()
-            ->keyBy('key');
+        // Load ALL DB rows keyed by lang-key for O(1) lookup in the blade
+        // template. The table is small (~340 rows) so no page filter is
+        // needed — the registry controls which fields appear per page.
+        // This avoids empty-field bugs when a row's `page` column is
+        // out of sync with the current registry structure.
+        $rows = PageContent::all()->keyBy('key');
 
         return view('admin.page-content.edit', [
             'pageSlug' => $page,
