@@ -20,7 +20,7 @@
     //
     // This is the fix the admin asked for: every input shows what the page
     // currently renders, making fields easy to identify at a glance.
-    $effective = function (string $locale) use ($row, $defaults) {
+    $effective = function (string $locale) use ($row, $defaults, $key) {
         $candidates = [
             $row?->{"value_{$locale}"},
             $defaults[$locale] ?? null,
@@ -29,6 +29,21 @@
         ];
         foreach ($candidates as $v) {
             if ($v !== null && $v !== '') return (string) $v;
+        }
+        // Last resort: resolve directly from the lang file using
+        // data_get() which handles numeric array indices. This
+        // guarantees the field always shows a value even when
+        // both the DB row and controller-provided defaults are empty.
+        $dotPos = strpos($key, '.');
+        if ($dotPos !== false) {
+            $group = substr($key, 0, $dotPos);
+            $path = substr($key, $dotPos + 1);
+            $file = lang_path("{$locale}/{$group}.php");
+            if (!file_exists($file)) $file = lang_path("en/{$group}.php");
+            if (file_exists($file)) {
+                $val = data_get(include $file, $path);
+                if ($val !== null && !is_array($val)) return (string) $val;
+            }
         }
         return '';
     };

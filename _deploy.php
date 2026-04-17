@@ -59,7 +59,7 @@ echo "[2/6] MIGRATIONS\n";
 echo str_repeat('-', 60) . "\n";
 echo runArtisan($kernel, 'migrate', ['--force' => true]) . "\n\n";
 
-// --- 5. Seeders --------------------------------------------------------
+// --- 5. Seeders + direct backfill ----------------------------------------
 echo "[3/6] SEEDERS\n";
 echo str_repeat('-', 60) . "\n";
 $seeders = [
@@ -86,6 +86,44 @@ foreach ($seeders as $seederClass) {
     } else {
         echo "\n  " . str_replace("\n", "\n  ", $result) . "\n";
     }
+}
+
+// Direct PHP backfill: walk every page_content row and fill empty
+// locale values from the lang file using data_get(). This is the
+// nuclear option — doesn't rely on the seeder, config cache, or
+// Laravel's translator. Reads files directly.
+echo "\n  Direct backfill of empty fields:\n";
+$langDir = __DIR__ . '/laravel/lang';
+$backfilled = 0;
+try {
+    $allRows = \App\Models\PageContent::all();
+    $fileCache = [];
+    foreach ($allRows as $pcRow) {
+        $key = $pcRow->key;
+        $dotPos = strpos($key, '.');
+        if ($dotPos === false) continue;
+        $group = substr($key, 0, $dotPos);
+        $path = substr($key, $dotPos + 1);
+        $dirty = false;
+        foreach (['en', 'ar', 'it'] as $loc) {
+            $col = "value_{$loc}";
+            if ($pcRow->$col !== null && $pcRow->$col !== '') continue;
+            $ck = "{$loc}/{$group}";
+            if (!isset($fileCache[$ck])) {
+                $f = "{$langDir}/{$loc}/{$group}.php";
+                $fileCache[$ck] = file_exists($f) ? include $f : [];
+            }
+            $v = data_get($fileCache[$ck], $path);
+            if ($v !== null && !is_array($v)) {
+                $pcRow->$col = (string) $v;
+                $dirty = true;
+            }
+        }
+        if ($dirty) { $pcRow->save(); $backfilled++; }
+    }
+    echo "  {$backfilled} rows backfilled from lang files.\n";
+} catch (\Throwable $e) {
+    echo "  Backfill error: " . $e->getMessage() . "\n";
 }
 echo "\n";
 
