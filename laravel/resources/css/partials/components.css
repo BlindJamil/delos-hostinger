@@ -111,19 +111,17 @@
 }
 
 html.js #mobile-menu {
+    max-height: 0;
     opacity: 0;
-    visibility: hidden;
+    overflow: hidden;
     transition:
-        opacity var(--motion-duration-base) var(--motion-ease-standard),
-        visibility 0s linear var(--motion-duration-base);
+        max-height calc(var(--motion-duration-base) + 0.1s) var(--motion-ease-standard),
+        opacity var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 html.js #mobile-menu.menu-open {
+    max-height: 600px;
     opacity: 1;
-    visibility: visible;
-    transition:
-        opacity var(--motion-duration-base) var(--motion-ease-standard),
-        visibility 0s linear 0s;
 }
 
 html.js #mobile-menu a {
