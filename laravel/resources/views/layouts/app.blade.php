@@ -285,23 +285,40 @@
                     </ul>
                 </div>
 
-                {{-- Branches Column --}}
+                {{-- Branches Column — DB-driven from the admin /admin/branches editor.
+                     Each active branch row renders city + address + phone (phone
+                     only when set, so we don't show an empty placeholder line). --}}
                 <div data-motion="fade-up">
                     <h4 class="text-overline text-delos-cream text-[10px] mb-6">{{ pcontent('common.footer.showrooms_heading') }}</h4>
                     <ul class="space-y-4">
-                        <li>
-                            <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.showroom_erbil_soran.title') }}</p>
-                            <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ pcontent('common.footer.showroom_erbil_soran.address') }}</p>
-                            <p class="font-sans text-delos-muted text-xs">{{ pcontent('common.footer.showroom_erbil_soran.phone') }}</p>
-                        </li>
-                        <li>
-                            <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.showroom_erbil_gulan.title') }}</p>
-                            <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ pcontent('common.footer.showroom_erbil_gulan.address') }}</p>
-                            <p class="font-sans text-delos-muted text-xs">{{ pcontent('common.footer.showroom_erbil_gulan.phone') }}</p>
-                        </li>
-                        <li>
-                            <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.other_cities') }}</p>
-                        </li>
+                        @forelse(($footerBranches ?? collect()) as $footerBranch)
+                            <li>
+                                <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ $footerBranch->localized('name') }}</p>
+                                @if($footerBranch->localized('address'))
+                                    <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ $footerBranch->localized('address') }}</p>
+                                @endif
+                                @if($footerBranch->phone)
+                                    <p class="font-sans text-delos-muted text-xs">{{ $footerBranch->phone }}</p>
+                                @endif
+                            </li>
+                        @empty
+                            {{-- Legacy fallback — lang-file entries used before the
+                                 branches table was populated. Keeps the footer
+                                 meaningful on a fresh install. --}}
+                            <li>
+                                <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.showroom_erbil_soran.title') }}</p>
+                                <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ pcontent('common.footer.showroom_erbil_soran.address') }}</p>
+                                <p class="font-sans text-delos-muted text-xs">{{ pcontent('common.footer.showroom_erbil_soran.phone') }}</p>
+                            </li>
+                            <li>
+                                <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.showroom_erbil_gulan.title') }}</p>
+                                <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ pcontent('common.footer.showroom_erbil_gulan.address') }}</p>
+                                <p class="font-sans text-delos-muted text-xs">{{ pcontent('common.footer.showroom_erbil_gulan.phone') }}</p>
+                            </li>
+                            <li>
+                                <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.other_cities') }}</p>
+                            </li>
+                        @endforelse
                     </ul>
                 </div>
 

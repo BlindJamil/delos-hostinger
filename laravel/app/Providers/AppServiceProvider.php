@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Branch;
 use App\Models\SiteSetting;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -35,12 +36,25 @@ class AppServiceProvider extends ServiceProvider
                 // Swallow — fall through to the anonymous view.
             }
 
+            // Active branches shared with every view so the footer's
+            // "Showrooms" column stays in sync with whatever the admin
+            // has saved in /admin/branches — no lang-file duplication.
+            // Wrapped in try/catch because the footer renders on every
+            // page including 404s where DB tables may not exist yet.
+            $footerBranches = collect();
+            try {
+                $footerBranches = Branch::query()->active()->ordered()->get();
+            } catch (\Throwable) {
+                // Empty collection → footer falls back to lang strings.
+            }
+
             $view->with([
                 // Admin presence — drives the edit pills and floating admin
                 // bar on public pages. Cheap check (cookie + session read)
                 // via the admin guard.
                 'isAdmin' => $isAdmin,
                 'adminUser' => $adminUser,
+                'footerBranches' => $footerBranches,
 
                 'settingInstagram' => SiteSetting::value('social_instagram'),
                 'settingFacebook' => SiteSetting::value('social_facebook'),
