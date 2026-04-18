@@ -9,16 +9,16 @@
 <section data-motion-hero class="bg-delos-cream overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div class="pt-28 lg:pt-36 pb-0">
-            <div class="grid lg:grid-cols-12 gap-5 lg:gap-7">
+            <div class="grid lg:grid-cols-12 gap-5 lg:gap-7 lg:items-stretch">
 
-                <div class="lg:col-span-5 flex flex-col order-2 lg:order-none">
+                <div class="lg:col-span-5 flex flex-col order-2 lg:order-none lg:h-full">
                     <div data-motion-group="hero" class="pt-10 lg:pt-6 lg:pr-4">
                         <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6">
                             <span class="w-8 h-px bg-delos-gold"></span>
                             <span class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.hero.overline') }}</span>
                         </div>
 
-                        <h1 data-motion="fade-up" class="font-serif text-delos-dark text-4xl lg:text-5xl xl:text-[3.5rem] font-light leading-[1.08] mb-5">
+                        <h1 data-motion="fade-up" class="about-hero-h1 font-serif text-delos-dark font-light leading-[1.08] mb-5">
                             {{ pcontent('about.hero.heading_1') }}<br>
                             {{ pcontent('about.hero.heading_2') }}<br>
                             <em class="text-delos-gold not-italic">{{ pcontent('about.hero.heading_accent') }}</em>
@@ -29,7 +29,7 @@
                         </p>
                     </div>
 
-                    <div data-motion="fade-up" class="hidden lg:block relative overflow-hidden lg:h-[260px] mt-auto">
+                    <div data-motion="fade-up" class="about-showroom hidden lg:block relative overflow-hidden mt-auto">
                         <x-responsive-image src="delos-erbil-showroom-6.jpg" alt="Delos Erbil Showroom"
                             sizes="(min-width: 1024px) 42vw, 100vw"
                             class="w-full h-full object-cover" />
@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="lg:col-span-7 order-1 lg:order-none">
-                    <div data-motion="fade" class="relative overflow-hidden h-[55vh] lg:h-[75vh]">
+                    <div data-motion="fade" class="about-hero-img relative overflow-hidden">
                         <x-responsive-image src="about-hero.jpg" alt="Delos International Showroom"
                             sizes="(min-width: 1024px) 58vw, 100vw"
                             loading="eager"

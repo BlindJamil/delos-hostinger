@@ -999,4 +999,48 @@ body.has-custom-cursor .admin-bar label.admin-bar__toggle * {
    self-contained (no CSS here) so it behaves identically to the
    long-running production version. */
 
+/* ===== About / Company Profile hero — responsive envelope ===== */
+/* Fluid type: floor 28px (landscape phones) → ceiling 56px (xl+).
+   At 1440 ≈ 48px and at 1920 ≈ 56px, matching prior text-5xl / text-[3.5rem]. */
+.about-hero-h1 {
+    font-size: clamp(1.75rem, 1.1rem + 2.6vw, 3.5rem);
+}
+
+/* Hero image: mobile/tablet uses a 4/3 aspect cage (image composes cleanly
+   instead of stretching to an arbitrary vh). At lg+ it becomes a flexible
+   height with a hard ceiling so it never becomes an empty tall frame. */
+.about-hero-img {
+    aspect-ratio: 4 / 3;
+    height: auto;
+    max-height: clamp(22rem, 62vh, 47.5rem);   /* 352 → 760px */
+}
+@media (min-width: 1024px) {
+    .about-hero-img {
+        aspect-ratio: auto;
+        height: clamp(30rem, 68vh, 47.5rem);   /* 480 → 760px — matches prior ~75vh at 1080p */
+        max-height: none;
+    }
+}
+
+/* Showroom photo: proportional to hero, no magic 260px */
+.about-showroom {
+    height: clamp(14rem, 22vh, 17rem);          /* 224 → 272px (≈ prior 260px at 1080p) */
+}
+
+/* Query 1: Short landscape (13" laptops at 1280x720, landscape phones,
+   older projectors). Prevents the hero from consuming the entire fold. */
+@media (max-height: 720px) and (orientation: landscape) {
+    .about-hero-img { height: clamp(20rem, 58vh, 26rem); }
+    .about-showroom { height: clamp(10rem, 18vh, 13rem); }
+    .about-hero-h1  { font-size: clamp(1.75rem, 1rem + 1.8vw, 2.5rem); }
+}
+
+/* Query 2: Ultra-wide (21:9, 32:9 — the DELOS presentation scenario).
+   Width-based breakpoints can't tell 2560x1080 (wide) apart from
+   2560x1600 (tall). Aspect-ratio queries can. */
+@media (min-aspect-ratio: 2/1) {
+    .about-hero-img { height: clamp(24rem, 56vh, 34rem); }
+    .about-showroom { height: clamp(12rem, 20vh, 15rem); }
+}
+
 
