@@ -57,43 +57,69 @@ $brandFixes = [
     'cantori' => [
         // Cantori is in Camerano (Ancona), Marche region — not Forlì, Emilia-Romagna.
         // Sante Cantori founded the company in 1976; Cantori Spa formalised in 1986.
+        // Specialties refined to reflect Cantori's actual breadth (beds, tables,
+        // mirrors, lighting) while keeping the artistic signature.
         'set' => [
-            'origin_en' => 'Camerano, Marche — Italy',
-            'origin_ar' => 'كاميرانو، ماركي — إيطاليا',
-            'origin_it' => 'Camerano, Marche — Italia',
-            'since'     => 'Est. 1976',
-        ],
-    ],
-    'creo-kitchens' => [
-        // CREO Kitchens is the modern-affordable line launched by Gruppo Lube in 2014.
-        'set' => [
-            'since' => 'Est. 2014',
+            'origin_en'      => 'Camerano, Marche — Italy',
+            'origin_ar'      => 'كاميرانو، ماركي — إيطاليا',
+            'origin_it'      => 'Camerano, Marche — Italia',
+            'since'          => 'Est. 1976',
+            'specialties_en' => ['Beds & seating', 'Tables & storage', 'Mirrors & lighting', 'Metal and glass artistry'],
+            'specialties_ar' => ['أسرة ومقاعد', 'طاولات وخزائن', 'مرايا وإضاءة', 'فن المعدن والزجاج'],
+            'specialties_it' => ['Letti e sedute', 'Tavoli e contenitori', 'Specchi e illuminazione', 'Arte del metallo e del vetro'],
         ],
     ],
     'faer' => [
         // FAER Ambienti is located at Zona Artigianale Capoluogo, Treia (Macerata),
         // same industrial zone as LUBE — it's a Gruppo Lube atelier, not a Brianza workshop.
-        // Founded by Gruppo Industriale Lube in 1995.
+        // Founded by Gruppo Industriale Lube in 1995. FAER's actual catalogue is
+        // BEDROOM FURNITURE ONLY (wardrobes, beds, walk-in closets, night sets) —
+        // the previous "living/dining" positioning was incorrect.
         'set' => [
-            'origin_en' => 'Treia, Macerata — Italy',
-            'origin_ar' => 'تريا، ماتشيراتا — إيطاليا',
-            'origin_it' => 'Treia, Macerata — Italia',
-            'since'     => 'Est. 1995',
+            'origin_en'       => 'Treia, Macerata — Italy',
+            'origin_ar'       => 'تريا، ماتشيراتا — إيطاليا',
+            'origin_it'       => 'Treia, Macerata — Italia',
+            'since'           => 'Est. 1995',
+            'specialties_en'  => ['Wardrobes & walk-in closets', 'Beds & bedroom sets', 'Children\'s bedroom programmes', 'Bespoke night-area interiors'],
+            'specialties_ar'  => ['خزائن وغرف تبديل ملابس', 'أسرة وأطقم غرف نوم', 'برامج غرف نوم الأطفال', 'تصاميم داخلية حسب الطلب لفضاء النوم'],
+            'specialties_it'  => ['Armadi e cabine armadio', 'Letti e camere da letto complete', 'Programmi per camerette', 'Ambienti notte su misura'],
         ],
         'description_en' => [
-            'from' => 'crafted in the heart of Brianza — Italy\'s furniture-making region',
-            'to'   => 'crafted by Gruppo Lube\'s Marche atelier',
+            'from' => 'specializing in refined living and dining environments. Each FAER piece is crafted in the heart of Brianza — Italy\'s furniture-making region',
+            'to'   => 'specializing in refined night-area environments — wardrobes, beds, and walk-in closets. Each FAER piece is crafted by Gruppo Lube\'s Marche atelier',
         ],
         'description_ar' => [
-            'from' => 'في قلب بريانتسا — منطقة صناعة الأثاث في إيطاليا',
-            'to'   => 'في أتيليه مجموعة لوبي بمنطقة ماركي',
+            'from' => 'متخصص في إبداع فضاءات معيشة وطعام راقية. تصنع كل قطعة من FAER في قلب بريانتسا — منطقة صناعة الأثاث في إيطاليا',
+            'to'   => 'متخصص في فضاءات النوم الراقية — خزائن وأسرة وغرف تبديل ملابس. تصنع كل قطعة من FAER في أتيليه مجموعة لوبي بمنطقة ماركي',
         ],
         'description_it' => [
-            'from' => 'nel cuore della Brianza — la regione italiana dell\'arredamento',
-            'to'   => 'dall\'atelier del Gruppo Lube nelle Marche',
+            'from' => 'specializzato in raffinati ambienti living e dining. Ogni pezzo FAER è realizzato nel cuore della Brianza — la regione italiana dell\'arredamento',
+            'to'   => 'specializzato in raffinati ambienti notte — armadi, letti e cabine armadio. Ogni pezzo FAER è realizzato dall\'atelier del Gruppo Lube nelle Marche',
+        ],
+    ],
+    'skema' => [
+        // SKEMA's flagship is SPC rigid-polymer flooring + outdoor WPC decking.
+        // Previous list missed both and used generic "Contemporary surfaces".
+        'set' => [
+            'specialties_en' => ['Wood parquet flooring', 'SPC technical floors', 'Outdoor WPC decking', 'Acoustic wall & ceiling systems'],
+            'specialties_ar' => ['أرضيات باركيه خشبية', 'أرضيات SPC تقنية', 'ألواح خارجية من مركب WPC', 'أنظمة جدران وأسقف عازلة للصوت'],
+            'specialties_it' => ['Pavimenti in parquet', 'Pavimenti tecnici SPC', 'Decking da esterno in WPC', 'Rivestimenti fonoassorbenti per pareti e soffitti'],
+        ],
+    ],
+    'creo-kitchens' => [
+        // CREO Kitchens is Gruppo Lube's modern-affordable line, launched 2014.
+        // CREO makes BOTH modern AND classic kitchens, plus ColorLab colour
+        // customization. Previous list was all "modern/contemporary" and
+        // missed half their catalogue; and "Est. 1993" was wrong.
+        'set' => [
+            'since'          => 'Est. 2014',
+            'specialties_en' => ['Modern kitchens', 'Classic kitchens', 'Custom colour finishes', 'Smart storage & compact layouts'],
+            'specialties_ar' => ['مطابخ عصرية', 'مطابخ كلاسيكية', 'تشطيبات ألوان حسب الطلب', 'تخزين ذكي وحلول مدمجة'],
+            'specialties_it' => ['Cucine moderne', 'Cucine classiche', 'Finiture colore personalizzate', 'Soluzioni compatte e smart'],
         ],
     ],
 ];
+
 
 echo '─── BRAND FACTS ─────────────────────────────' . PHP_EOL;
 foreach ($brandFixes as $slug => $ops) {
