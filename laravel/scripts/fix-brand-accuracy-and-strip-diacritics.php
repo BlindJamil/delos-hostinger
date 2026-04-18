@@ -48,6 +48,11 @@ $brandFixes = [
             'from' => 'oltre 600.000 cucine all\'anno',
             'to'   => 'oltre 65.000 cucine all\'anno',
         ],
+        // Correct the outward-facing URL — lubecucine.it does not resolve;
+        // the official domain is cucinelube.it with an EN path available.
+        'set' => [
+            'url' => 'https://www.cucinelube.it/en/',
+        ],
     ],
     'cantori' => [
         // Cantori is in Camerano (Ancona), Marche region — not Forlì, Emilia-Romagna.
