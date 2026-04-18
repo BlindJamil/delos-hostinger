@@ -157,7 +157,17 @@
                 $empName = $emp->localized('name');
                 $empRole = $emp->localized('role');
                 $empBranch = $emp->branch;
-                $empAchievement = $emp->localized('achievement');
+                // Card teaser: first sentence of the bio, trimmed to its first
+                // clause if long. Keeps the card tight (~1 line) while the full
+                // bio lives on the /team/{id} detail page.
+                $empPlain = trim(strip_tags((string) $emp->localized('achievement')));
+                $empFirstSentence = $empPlain === ''
+                    ? ''
+                    : (preg_split('/(?<=[.!?؟])\s+/u', $empPlain, 2)[0] ?? $empPlain);
+                if (mb_strlen($empFirstSentence) > 85) {
+                    $empFirstSentence = preg_split('/\s*[,،—–]\s*/u', $empFirstSentence, 2)[0] ?? $empFirstSentence;
+                }
+                $empAchievement = rtrim($empFirstSentence, " .!?؟,");
             @endphp
             <div data-motion="fade-up" class="employee-slide employee-card card-tilt group relative w-[350px] lg:w-[420px] aspect-[3/4] overflow-hidden bg-delos-dark-2 flex-shrink-0">
                 <x-admin-edit-pill :href="route('admin.employees.edit', $emp)" :label="'Edit ' . $empName" />
@@ -178,7 +188,7 @@
                     <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $empName }}</h3>
                     <p class="text-overline-sm text-delos-cream/50 mb-4">{{ $empRole }}</p>
                     @if($empAchievement)
-                        <div class="text-body-sm text-delos-cream/40 leading-relaxed group-hover:text-delos-cream/60 transition-colors duration-500 employee-achievement line-clamp-3">{!! $empAchievement !!}</div>
+                        <p class="text-body-sm text-delos-cream/40 leading-relaxed group-hover:text-delos-cream/60 transition-colors duration-500 employee-achievement">{{ $empAchievement }}</p>
                     @endif
                 </div>
             </div>
