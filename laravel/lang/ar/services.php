@@ -2,11 +2,13 @@
 
 return [
     'hero' => [
+        'image' => 'collection-lube-classic.jpg',
         'marquee_bg_label' => 'خدماتنا',
         'overline' => 'ما نقدّمه',
         'heading_1_before' => 'فخامة إيطالية،',
         'heading_1_accent' => 'مصاغة',
         'heading_2' => 'لكلّ غرفة.',
+        'categories' => 'مطابخ · غرف ملابس · غسيل · أثاث · أرضيات · حسب الطلب',
     ],
 
     'arch_carousel' => [

@@ -318,11 +318,12 @@ return [
             'hero' => [
                 'label' => 'Hero',
                 'fields' => [
+                    ['key' => 'services.hero.image', 'label' => 'Hero background image', 'type' => 'image'],
                     ['key' => 'services.hero.overline', 'label' => 'Overline', 'type' => 'text'],
                     ['key' => 'services.hero.heading_1_before', 'label' => 'Heading prefix', 'type' => 'text'],
                     ['key' => 'services.hero.heading_1_accent', 'label' => 'Heading accent', 'type' => 'text'],
                     ['key' => 'services.hero.heading_2', 'label' => 'Heading line 2', 'type' => 'text'],
-                    ['key' => 'services.hero.marquee_bg_label', 'label' => 'Marquee background label', 'type' => 'text'],
+                    ['key' => 'services.hero.categories', 'label' => 'Service categories list', 'type' => 'text'],
                 ],
             ],
             'arch_carousel' => [

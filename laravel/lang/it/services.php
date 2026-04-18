@@ -2,11 +2,13 @@
 
 return [
     'hero' => [
+        'image' => 'collection-lube-classic.jpg',
         'marquee_bg_label' => 'I nostri servizi',
         'overline' => 'Cosa offriamo',
         'heading_1_before' => 'Lusso italiano,',
         'heading_1_accent' => 'pensato',
         'heading_2' => 'per ogni ambiente.',
+        'categories' => 'Cucine · Cabine armadio · Lavanderia · Arredi · Parquet · Su misura',
     ],
 
     'arch_carousel' => [

@@ -2,11 +2,13 @@
 
 return [
     'hero' => [
+        'image' => 'collection-lube-classic.jpg',
         'marquee_bg_label' => 'Our Services',
         'overline' => 'What We Offer',
         'heading_1_before' => 'Italian luxury,',
         'heading_1_accent' => 'crafted',
         'heading_2' => 'for every room.',
+        'categories' => 'Kitchens · Dressing · Laundry · Furniture · Parquet · Custom',
     ],
 
     'arch_carousel' => [

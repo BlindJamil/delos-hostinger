@@ -334,6 +334,43 @@ body.reduced-motion .stat-suffix {
     to   { clip-path: inset(0 0 0 0); opacity: 1; }
 }
 
+/* Magazine-cover services hero — full-bleed image with slow Ken-Burns
+   parallax zoom and a bottom-anchored dark gradient for legibility. */
+.svc-hero {
+    isolation: isolate;
+}
+
+.svc-hero__image {
+    overflow: hidden;
+    will-change: transform;
+}
+
+.svc-hero__image img {
+    transform-origin: center center;
+    animation: svcHeroKenBurns 16s ease-in-out infinite alternate;
+}
+
+.svc-hero__overlay {
+    background: linear-gradient(
+        to top,
+        rgba(26, 20, 18, 0.78) 0%,
+        rgba(26, 20, 18, 0.55) 25%,
+        rgba(26, 20, 18, 0.15) 55%,
+        transparent 75%
+    );
+}
+
+@keyframes svcHeroKenBurns {
+    from { transform: scale(1.0); }
+    to   { transform: scale(1.08); }
+}
+
+html.reduced-motion .svc-hero__image img,
+body.reduced-motion .svc-hero__image img {
+    animation: none;
+    transform: none;
+}
+
 .svc-hero-img-reveal {
     clip-path: inset(0 100% 0 0);
     animation: svcRevealMask 1.4s cubic-bezier(0.77, 0, 0.175, 1) forwards;

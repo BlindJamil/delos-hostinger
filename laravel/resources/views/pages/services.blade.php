@@ -5,55 +5,72 @@
 
 @section('content')
 
-{{-- Hero --}}
-<section data-motion-hero class="relative min-h-dvh overflow-hidden bg-delos-cream">
+{{-- Hero — magazine-cover full-bleed editorial layout --}}
+<section data-motion-hero class="svc-hero relative min-h-dvh overflow-hidden bg-delos-dark">
 
-    {{-- Subtle vertical stripe texture --}}
-    <div class="absolute inset-0 opacity-[0.04] pointer-events-none" style="background: repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(61,46,42,0.2) 50px, rgba(61,46,42,0.2) 51px);"></div>
+    {{-- Full-bleed background image with slow Ken-Burns parallax zoom --}}
+    <div class="svc-hero__image absolute inset-0">
+        <img src="{{ pcontent_url('services.hero.image', asset('images/collection-lube-classic.jpg')) }}"
+             alt=""
+             class="w-full h-full object-cover"
+             fetchpriority="high"
+             decoding="async">
+    </div>
 
-    {{-- Giant scrolling marquee text — behind the image --}}
-    <div class="absolute inset-0 flex items-center z-[1] overflow-hidden">
-        <div class="brand-marquee flex whitespace-nowrap">
-            @for($i = 0; $i < 6; $i++)
-                <span class="font-serif text-[clamp(6rem,15vw,14rem)] font-light text-delos-dark/[0.05] tracking-wide leading-none flex-shrink-0 px-4 select-none">{{ pcontent('services.hero.marquee_bg_label') }}</span>
-                <span class="font-serif text-[clamp(6rem,15vw,14rem)] font-light text-delos-gold/[0.07] tracking-wide leading-none flex-shrink-0 px-8 select-none">—</span>
-            @endfor
+    {{-- Bottom-anchored gradient — keeps image vivid at top, text legible at bottom --}}
+    <div class="svc-hero__overlay absolute inset-0 pointer-events-none"></div>
+
+    {{-- Top-left overline --}}
+    <div data-motion="fade" class="absolute top-28 lg:top-32 left-6 lg:left-12 z-[2] flex items-center gap-3">
+        <span class="w-8 h-px bg-delos-gold/70"></span>
+        <span class="text-delos-gold text-[10px] lg:text-[11px] tracking-[0.5em] uppercase font-semibold" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.hero.overline') }}</span>
+    </div>
+
+    {{-- Bottom-left composition: heading + categories + scroll cue --}}
+    <div class="absolute inset-x-0 bottom-0 z-[2] px-6 lg:px-12 pb-12 lg:pb-16">
+        <div class="max-w-[1400px] mx-auto">
+            <h1 class="font-serif text-delos-cream font-light leading-[1.05] text-4xl sm:text-5xl lg:text-7xl xl:text-[5.5rem] [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
+                <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_1_before') }}</span>
+                <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_1_accent') }} <em class="text-delos-gold italic font-light">for</em></span>
+                <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_2') }}</span>
+            </h1>
+
+            <div data-motion="fade" class="mt-8 lg:mt-10 flex items-center gap-3 max-w-3xl">
+                <span class="w-8 h-px bg-delos-gold/60 flex-shrink-0"></span>
+                <p class="text-delos-gold/80 text-[10px] lg:text-[11px] tracking-[0.4em] uppercase font-medium leading-relaxed" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.hero.categories') }}</p>
+            </div>
         </div>
     </div>
 
-    {{-- Center composition --}}
-    <div class="relative z-[2] flex flex-col items-center min-h-dvh px-6 pt-28 lg:pt-36 pb-16">
-
-        {{-- Top heading --}}
-        <div class="text-center mb-10 lg:mb-14">
-            <div data-motion="fade" class="inline-flex items-center gap-3 mb-5">
-                <span class="w-8 h-px bg-delos-gold/50"></span>
-                <span class="text-delos-gold text-[10px] tracking-[0.5em] uppercase font-semibold" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.hero.overline') }}</span>
-                <span class="w-8 h-px bg-delos-gold/50"></span>
-            </div>
-            <h1 data-motion="fade-up" class="font-serif text-delos-dark text-4xl lg:text-6xl xl:text-7xl font-light leading-[1.08] mb-2">
-                {{ pcontent('services.hero.heading_1_before') }} <em class="text-delos-gold not-italic">{{ pcontent('services.hero.heading_1_accent') }}</em>
-            </h1>
-            <h1 data-motion="fade-up" class="font-serif text-delos-dark text-4xl lg:text-6xl xl:text-7xl font-light leading-[1.08]">
-                {{ pcontent('services.hero.heading_2') }}
-            </h1>
+    {{-- Scroll cue --}}
+    <div data-motion="fade" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-[2] flex flex-col items-center gap-3">
+        <span class="text-delos-cream/50 text-[9px] tracking-[0.5em] uppercase" style="font-family: 'Inter', sans-serif;">{{ pcontent('home.hero.scroll_label') }}</span>
+        <div class="w-px h-10 bg-delos-cream/25 relative overflow-hidden">
+            <div class="scroll-line absolute top-0 left-0 w-full bg-delos-gold/60" style="height:30%"></div>
         </div>
+    </div>
 
-        {{-- Arch carousel --}}
+</section>
+
+{{-- Specialties showcase — the arched-frame carousel, relocated from the hero --}}
+<section class="bg-delos-cream py-16 lg:py-24 overflow-hidden">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         @php $archSlides = __('services.arch_carousel.slides'); @endphp
 
-        <div data-motion="scale-in" id="svc-arch-carousel" class="relative mb-10 lg:mb-14">
+        <div data-motion="scale-in" id="svc-arch-carousel" class="relative flex flex-col items-center">
             @foreach($archSlides as $i => $slide)
-                <div class="svc-arch-frame {{ $i > 0 ? 'absolute inset-0 opacity-0 pointer-events-none' : 'relative' }}" data-label="{{ $slide['label'] }}">
-                    <div class="absolute -inset-4 lg:-inset-8 rounded-t-full bg-gradient-to-b from-delos-gold/15 via-delos-ivory to-delos-cream z-[0]"></div>
+                <div class="svc-arch-frame {{ $i > 0 ? 'absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none' : 'relative' }}" data-label="{{ $slide['label'] }}">
+                    <div class="relative">
+                        <div class="absolute -inset-4 lg:-inset-8 rounded-t-full bg-gradient-to-b from-delos-gold/15 via-delos-ivory to-delos-cream z-[0]"></div>
 
-                    <div class="relative z-[1] w-[300px] sm:w-[400px] lg:w-[480px] xl:w-[540px] overflow-hidden rounded-t-full shadow-2xl">
-                        <div class="aspect-[3/4] overflow-hidden">
-                            <x-responsive-image :src="$slide['img']" :alt="$slide['label']"
-                                sizes="(min-width: 1280px) 540px, (min-width: 1024px) 480px, (min-width: 640px) 400px, 300px"
-                                class="w-full h-full object-cover"
-                                :loading="$i === 0 ? 'eager' : 'lazy'"
-                                :fetchpriority="$i === 0 ? 'high' : null" />
+                        <div class="relative z-[1] w-[300px] sm:w-[400px] lg:w-[480px] xl:w-[540px] overflow-hidden rounded-t-full shadow-2xl">
+                            <div class="aspect-[3/4] overflow-hidden">
+                                <x-responsive-image :src="$slide['img']" :alt="$slide['label']"
+                                    sizes="(min-width: 1280px) 540px, (min-width: 1024px) 480px, (min-width: 640px) 400px, 300px"
+                                    class="w-full h-full object-cover"
+                                    :loading="$i === 0 ? 'eager' : 'lazy'"
+                                    :fetchpriority="$i === 0 ? 'high' : null" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -64,7 +81,6 @@
                 <p id="svc-arch-label" class="text-delos-gold text-[10px] tracking-[0.5em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.arch_carousel.default_label') }}</p>
             </div>
         </div>
-
     </div>
 </section>
 
