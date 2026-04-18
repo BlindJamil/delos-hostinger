@@ -5,6 +5,7 @@ return [
         'overline' => 'Get in Touch',
         'heading_1' => 'Contact us.',
         'heading_accent' => "We're here for you.",
+        'image' => 'delos-wall-branding.jpg',
     ],
 
     'intro' => [

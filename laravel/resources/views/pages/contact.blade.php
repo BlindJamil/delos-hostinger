@@ -7,7 +7,7 @@
 
 {{-- Hero Image --}}
 <section class="relative h-[55vh] lg:h-[60vh] overflow-hidden">
-    <x-responsive-image src="delos-wall-branding.jpg" alt="Delos International Wall"
+    <x-responsive-image :src="pcontent('contact.hero.image', 'delos-wall-branding.jpg')" alt="Delos International Wall"
         sizes="100vw"
         loading="eager"
         fetchpriority="high"

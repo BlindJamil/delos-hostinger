@@ -472,6 +472,7 @@ return [
             'hero' => [
                 'label' => 'Hero',
                 'fields' => [
+                    ['key' => 'contact.hero.image', 'label' => 'Hero image', 'type' => 'image'],
                     ['key' => 'contact.hero.overline', 'label' => 'Overline', 'type' => 'text'],
                     ['key' => 'contact.hero.heading_1', 'label' => 'Heading line 1', 'type' => 'text'],
                     ['key' => 'contact.hero.heading_accent', 'label' => 'Heading accent', 'type' => 'text'],

@@ -5,6 +5,7 @@ return [
         'overline' => 'تواصل معنا',
         'heading_1' => 'تواصل معنا.',
         'heading_accent' => 'نحن هنا من أجلك.',
+        'image' => 'delos-wall-branding.jpg',
     ],
 
     'intro' => [
