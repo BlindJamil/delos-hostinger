@@ -65,6 +65,15 @@
                                     loading="{{ $i === 0 ? 'eager' : 'lazy' }}"
                                     @if($i === 0) fetchpriority="high" @endif
                                     decoding="async">
+                            @else
+                                {{-- Editorial placeholder for brands without
+                                     an image yet — luxury catalogue look
+                                     using the brand initial as a watermark. --}}
+                                <div class="brand-card-placeholder" aria-hidden="true">
+                                    <span class="brand-card-placeholder__letter">{{ mb_substr($bName, 0, 1) }}</span>
+                                    <span class="brand-card-placeholder__rule"></span>
+                                    <span class="brand-card-placeholder__meta">{{ $bCategory ?: 'Italian Brand Partner' }}</span>
+                                </div>
                             @endif
                         </div>
                         <div class="brand-card-info">
