@@ -178,7 +178,7 @@
                     <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $empName }}</h3>
                     <p class="text-overline-sm text-delos-cream/50 mb-4">{{ $empRole }}</p>
                     @if($empAchievement)
-                        <div class="text-body-sm text-delos-cream/40 leading-relaxed group-hover:text-delos-cream/60 transition-colors duration-500 employee-achievement">{!! $empAchievement !!}</div>
+                        <div class="text-body-sm text-delos-cream/40 leading-relaxed group-hover:text-delos-cream/60 transition-colors duration-500 employee-achievement line-clamp-3">{!! $empAchievement !!}</div>
                     @endif
                 </div>
             </div>
