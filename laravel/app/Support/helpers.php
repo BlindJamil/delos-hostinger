@@ -181,3 +181,26 @@ if (!function_exists('pcontent_url')) {
         return $fallback;
     }
 }
+
+if (!function_exists('wa_digits')) {
+    /**
+     * Normalise an Iraqi phone number to the digit-only form wa.me expects.
+     * Examples:
+     *   "+964 750 200 1003"  → "9647502001003"
+     *   "00964 750 200 1003" → "9647502001003"
+     *   "0750 200 1003"      → "9647502001003"
+     *   "750-200-1003"       → "9647502001003"
+     * Returns null on empty/obviously-too-short input so the caller can
+     * detect a branch that hasn't had its WhatsApp number set yet.
+     */
+    function wa_digits(?string $phone): ?string
+    {
+        if (!$phone) return null;
+        $d = preg_replace('/\D+/', '', $phone);
+        if (strlen($d) < 8) return null;
+        if (str_starts_with($d, '00')) $d = substr($d, 2);      // drop int'l "00" prefix
+        if (str_starts_with($d, '0'))  $d = '964' . substr($d, 1);
+        if (!str_starts_with($d, '964')) $d = '964' . $d;
+        return $d;
+    }
+}

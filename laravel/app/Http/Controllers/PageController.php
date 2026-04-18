@@ -87,7 +87,11 @@ class PageController extends Controller
 
     public function contact()
     {
-        return view('pages.contact');
+        $contactBranches = $this->safeQuery(
+            fn () => Branch::query()->active()->ordered()->get()
+        );
+
+        return view('pages.contact', compact('contactBranches'));
     }
 
     public function showEmployee(string $locale, int $employee)
