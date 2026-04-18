@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\PageContent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -87,6 +89,22 @@ class PageContentController extends Controller
         $pageConfig = $this->pageOrAbort($page);
         $values = $request->input('values', []);
 
+        // Defensive: if PHP truncated the payload (max_input_vars) or the
+        // client sent nothing, fail loudly instead of silently redirecting
+        // back with no changes — that silent failure was the "save doesn't
+        // work" symptom the user was hitting.
+        if (!is_array($values) || empty($values)) {
+            Log::warning('PageContent update received empty values payload', [
+                'page' => $page,
+                'post_keys' => array_keys($request->all()),
+                'max_input_vars' => ini_get('max_input_vars'),
+                'post_max_size' => ini_get('post_max_size'),
+            ]);
+            return redirect()
+                ->route('admin.page-content.edit', $page)
+                ->with('error', 'Nothing was saved — the form submission arrived empty. This often means PHP dropped the payload (max_input_vars limit). Check the server logs.');
+        }
+
         // Build a map of key → type from the registry so we can store type
         // metadata correctly and validate rich-text HTML size etc.
         $typeByKey = [];
@@ -96,28 +114,66 @@ class PageContentController extends Controller
             }
         }
 
-        foreach ($values as $key => $localeValues) {
-            if (!isset($typeByKey[$key])) {
-                // Ignore unknown keys — someone probably tampered with the form.
-                continue;
-            }
+        $saved = 0;
+        $skipped = [];
 
-            PageContent::updateOrCreate(
-                ['key' => $key],
-                [
-                    'page' => $page,
-                    'section' => $this->sectionForKey($pageConfig, $key),
-                    'type' => $typeByKey[$key],
-                    'value_en' => $localeValues['en'] ?? null,
-                    'value_ar' => $localeValues['ar'] ?? null,
-                    'value_it' => $localeValues['it'] ?? null,
-                ]
-            );
+        try {
+            DB::transaction(function () use ($values, $typeByKey, $pageConfig, $page, &$saved, &$skipped) {
+                foreach ($values as $key => $localeValues) {
+                    if (!isset($typeByKey[$key])) {
+                        // Key isn't in the registry — surface it so admins
+                        // can tell if a rename got out of sync.
+                        $skipped[] = $key;
+                        continue;
+                    }
+                    if (!is_array($localeValues)) {
+                        // Malformed — ignore silently but count it.
+                        $skipped[] = $key;
+                        continue;
+                    }
+
+                    PageContent::updateOrCreate(
+                        ['key' => $key],
+                        [
+                            'page' => $page,
+                            'section' => $this->sectionForKey($pageConfig, $key),
+                            'type' => $typeByKey[$key],
+                            'value_en' => $localeValues['en'] ?? null,
+                            'value_ar' => $localeValues['ar'] ?? null,
+                            'value_it' => $localeValues['it'] ?? null,
+                        ]
+                    );
+                    $saved++;
+                }
+            });
+        } catch (\Throwable $e) {
+            Log::error('PageContent update transaction failed', [
+                'page' => $page,
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()
+                ->route('admin.page-content.edit', $page)
+                ->with('error', 'Save failed: ' . $e->getMessage());
+        }
+
+        // Belt-and-suspenders: some cache drivers can miss the model-event
+        // bust if a write happens inside a transaction on certain DBs. Bust
+        // once more after commit so the public site is guaranteed fresh.
+        PageContent::clearCache();
+
+        $message = "Content saved — {$saved} field" . ($saved === 1 ? '' : 's') . " written.";
+        if (!empty($skipped)) {
+            Log::info('PageContent update skipped unregistered keys', [
+                'page' => $page,
+                'skipped' => $skipped,
+            ]);
+            $message .= ' (' . count($skipped) . ' unknown key' . (count($skipped) === 1 ? '' : 's') . ' skipped — see server log.)';
         }
 
         return redirect()
             ->route('admin.page-content.edit', $page)
-            ->with('success', 'Content saved.');
+            ->with('success', $message);
     }
 
     /**
