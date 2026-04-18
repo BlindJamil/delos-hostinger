@@ -79,8 +79,9 @@
                         <div class="brand-card-info">
                             <div class="flex items-center justify-between gap-3">
                                 <div class="min-w-0">
-                                    <h2 class="brand-card-name font-serif text-delos-cream text-base md:text-lg lg:text-xl font-light leading-tight truncate">{{ $bName }}</h2>
-                                    <p class="brand-card-category text-delos-cream/40 text-[9px] tracking-[0.2em] uppercase mt-0.5 truncate" style="font-family: 'Inter', sans-serif;">{{ $bCategory }}</p>
+                                    {{-- Centerpiece (4th card, zero-indexed = 3) gets full text — no truncation. --}}
+                                    <h2 class="brand-card-name font-serif text-delos-cream text-base md:text-lg lg:text-xl font-light leading-tight {{ $i === 3 ? '' : 'truncate' }}">{{ $bName }}</h2>
+                                    <p class="brand-card-category text-delos-cream/40 text-[9px] tracking-[0.2em] uppercase mt-0.5 {{ $i === 3 ? '' : 'truncate' }}" style="font-family: 'Inter', sans-serif;">{{ $bCategory }}</p>
                                 </div>
                                 <span class="brand-card-since text-delos-gold/60 text-[9px] tracking-[0.3em] uppercase flex-shrink-0" style="font-family: 'Inter', sans-serif;">{{ $bSince }}</span>
                             </div>
