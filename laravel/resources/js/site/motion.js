@@ -525,6 +525,17 @@ function initBrandShowcase(context) {
                 opacity: 1, y: 0, x: 0, scale: 1, rotation: 0, filter: 'blur(0px)',
                 duration: 1, ease: 'power4.out', stagger: 0.08, clearProps: 'transform,filter',
             }, 0.3);
+
+            // Reveal any cards beyond index 4 (e.g. brands 6 & 7) so the
+            // animation is N-card-safe — works for 5, 7, or any future
+            // count without leaving extra cards stuck at opacity 0.
+            const extraCards = cards.slice(5);
+            if (extraCards.length) {
+                tl.to(extraCards, {
+                    opacity: 1, y: 0, x: 0, scale: 1, rotation: 0, filter: 'blur(0px)',
+                    duration: 1, ease: 'power4.out', stagger: 0.08, clearProps: 'transform,filter',
+                }, 0.45);
+            }
         },
     });
 
