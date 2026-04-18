@@ -502,7 +502,7 @@ html.js .stat-suffix.is-visible {
 }
 
 .brand-card-placeholder__letter {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-serif-delos, 'Cormorant Garamond', serif);
     font-size: clamp(4rem, 12vw, 7rem);
     font-weight: 300;
     line-height: 1;

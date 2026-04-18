@@ -55,7 +55,7 @@
     height: 100%;
     margin: 0;
     color: var(--color-delos-dark, #3D2E2A);
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-serif-delos, 'Cormorant Garamond', serif);
 }
 
 .iraq-map__canvas {
@@ -240,7 +240,7 @@ body.has-custom-cursor .iraq-map__pin-group {
 
 .iraq-map__pin-label {
     fill: var(--color-delos-dark, #3D2E2A);
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-serif-delos, 'Cormorant Garamond', serif);
     font-size: 22px;
     font-weight: 400;
     letter-spacing: 0.02em;
@@ -418,7 +418,7 @@ body.has-custom-cursor .iraq-map__pin-group {
 }
 
 .branch-card__watermark-letter {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-serif-delos, 'Cormorant Garamond', serif);
     font-size: clamp(180px, 20vw, 280px);
     line-height: 1;
     color: rgba(196, 154, 122, 0.18);

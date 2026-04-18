@@ -38,7 +38,9 @@
 }
 [lang="ar"] {
     --font-sans-delos: 'Cairo', 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-serif-delos: 'Amiri', 'Cormorant Garamond', Georgia, serif;
+    /* Arabic headings share the navigation typeface (Cairo) for clarity —
+       Amiri rendered too decoratively for titles at display sizes. */
+    --font-serif-delos: 'Cairo', 'Amiri', 'Cormorant Garamond', Georgia, serif;
 }
 [lang="ar"] body,
 [lang="ar"] .font-sans,
