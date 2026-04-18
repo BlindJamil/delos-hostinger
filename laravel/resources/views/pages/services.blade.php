@@ -33,7 +33,7 @@
         <div class="max-w-[1400px] mx-auto">
             <h1 class="font-serif text-delos-cream font-light leading-[1.05] text-4xl sm:text-5xl lg:text-7xl xl:text-[5.5rem] [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
                 <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_1_before') }}</span>
-                <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_1_accent') }} <em class="text-delos-gold italic font-light">for</em></span>
+                <span data-motion="fade-up" class="block"><em class="text-delos-gold italic font-light">{{ pcontent('services.hero.heading_1_accent') }}</em></span>
                 <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_2') }}</span>
             </h1>
         </div>
