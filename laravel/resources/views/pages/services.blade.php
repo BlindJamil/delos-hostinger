@@ -26,12 +26,12 @@
         <span class="text-delos-gold text-[10px] lg:text-[11px] tracking-[0.5em] uppercase font-semibold" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.hero.overline') }}</span>
     </div>
 
-    {{-- Vertically centered heading on the left — sits in the visual
-         middle of the image, balanced with the overline at top and
-         scroll cue at bottom. Editorial magazine-cover composition. --}}
-    <div class="absolute inset-0 z-[2] flex items-center px-6 lg:px-12">
+    {{-- Vertically centered heading, inset from the left edge with
+         a constrained max-width so the text feels like an editorial
+         caption rather than spanning the whole viewport. --}}
+    <div class="absolute inset-0 z-[2] flex items-center px-6 sm:px-12 lg:px-20 xl:px-28">
         <div class="max-w-[1400px] mx-auto w-full">
-            <h1 class="font-serif text-delos-cream font-light leading-[1.05] text-4xl sm:text-5xl lg:text-6xl xl:text-7xl [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
+            <h1 class="font-serif text-delos-cream font-light leading-[1.1] text-3xl sm:text-4xl lg:text-5xl xl:text-6xl max-w-xl lg:max-w-2xl [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
                 <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_1_before') }}</span>
                 <span data-motion="fade-up" class="block"><em class="text-delos-gold italic font-light">{{ pcontent('services.hero.heading_1_accent') }}</em></span>
                 <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_2') }}</span>
