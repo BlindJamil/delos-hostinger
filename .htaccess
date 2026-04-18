@@ -3,6 +3,8 @@
 # via their hashed filenames from Vite.
 <IfModule LiteSpeed>
     CacheDisable public /
+    RewriteEngine On
+    RewriteRule .* - [E=Cache-Control:no-cache]
 </IfModule>
 
 # Prevent any proxy/CDN cache from serving stale HTML
@@ -10,7 +12,24 @@
     <FilesMatch "\.php$">
         Header set Cache-Control "no-cache, no-store, must-revalidate"
         Header set Pragma "no-cache"
+        Header set X-LiteSpeed-Cache-Control "no-cache"
     </FilesMatch>
+</IfModule>
+
+# PHP limits — the admin page-content editor submits ~600 inputs per save
+# (65 fields × 3 locales plus hidden fields). The default max_input_vars
+# of 1000 is close enough to truncate on some hosts once the form grows,
+# which makes "Save All" silently drop fields. Raise to 5000 on whichever
+# PHP SAPI Hostinger is running. (Also set in .user.ini as a fallback.)
+<IfModule mod_php.c>
+    php_value max_input_vars 5000
+    php_value post_max_size 60M
+    php_value upload_max_filesize 60M
+</IfModule>
+<IfModule lsapi_module>
+    php_value max_input_vars 5000
+    php_value post_max_size 60M
+    php_value upload_max_filesize 60M
 </IfModule>
 
 <IfModule mod_rewrite.c>

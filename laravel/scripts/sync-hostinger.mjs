@@ -47,6 +47,10 @@ const mappings = [
     // Raised PHP upload limits so admins can replace the homepage
     // brand video (~42MB) from the page-content editor.
     ['public/.user.ini', '.user.ini'],
+    // Apache/LiteSpeed config — cache-control, PHP input limits, and
+    // rewrite rules. Previously edited in the Hostinger repo by hand;
+    // now sourced from delos-website so the two stay in lockstep.
+    ['public/.htaccess', '.htaccess'],
 ];
 
 for (const [sourceRelativePath, destinationRelativePath] of mappings) {
