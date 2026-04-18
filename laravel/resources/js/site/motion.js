@@ -74,15 +74,11 @@ const MOTION_VARIANTS = {
 gsap.registerPlugin(ScrollTrigger);
 
 export function initMotion(context) {
-    // Entry/scroll animations only run on the homepage. Every other
-    // page renders content immediately without fade-ins or staggers.
-    const animationsEnabled = context.page === 'home' && !context.prefersReducedMotion;
-
-    context.documentElement.classList.toggle('reduced-motion', !animationsEnabled);
-    context.body.classList.toggle('reduced-motion', !animationsEnabled);
+    context.documentElement.classList.toggle('reduced-motion', context.prefersReducedMotion);
+    context.body.classList.toggle('reduced-motion', context.prefersReducedMotion);
     prepareMotionGroups();
 
-    if (!animationsEnabled) {
+    if (context.prefersReducedMotion) {
         applyReducedMotionState(context);
         return;
     }

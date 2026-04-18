@@ -53,68 +53,17 @@ export function initPageLoader(context, onReady) {
 }
 
 export function initPageTransitions(context) {
+    // Page transition overlay disabled: it caused a brief blank flash
+    // when navigating between pages and didn't add real value. Links
+    // now use the browser's standard navigation. The overlay element
+    // remains in the DOM (used by admin-edit-pill z-index ordering)
+    // but is never activated. Stale sessionStorage state is cleared
+    // in case a user is mid-navigation when this deploys.
     const overlay = qs('[data-page-transition]');
-    if (!overlay) {
-        return;
-    }
-
-    if (context.prefersReducedMotion) {
+    if (overlay) {
         overlay.classList.remove('is-active', 'is-exiting');
-        sessionStorage.removeItem(context.transitionStorageKey);
-        return;
     }
-
-    if (sessionStorage.getItem(context.transitionStorageKey) === 'pending') {
-        sessionStorage.removeItem(context.transitionStorageKey);
-        overlay.classList.add('is-active');
-        requestAnimationFrame(() => {
-            overlay.classList.add('is-exiting');
-        });
-
-        window.setTimeout(() => {
-            overlay.classList.remove('is-active', 'is-exiting');
-        }, TRANSITION_DURATION_MS + 120);
-    }
-
-    document.addEventListener('click', (event) => {
-        if (event.defaultPrevented || event.button !== 0 || hasModifierKey(event)) {
-            return;
-        }
-
-        const link = event.target.closest('a[href]');
-        if (!link || !shouldTransitionLink(link)) {
-            return;
-        }
-
-        const destination = new URL(link.href, window.location.href);
-        if (destination.origin !== window.location.origin) {
-            return;
-        }
-
-        if (
-            destination.pathname === window.location.pathname &&
-            destination.search === window.location.search &&
-            destination.hash
-        ) {
-            return;
-        }
-
-        if (
-            destination.pathname === window.location.pathname &&
-            destination.search === window.location.search &&
-            destination.hash === window.location.hash
-        ) {
-            return;
-        }
-
-        event.preventDefault();
-        sessionStorage.setItem(context.transitionStorageKey, 'pending');
-        overlay.classList.add('is-active');
-
-        window.setTimeout(() => {
-            window.location.assign(destination.href);
-        }, TRANSITION_DURATION_MS);
-    });
+    sessionStorage.removeItem(context.transitionStorageKey);
 }
 
 export function initHeader() {
