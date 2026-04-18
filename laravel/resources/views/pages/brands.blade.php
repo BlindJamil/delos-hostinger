@@ -36,15 +36,20 @@
                     $bName = $b->name;
                     $bCategory = $b->localized('category');
                     $bSince = $b->since;
-                    // Render as <a> when the brand has an official URL,
-                    // fall back to <div> so the card still renders intact.
-                    $tag = $b->url ? 'a' : 'div';
                 @endphp
-                <{{ $tag }}
-                    @if($b->url) href="{{ $b->url }}" target="_blank" rel="noopener" aria-label="{{ $bName }} — visit official website" @endif
-                    class="brand-card card-tilt relative block"
-                    data-brand-index="{{ $i }}">
+                <div class="brand-card card-tilt relative" data-brand-index="{{ $i }}">
                     <x-admin-edit-pill :href="route('admin.brands.edit', $b)" :label="'Edit ' . $bName" />
+                    @if($b->url)
+                        {{-- Full-card overlay link: lets the whole card act
+                             as a clickable link to the brand's official site
+                             without nesting anchors (which conflicts with
+                             the admin-edit pill that's also an anchor).
+                             z-1 sits above the card content, while the admin
+                             pill's higher z-index keeps it clickable. --}}
+                        <a href="{{ $b->url }}" target="_blank" rel="noopener"
+                           aria-label="{{ $bName }} — visit official website"
+                           class="absolute inset-0 z-[1]"></a>
+                    @endif
                     <div class="brand-card-inner">
                         <div class="brand-card-image">
                             @if($b->imageIsLegacy())
@@ -72,7 +77,7 @@
                             </div>
                         </div>
                     </div>
-                </{{ $tag }}>
+                </div>
             @endforeach
         </div>
     </div>
