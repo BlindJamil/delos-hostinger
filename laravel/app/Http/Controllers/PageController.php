@@ -89,4 +89,15 @@ class PageController extends Controller
     {
         return view('pages.contact');
     }
+
+    public function showEmployee(string $locale, int $employee)
+    {
+        $employee = Employee::query()->where('id', $employee)->where('active', true)->first();
+
+        if (!$employee) {
+            abort(404);
+        }
+
+        return view('pages.employee-show', compact('employee'));
+    }
 }

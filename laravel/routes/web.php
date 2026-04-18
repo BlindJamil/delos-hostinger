@@ -148,6 +148,7 @@ Route::prefix('{locale}')
         Route::get('/brands', [PageController::class, 'brands'])->name('brands');
         Route::get('/branches', [PageController::class, 'branches'])->name('branches');
         Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+        Route::get('/team/{employee}', [PageController::class, 'showEmployee'])->name('employee-show');
     });
 
 /*

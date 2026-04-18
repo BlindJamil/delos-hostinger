@@ -161,12 +161,17 @@
             @endphp
             <div data-motion="fade-up" class="employee-slide employee-card card-tilt group relative w-[350px] lg:w-[420px] aspect-[3/4] overflow-hidden bg-delos-dark-2 flex-shrink-0">
                 <x-admin-edit-pill :href="route('admin.employees.edit', $emp)" :label="'Edit ' . $empName" />
+                <a href="{{ lroute('employee-show', ['employee' => $emp->id]) }}"
+                   class="employee-card__link absolute inset-0 z-[4]"
+                   aria-label="View profile of {{ $empName }}">
+                    <span class="sr-only">{{ $empName }}</span>
+                </a>
                 @if($emp->imageIsLegacy())
                     <x-responsive-image :src="$emp->image" :alt="$empName . ' — ' . $empRole" sizes="(min-width: 1024px) 420px, 350px" class="absolute inset-0 w-full h-full object-cover opacity-60" />
                 @elseif($emp->image_url)
                     <img src="{{ $emp->image_url }}" alt="{{ $empName }} — {{ $empRole }}" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover opacity-60">
                 @endif
-                <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3]">
+                <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3] pointer-events-none">
                     @if($empBranch)
                         <p class="text-overline-sm text-delos-gold mb-3">{{ $empBranch }}</p>
                     @endif

@@ -1043,4 +1043,52 @@ body.has-custom-cursor .admin-bar label.admin-bar__toggle * {
     .about-showroom { height: clamp(12rem, 20vh, 15rem); }
 }
 
+/* ===== Employee card — clickable overlay link ===== */
+.employee-card__link {
+    text-decoration: none;
+    display: block;
+}
+.employee-card .admin-edit-pill,
+.employee-card a.admin-edit-pill {
+    z-index: 20;
+}
+
+/* ===== Employee Show — editorial profile page ===== */
+/* Fluid name type: 36px floor (mobile) → 80px ceiling (xl+). */
+.employee-show__name {
+    font-size: clamp(2.25rem, 1.25rem + 3vw, 5rem);
+    letter-spacing: -0.01em;
+}
+
+/* Portrait frame: a tall 4/5 aspect, capped on large screens so it doesn't
+   dwarf the text column on wide monitors. On mobile it centers and caps width. */
+.employee-show__portrait {
+    aspect-ratio: 4 / 5;
+    width: 100%;
+    max-width: 28rem;
+    margin-inline: auto;
+    box-shadow: 0 30px 80px -40px rgba(61, 46, 42, 0.28);
+}
+@media (min-width: 1024px) {
+    .employee-show__portrait {
+        max-width: none;
+        margin-inline: 0;
+    }
+}
+
+/* Bio typography: paragraphs and line breaks render naturally */
+.employee-show__bio p {
+    margin-bottom: 1em;
+}
+.employee-show__bio p:last-child {
+    margin-bottom: 0;
+}
+
+/* Short landscape safety — shrink portrait and name so content doesn't
+   overflow the fold on projectors or landscape phones. */
+@media (max-height: 720px) and (orientation: landscape) {
+    .employee-show__portrait { aspect-ratio: 4 / 5; max-height: 60vh; }
+    .employee-show__name { font-size: clamp(2rem, 1rem + 2vw, 3.5rem); }
+}
+
 
