@@ -49,25 +49,6 @@
 
 </section>
 
-{{-- Bottom info row --}}
-<section class="bg-delos-cream pb-16 lg:pb-20">
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div data-motion-group="services-info" class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 lg:gap-20 text-center sm:text-left">
-            <p data-motion="slide-left" class="text-delos-muted text-sm leading-relaxed max-w-xs" style="font-family: 'Inter', sans-serif;">
-                {{ pcontent('services.info_row.blurb') }}
-            </p>
-            <div data-motion="fade-up" class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-delos-gold"></span>
-                <span class="text-delos-muted text-[10px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.info_row.est') }}</span>
-            </div>
-            <a data-motion="slide-right" href="{{ lroute('contact') }}" class="magnetic-btn btn-ripple inline-flex items-center gap-3 px-7 py-3 bg-delos-gold text-delos-dark text-[11px] tracking-[0.25em] uppercase font-medium hover:bg-delos-gold-light transition-all duration-300 group" style="font-family: 'Inter', sans-serif;">
-                {{ pcontent('common.ctas.book_consultation') }}
-                <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            </a>
-        </div>
-    </div>
-</section>
-
 {{-- Services Detail --}}
 <section class="py-24 lg:py-32 bg-delos-cream">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
