@@ -1,19 +1,24 @@
 #!/usr/bin/env node
 /**
- * One-shot build script — regenerates resources/svg/iraq-map.svg from the
- * Natural Earth 1:10m vector dataset (public domain, Mike Bostock / D3 +
- * Nathan Kelso). Output is an editorial-grade cartographic SVG:
+ * One-shot build script — regenerates resources/svg/iraq-map.svg from
+ * authoritative cartographic sources. Editorial-grade output for the DELOS
+ * branches page:
  *
- *   • Iraq outline          — 1:10m countries, simplified to 0.15 SVG units
- *   • Neighboring countries — Turkey, Iran, Syria, Jordan, Saudi Arabia,
- *                             Kuwait — rendered as hair-line borders so
- *                             Iraq sits in geographic context, not a void
- *   • Tigris + Euphrates    — real river centerlines (ne_10m_rivers), not
- *                             hand-drawn Béziers
+ *   • Iraq outline       — HDX Common Operational Dataset for Iraq (UN OCHA),
+ *                          tolerance 0.05 SVG units (~46 m) so Al-Faw peninsula
+ *                          and desert surveyed straights render at full fidelity.
+ *   • Governorates       — HDX admin1 (18 governorates; Halabja not yet in
+ *                          public open-data releases — will appear automatically
+ *                          once HDX publishes the 19-governorate update).
+ *   • Kurdistan Region   — subtle gold tint on Duhok + Erbil + Sulaymaniyah.
+ *   • Neighbors          — Natural Earth 1:10m (Turkey, Iran, Syria, Jordan,
+ *                          Saudi Arabia, Kuwait), clipped to viewBox.
+ *   • Rivers             — Natural Earth 1:10m Tigris, Euphrates, Shatt al Arab.
  *
- * Sources:
- *   Countries : https://unpkg.com/world-atlas@2/countries-10m.json
- *   Rivers    : https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_rivers_lake_centerlines.geojson
+ * Sources (all public domain or open-licence):
+ *   HDX IRQ CODAB : https://data.humdata.org/dataset/cod-ab-irq
+ *   Countries 10m : https://unpkg.com/world-atlas@2/countries-10m.json
+ *   Rivers 10m    : https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_rivers_lake_centerlines.geojson
  *
  * Projection : linear lat/lng → SVG mapping, MUST match App\Support\Cartography
  *              viewBox 0..1000 × 0..800 covers lng 38.5..48.8, lat 29.0..37.5
@@ -21,11 +26,16 @@
  * Usage:
  *   cd delos-website && node scripts/generate-iraq-svg.mjs
  *
+ * Dependencies: node ≥ 18 (fetch, top-level await) and the `unzip` CLI
+ * (installed by default on macOS / Linux / Hostinger).
+ *
  * Safe to re-run any time — idempotent, fetches fresh data each call.
  */
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import os from 'node:os';
+import { execFileSync } from 'node:child_process';
 import { feature } from 'topojson-client';
 
 // ─── Projection constants (MUST match App\Support\Cartography) ─────
@@ -35,10 +45,34 @@ const LAT_MIN = 29.0;
 const LAT_MAX = 37.5;
 const VB_W = 1000;
 const VB_H = 800;
-
-// Padding so neighbors aren't cropped right at the canvas edge.
 const CLIP_PAD = 40;
 
+const IRAQ_TOLERANCE        = 0.05;  // ~46 m — preserve Faw + surveyed borders
+const GOVERNORATE_TOLERANCE = 0.25;  // ~230 m — crisp but unobtrusive interior
+const NEIGHBOR_TOLERANCE    = 0.35;
+const RIVER_TOLERANCE       = 0.15;
+
+// Governorates that make up the Kurdistan Region (HDX pcode → name)
+const KURDISTAN_PCODES = new Set(['IQG09', 'IQG11', 'IQG06']); // Duhok, Erbil, Sulaymaniyah
+
+// Data sources
+const HDX_ZIP_URL       = 'https://data.humdata.org/dataset/488bb3cd-3ce9-49d3-862a-3ce7975c63e1/resource/a9ed4d00-1182-4fdc-a0e4-82bbd20786db/download/irq_admin_boundaries.geojson.zip';
+const NE_COUNTRIES_URL  = 'https://unpkg.com/world-atlas@2/countries-10m.json';
+const NE_RIVERS_URL     = 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_rivers_lake_centerlines.geojson';
+
+const IRAQ_ID = '368';
+const NEIGHBOR_IDS = {
+    '792': 'Turkey',
+    '364': 'Iran',
+    '760': 'Syria',
+    '400': 'Jordan',
+    '682': 'Saudi Arabia',
+    '414': 'Kuwait',
+};
+
+const MAX_OUTPUT_BYTES = 200 * 1024; // abort if output exceeds 200 KB
+
+// ─── Geometry helpers ─────────────────────────────────────────────
 function project([lng, lat]) {
     const x = ((lng - LNG_MIN) / (LNG_MAX - LNG_MIN)) * VB_W;
     const y = VB_H - ((lat - LAT_MIN) / (LAT_MAX - LAT_MIN)) * VB_H;
@@ -46,11 +80,10 @@ function project([lng, lat]) {
 }
 
 /**
- * Douglas–Peucker polyline simplification. Tolerance is in SVG-unit space
- * (so ~0.15 ≈ ~140 m at Iraq's latitude — fine detail without noise).
+ * Douglas–Peucker polyline simplification. Tolerance is in SVG-unit space.
  */
 function simplify(points, tolerance) {
-    if (points.length < 3) return points;
+    if (points.length < 3 || tolerance <= 0) return points;
     const sqTol = tolerance * tolerance;
 
     function sqDist([x, y], [x1, y1], [x2, y2]) {
@@ -124,39 +157,7 @@ function polygonsToPath(geom, tolerance) {
     return segments.join(' ');
 }
 
-/**
- * Render a polygon's outline as an open polyline (no fill), clipped to the
- * padded viewBox. Used for neighbors: we only need the parts of their border
- * that are visible on our map, not the whole country.
- */
-function polygonBorderClipped(geom, tolerance) {
-    const polygons = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
-    const parts = [];
-    for (const polygon of polygons) {
-        for (const ring of polygon) {
-            // Treat the ring as a closed line (first = last), project, dedup,
-            // then clip to padded viewBox so only the visible border remains.
-            const projected = ring.map(project);
-            const dedped = dedup(projected);
-            const clipped = clipLineToBounds(dedped);
-            for (const segment of clipped) {
-                const simplified = simplify(segment, tolerance);
-                if (simplified.length < 2) continue;
-                const [mx, my] = simplified[0];
-                let d = `M ${mx} ${my}`;
-                for (let i = 1; i < simplified.length; i++) {
-                    d += ` L ${simplified[i][0]} ${simplified[i][1]}`;
-                }
-                parts.push(d);
-            }
-        }
-    }
-    return parts.join(' ');
-}
-
-// ─── Clip a line segment against the padded viewBox ──────────────
-//   Keeps only the parts of a LineString that fall inside the canvas
-//   (Liang-Barsky). Used for rivers that exit Iraq's bounds.
+// Liang-Barsky clipping of a line segment to the padded viewBox
 function clipLineToBounds(points) {
     const xMin = -CLIP_PAD, xMax = VB_W + CLIP_PAD;
     const yMin = -CLIP_PAD, yMax = VB_H + CLIP_PAD;
@@ -168,7 +169,6 @@ function clipLineToBounds(points) {
     }
 
     function clipEdge(p1, p2) {
-        // Liang-Barsky
         let [x1, y1] = p1;
         let [x2, y2] = p2;
         let t0 = 0, t1 = 1;
@@ -217,7 +217,6 @@ function clipLineToBounds(points) {
                 if (current.length) { segments.push(current); current = []; }
                 current.push(ca, b);
             } else {
-                // both outside but segment crosses canvas
                 segments.push([ca, cb]);
             }
         }
@@ -226,11 +225,37 @@ function clipLineToBounds(points) {
     return segments;
 }
 
+/**
+ * Render a polygon as clipped open border lines (used for neighbours and
+ * governorate interior boundaries — we only want the visible border segments).
+ */
+function polygonBorderClipped(geom, tolerance) {
+    const polygons = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+    const parts = [];
+    for (const polygon of polygons) {
+        for (const ring of polygon) {
+            const projected = ring.map(project);
+            const dedped = dedup(projected);
+            const clipped = clipLineToBounds(dedped);
+            for (const segment of clipped) {
+                const simplified = simplify(segment, tolerance);
+                if (simplified.length < 2) continue;
+                const [mx, my] = simplified[0];
+                let d = `M ${mx} ${my}`;
+                for (let i = 1; i < simplified.length; i++) {
+                    d += ` L ${simplified[i][0]} ${simplified[i][1]}`;
+                }
+                parts.push(d);
+            }
+        }
+    }
+    return parts.join(' ');
+}
+
 function lineStringsToPath(coords, tolerance) {
-    // coords may be LineString or MultiLineString-compatible
     const lines = Array.isArray(coords[0][0]) && typeof coords[0][0][0] === 'number'
-        ? coords          // MultiLineString
-        : [coords];       // LineString
+        ? coords
+        : [coords];
 
     const parts = [];
     for (const line of lines) {
@@ -255,86 +280,142 @@ function lineStringsToPath(coords, tolerance) {
 async function fetchJson(url) {
     console.log(`→ Fetching ${url}`);
     const res = await fetch(url);
-    if (!res.ok) {
-        console.error(`  Failed: HTTP ${res.status}`);
-        process.exit(1);
-    }
+    if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
     return res.json();
 }
 
+async function fetchZip(url) {
+    console.log(`→ Fetching ${url}`);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
+    const buf = Buffer.from(await res.arrayBuffer());
+    return buf;
+}
+
+async function extractHdxGeoJson() {
+    // Fetch zip → write to temp → unzip just the files we need.
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'delos-hdx-'));
+    const zipPath = path.join(tmpDir, 'hdx.zip');
+    const buf = await fetchZip(HDX_ZIP_URL);
+    await fs.writeFile(zipPath, buf);
+
+    // Require `unzip` on PATH. Fail clean if missing.
+    try {
+        execFileSync('unzip', ['-q', '-o', zipPath, '-d', tmpDir], { stdio: 'pipe' });
+    } catch (err) {
+        throw new Error(
+            `Failed to run \`unzip\` (required to extract HDX archive). ` +
+            `Install on Debian/Ubuntu: \`sudo apt-get install unzip\`. Error: ${err.message}`
+        );
+    }
+
+    const admin0 = JSON.parse(await fs.readFile(path.join(tmpDir, 'irq_admin0.geojson'), 'utf8'));
+    const admin1 = JSON.parse(await fs.readFile(path.join(tmpDir, 'irq_admin1.geojson'), 'utf8'));
+
+    // Clean up temp dir (best effort)
+    fs.rm(tmpDir, { recursive: true, force: true }).catch(() => {});
+
+    return { admin0, admin1 };
+}
+
 // ─── Main ─────────────────────────────────────────────────────────
-const COUNTRIES_URL = 'https://unpkg.com/world-atlas@2/countries-10m.json';
-const RIVERS_URL    = 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_rivers_lake_centerlines.geojson';
+async function main() {
+    // 1. Iraq outline + governorates from HDX
+    let iraqPath, governorateSegments, regionFills, iraqVertexCount, govVertexCount;
+    let geographySource = 'HDX Common Operational Dataset for Iraq (UN OCHA)';
+    try {
+        const { admin0, admin1 } = await extractHdxGeoJson();
+        console.log(`  HDX admin0: 1 feature (${admin0.features[0].geometry.type})`);
+        console.log(`  HDX admin1: ${admin1.features.length} governorates`);
 
-// ISO-3166 numeric codes
-const IRAQ_ID = '368';
-const NEIGHBOR_IDS = {
-    '792': 'Turkey',
-    '364': 'Iran',
-    '760': 'Syria',
-    '400': 'Jordan',
-    '682': 'Saudi Arabia',
-    '414': 'Kuwait',
-};
+        iraqPath = polygonsToPath(admin0.features[0].geometry, IRAQ_TOLERANCE);
+        iraqVertexCount = (iraqPath.match(/[ML]/g) || []).length;
+        console.log(`  Iraq outline: ${iraqVertexCount} vertices at tolerance ${IRAQ_TOLERANCE}`);
 
-const IRAQ_TOLERANCE = 0.15;
-const NEIGHBOR_TOLERANCE = 0.35;
-const RIVER_TOLERANCE = 0.15;
+        // Kurdistan region fills — drawn BEHIND Iraq outline
+        regionFills = admin1.features
+            .filter(f => KURDISTAN_PCODES.has(f.properties.adm1_pcode))
+            .map(f => ({
+                name: f.properties.adm1_name,
+                pcode: f.properties.adm1_pcode,
+                d: polygonsToPath(f.geometry, GOVERNORATE_TOLERANCE),
+            }))
+            .filter(r => r.d);
 
-// 1. Countries
-const topology = await fetchJson(COUNTRIES_URL);
-console.log('→ Decoding countries TopoJSON → GeoJSON');
-const countries = feature(topology, topology.objects.countries);
+        // Governorate interior boundaries (open polylines, clipped)
+        governorateSegments = admin1.features.map(f => ({
+            name: f.properties.adm1_name,
+            pcode: f.properties.adm1_pcode,
+            d: polygonBorderClipped(f.geometry, GOVERNORATE_TOLERANCE),
+        })).filter(g => g.d);
 
-const iraq = countries.features.find(f => String(f.id) === IRAQ_ID);
-if (!iraq) { console.error('  Could not find Iraq (id 368)'); process.exit(1); }
-console.log(`  Iraq (${iraq.geometry.type})`);
+        govVertexCount = governorateSegments.reduce(
+            (s, g) => s + (g.d.match(/[ML]/g) || []).length, 0);
+        console.log(`  Governorate borders: ${govVertexCount} vertices across ${governorateSegments.length} governorates`);
+        console.log(`  Kurdistan Region fills: ${regionFills.length} governorates`);
+    } catch (err) {
+        console.warn(`  ! HDX fetch failed (${err.message}) — falling back to Natural Earth 10m`);
+        geographySource = 'Natural Earth 1:10m (HDX fallback)';
+        const topology = await fetchJson(NE_COUNTRIES_URL);
+        const countries = feature(topology, topology.objects.countries);
+        const iraqFeature = countries.features.find(f => String(f.id) === IRAQ_ID);
+        if (!iraqFeature) throw new Error('Fallback failed: Iraq not in Natural Earth dataset');
+        iraqPath = polygonsToPath(iraqFeature.geometry, 0.15);
+        iraqVertexCount = (iraqPath.match(/[ML]/g) || []).length;
+        governorateSegments = [];
+        regionFills = [];
+        govVertexCount = 0;
+    }
 
-const iraqPath = polygonsToPath(iraq.geometry, IRAQ_TOLERANCE);
-const iraqVertexCount = (iraqPath.match(/[ML]/g) || []).length;
-console.log(`  Iraq outline: ${iraqVertexCount} vertices at tolerance ${IRAQ_TOLERANCE}`);
+    // 2. Neighbour countries from Natural Earth 10m
+    const topology = await fetchJson(NE_COUNTRIES_URL);
+    const countries = feature(topology, topology.objects.countries);
+    const neighborSegments = [];
+    for (const [id, name] of Object.entries(NEIGHBOR_IDS)) {
+        const f = countries.features.find(x => String(x.id) === id);
+        if (!f) { console.warn(`  ! Skipped ${name} (${id})`); continue; }
+        const d = polygonBorderClipped(f.geometry, NEIGHBOR_TOLERANCE);
+        if (d) neighborSegments.push({ name, d });
+        console.log(`  Neighbor ${name} (${id}): ${(d.match(/[ML]/g) || []).length} vertices`);
+    }
 
-const neighborSegments = [];
-for (const [id, name] of Object.entries(NEIGHBOR_IDS)) {
-    const f = countries.features.find(x => String(x.id) === id);
-    if (!f) { console.warn(`  ! Skipped ${name} (${id}) — not found`); continue; }
-    const d = polygonBorderClipped(f.geometry, NEIGHBOR_TOLERANCE);
-    if (d) neighborSegments.push({ name, d });
-    const v = (d.match(/[ML]/g) || []).length;
-    console.log(`  Neighbor ${name} (${id}): ${v} vertices`);
-}
+    // 3. Rivers from Natural Earth 10m
+    console.log('');
+    const rivers = await fetchJson(NE_RIVERS_URL);
+    const WANTED_RIVERS = ['Tigris', 'Euphrates', 'Shatt al Arab'];
+    const riverSegments = [];
+    for (const name of WANTED_RIVERS) {
+        const matches = rivers.features.filter(f => {
+            const n = (f.properties.name || '') + '|' + (f.properties.name_en || '');
+            return n.includes(name);
+        });
+        if (matches.length === 0) { console.warn(`  ! No river match for ${name}`); continue; }
+        const subPaths = matches
+            .map(f => lineStringsToPath(f.geometry.coordinates, RIVER_TOLERANCE))
+            .filter(Boolean);
+        const d = subPaths.join(' ');
+        if (d) riverSegments.push({ name, d });
+        console.log(`  River ${name}: ${(d.match(/[ML]/g) || []).length} vertices`);
+    }
 
-// 2. Rivers — Tigris, Euphrates, Shatt al Arab
-console.log('');
-const rivers = await fetchJson(RIVERS_URL);
-const WANTED_RIVERS = ['Tigris', 'Euphrates', 'Shatt al Arab'];
-const riverSegments = [];
-for (const name of WANTED_RIVERS) {
-    const matches = rivers.features.filter(f => {
-        const n = (f.properties.name || '') + '|' + (f.properties.name_en || '');
-        return n.includes(name);
-    });
-    if (matches.length === 0) { console.warn(`  ! No river match for ${name}`); continue; }
-    // A river may appear as multiple features (tributaries, main stem) — merge all
-    const subPaths = matches
-        .map(f => lineStringsToPath(f.geometry.coordinates, RIVER_TOLERANCE))
-        .filter(Boolean);
-    const d = subPaths.join(' ');
-    if (d) riverSegments.push({ name, d });
-    const v = (d.match(/[ML]/g) || []).length;
-    console.log(`  River ${name}: ${matches.length} feature(s) → ${v} vertices (clipped to bounds)`);
-}
+    // ─── Compose SVG ──────────────────────────────────────────────
+    const regionFillEls = regionFills
+        .map(({ name, pcode, d }) => `        <path class="iraq-map__region iraq-map__region--kurdistan" data-gov="${name}" data-pcode="${pcode}" d="${d}" />`)
+        .join('\n');
 
-// ─── Compose SVG ──────────────────────────────────────────────────
-const neighborPathEls = neighborSegments
-    .map(({ name, d }) => `        <path class="iraq-map__neighbor" data-country="${name}" d="${d}" vector-effect="non-scaling-stroke" />`)
-    .join('\n');
+    const governorateEls = governorateSegments
+        .map(({ name, pcode, d }) => `        <path class="iraq-map__governorate" data-gov="${name}" data-pcode="${pcode}" d="${d}" vector-effect="non-scaling-stroke" />`)
+        .join('\n');
 
-const riverPathEls = riverSegments
-    .map(({ name, d }) => `        <path class="iraq-map__river" data-river="${name}" d="${d}" vector-effect="non-scaling-stroke" />`)
-    .join('\n');
+    const neighborPathEls = neighborSegments
+        .map(({ name, d }) => `        <path class="iraq-map__neighbor" data-country="${name}" d="${d}" vector-effect="non-scaling-stroke" />`)
+        .join('\n');
 
-const svg = `<svg
+    const riverPathEls = riverSegments
+        .map(({ name, d }) => `        <path class="iraq-map__river" data-river="${name}" d="${d}" vector-effect="non-scaling-stroke" />`)
+        .join('\n');
+
+    const svg = `<svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 ${VB_W} ${VB_H}"
     preserveAspectRatio="xMidYMid meet"
@@ -345,14 +426,15 @@ const svg = `<svg
     <title id="iraq-map-title">Outline of Iraq showing Delos showroom locations</title>
 
     <!--
-        Generated from Natural Earth 1:10m (public domain) via
-        scripts/generate-iraq-svg.mjs. Do not edit this file by hand — re-run
-        the script to regenerate.
+        Generated by scripts/generate-iraq-svg.mjs — do not edit by hand.
 
         Geography:
-          • Iraq outline       — 1:10m countries, simplified to ${IRAQ_TOLERANCE} SVG units
-          • Neighbor outlines  — Turkey, Iran, Syria, Jordan, Saudi Arabia, Kuwait
-                                 (hair-line, drawn behind Iraq for context)
+          • Iraq outline       — ${geographySource}, simplified to ${IRAQ_TOLERANCE} SVG units
+          • Governorate borders — HDX admin1 (18 governorates; Halabja not yet
+                                  in public releases — will appear automatically
+                                  once HDX publishes the 19-governorate update)
+          • Kurdistan Region   — subtle gold tint on Duhok + Erbil + Sulaymaniyah
+          • Neighbour outlines — Natural Earth 1:10m, hair-lines behind Iraq
           • Rivers             — real Tigris, Euphrates, Shatt al Arab centerlines
 
         Projection matches App\\Support\\Cartography:
@@ -360,24 +442,42 @@ const svg = `<svg
           y = ${VB_H} - ((lat - ${LAT_MIN}) / ${(LAT_MAX - LAT_MIN).toFixed(1)}) * ${VB_H}
     -->
     <g class="iraq-map__geography">
-        <!-- Neighboring countries — faint context layer, drawn first so Iraq overlays cleanly -->
+        <!-- Kurdistan Region fills (drawn first, behind everything else) -->
+${regionFillEls || '        <!-- (no region fills) -->'}
+
+        <!-- Neighbouring countries — faint context layer -->
 ${neighborPathEls}
 
-        <!-- Iraq country outline -->
+        <!-- Governorate interior borders — hair-line -->
+${governorateEls || '        <!-- (no governorate borders) -->'}
+
+        <!-- Iraq country outline — drawn above governorate borders so the
+             international boundary reads as the strongest line on the map. -->
         <path
             class="iraq-map__outline"
             d="${iraqPath}"
             vector-effect="non-scaling-stroke"
         />
 
-        <!-- Tigris + Euphrates + Shatt al Arab, real centerlines -->
+        <!-- Tigris + Euphrates + Shatt al Arab centerlines -->
 ${riverPathEls}
     </g>
 </svg>
 `;
 
-const outPath = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', 'resources', 'svg', 'iraq-map.svg');
-await fs.writeFile(outPath, svg, 'utf8');
-const stat = await fs.stat(outPath);
-console.log('');
-console.log(`✓ Wrote ${outPath} (${(stat.size / 1024).toFixed(2)} KB)`);
+    const outPath = path.resolve(
+        path.dirname(new URL(import.meta.url).pathname),
+        '..', 'resources', 'svg', 'iraq-map.svg'
+    );
+    await fs.writeFile(outPath, svg, 'utf8');
+    const stat = await fs.stat(outPath);
+    console.log('');
+    console.log(`✓ Wrote ${outPath} (${(stat.size / 1024).toFixed(2)} KB)`);
+
+    if (stat.size > MAX_OUTPUT_BYTES) {
+        console.error(`✗ Output exceeds ${MAX_OUTPUT_BYTES} bytes — check simplification tolerances`);
+        process.exit(1);
+    }
+}
+
+await main();

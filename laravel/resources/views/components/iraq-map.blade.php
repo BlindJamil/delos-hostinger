@@ -66,14 +66,27 @@
                 @php
                     $b = $pin['branch'];
                     $name = $b->localized('name');
-                    // All showrooms render identically — the `is_flagship`
-                    // field remains in the DB for admin sort priority, but
-                    // the public map treats every branch equally.
                     $radius = 8;
                     // Place labels to the right of pins for most; flip to left for
                     // the far-east pins so text doesn't spill off the viewBox.
                     $labelAnchor = $pin['x'] > 780 ? 'end' : 'start';
                     $labelDx = $pin['x'] > 780 ? -14 : 14;
+                    // Default: label sits beside the pin at y=4.
+                    $labelDy = 4;
+                    $sublabelDy = 20;
+                    $connectorY2 = 0;
+                    // Collision check — if any earlier pin sits within 14 SVG units
+                    // vertically AND points its label the same direction, push this
+                    // label below the pin so Kirkuk/Sulaymaniyah (Δy ≈ 9) stop overlapping.
+                    foreach ($pins->take($i) as $prior) {
+                        $priorSide = $prior['x'] > 780 ? 'end' : 'start';
+                        if (abs($pin['y'] - $prior['y']) < 14 && $priorSide === $labelAnchor) {
+                            $labelDy = 26;
+                            $sublabelDy = 42;
+                            $connectorY2 = 16;
+                            break;
+                        }
+                    }
                 @endphp
 
                 <g
@@ -90,7 +103,7 @@
                     <line
                         class="iraq-map__pin-connector"
                         x1="0" y1="0"
-                        x2="{{ $labelDx * 0.7 }}" y2="0"
+                        x2="{{ $labelDx * 0.7 }}" y2="{{ $connectorY2 }}"
                     />
 
                     {{-- The pin dot itself, wrapped in <a> for keyboard nav --}}
@@ -106,7 +119,7 @@
                     <text
                         class="iraq-map__pin-label"
                         x="{{ $labelDx }}"
-                        y="4"
+                        y="{{ $labelDy }}"
                         text-anchor="{{ $labelAnchor }}"
                     >{{ $name }}</text>
 
@@ -115,7 +128,7 @@
                         <text
                             class="iraq-map__pin-sublabel"
                             x="{{ $labelDx }}"
-                            y="20"
+                            y="{{ $sublabelDy }}"
                             text-anchor="{{ $labelAnchor }}"
                         >{{ $b->localized('established') }}</text>
                     @endif

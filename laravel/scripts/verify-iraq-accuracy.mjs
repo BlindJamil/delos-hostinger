@@ -65,7 +65,7 @@ const tests = [
     { name: 'Sulaymaniyah',  lat: 35.5617, lng: 45.4309, expected: 'in' },
     { name: 'Najaf',         lat: 32.0000, lng: 44.3333, expected: 'in' },
     { name: 'Ramadi',        lat: 33.4206, lng: 43.3072, expected: 'in' },
-    { name: 'Faw (SE tip)',  lat: 30.0000, lng: 48.4750, expected: 'in' },
+    { name: 'Al-Faw town',   lat: 29.9765, lng: 48.4683, expected: 'in' },
     // Should be OUTSIDE Iraq:
     { name: 'Tehran (IR)',   lat: 35.6892, lng: 51.3890, expected: 'out' },
     { name: 'Damascus (SY)', lat: 33.5138, lng: 36.2765, expected: 'out' },
@@ -95,7 +95,7 @@ const borderLandmarks = [
     { name: 'Zakho (NW corner)',    lat: 37.1429, lng: 42.6870 },
     { name: 'Sinjar (NW)',          lat: 36.3189, lng: 41.8379 },
     { name: 'Al-Qaim (W border)',   lat: 34.3885, lng: 41.0065 },
-    { name: 'Faw peninsula (SE)',   lat: 30.0000, lng: 48.4750 },
+    { name: 'Al-Faw town (SE tip)', lat: 29.9765, lng: 48.4683 },
     { name: 'Umm Qasr (S coast)',   lat: 30.0333, lng: 47.9333 },
 ];
 
@@ -117,6 +117,6 @@ for (const c of borderLandmarks) {
 }
 console.log('');
 
-console.log(`Dataset: Natural Earth 1:10m via unpkg.com/world-atlas@2`);
-console.log(`         (public domain, used by NYT/BBC/Economist for editorial maps)`);
-console.log(`Pipeline: TopoJSON → feature id=368 (Iraq) → ${points.length} vertices after Douglas-Peucker (tolerance 0.15)\n`);
+console.log(`Dataset: HDX Common Operational Dataset for Iraq (UN OCHA) admin0`);
+console.log(`         + Natural Earth 1:10m for neighbours and rivers`);
+console.log(`Pipeline: HDX GeoJSON → ${points.length} vertices after Douglas-Peucker (tolerance 0.05)\n`);

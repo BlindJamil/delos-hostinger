@@ -117,6 +117,39 @@
     opacity: 1;
 }
 
+/* Kurdistan Region — barely-there gold wash on the three (soon four) northern
+   governorates. Drawn behind everything so it colors the fill without dominating. */
+.iraq-map__region {
+    stroke: none;
+    opacity: 0;
+    transition: opacity 1.2s ease 0.6s;
+}
+
+.iraq-map__region--kurdistan {
+    fill: rgba(196, 154, 122, 0.05);
+}
+
+.iraq-map.is-revealed .iraq-map__region {
+    opacity: 1;
+}
+
+/* Governorate interior borders — hair-line, drawn above region fill and
+   neighbor context but below the Iraq outline so the international border
+   remains the strongest line on the map. */
+.iraq-map__governorate {
+    stroke: rgba(60, 46, 42, 0.10);
+    stroke-width: 0.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    fill: none;
+    opacity: 0;
+    transition: opacity 1.2s ease 1s;
+}
+
+.iraq-map.is-revealed .iraq-map__governorate {
+    opacity: 1;
+}
+
 /* Pin overlay */
 
 .iraq-map__pins {
@@ -319,6 +352,8 @@ body.has-custom-cursor .iraq-map__pin-group {
     }
     .iraq-map__river,
     .iraq-map__neighbor,
+    .iraq-map__region,
+    .iraq-map__governorate,
     .iraq-map__cartouche,
     .iraq-map__compass {
         opacity: 1;
