@@ -31,7 +31,7 @@
          caption rather than spanning the whole viewport. --}}
     <div class="absolute inset-0 z-[2] flex items-center px-6 sm:px-12 lg:px-20 xl:px-28">
         <div class="max-w-[1400px] mx-auto w-full">
-            <h1 class="font-serif text-delos-cream font-light leading-[1.1] text-3xl sm:text-4xl lg:text-5xl xl:text-6xl max-w-xl lg:max-w-2xl [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
+            <h1 class="font-serif text-delos-cream font-light leading-[1.1] text-4xl sm:text-5xl lg:text-6xl xl:text-7xl max-w-xl lg:max-w-3xl [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
                 <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_1_before') }}</span>
                 <span data-motion="fade-up" class="block"><em class="text-delos-gold italic font-light">{{ pcontent('services.hero.heading_1_accent') }}</em></span>
                 <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_2') }}</span>
