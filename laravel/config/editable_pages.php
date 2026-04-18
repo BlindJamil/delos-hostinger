@@ -323,7 +323,6 @@ return [
                     ['key' => 'services.hero.heading_1_before', 'label' => 'Heading prefix', 'type' => 'text'],
                     ['key' => 'services.hero.heading_1_accent', 'label' => 'Heading accent', 'type' => 'text'],
                     ['key' => 'services.hero.heading_2', 'label' => 'Heading line 2', 'type' => 'text'],
-                    ['key' => 'services.hero.categories', 'label' => 'Service categories list', 'type' => 'text'],
                 ],
             ],
             'arch_carousel' => [

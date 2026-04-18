@@ -34,11 +34,6 @@
                 <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_1_accent') }} <em class="text-delos-gold italic font-light">for</em></span>
                 <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_2') }}</span>
             </h1>
-
-            <div data-motion="fade" class="mt-8 lg:mt-10 flex items-center gap-3 max-w-3xl">
-                <span class="w-8 h-px bg-delos-gold/60 flex-shrink-0"></span>
-                <p class="text-delos-gold/80 text-[10px] lg:text-[11px] tracking-[0.4em] uppercase font-medium leading-relaxed" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.hero.categories') }}</p>
-            </div>
         </div>
     </div>
 
