@@ -49,38 +49,6 @@
 
 </section>
 
-{{-- Specialties showcase — the arched-frame carousel, relocated from the hero --}}
-<section class="bg-delos-cream py-16 lg:py-24 overflow-hidden">
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-        @php $archSlides = __('services.arch_carousel.slides'); @endphp
-
-        <div data-motion="scale-in" id="svc-arch-carousel" class="relative flex flex-col items-center">
-            @foreach($archSlides as $i => $slide)
-                <div class="svc-arch-frame {{ $i > 0 ? 'absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none' : 'relative' }}" data-label="{{ $slide['label'] }}">
-                    <div class="relative">
-                        <div class="absolute -inset-4 lg:-inset-8 rounded-t-full bg-gradient-to-b from-delos-gold/15 via-delos-ivory to-delos-cream z-[0]"></div>
-
-                        <div class="relative z-[1] w-[300px] sm:w-[400px] lg:w-[480px] xl:w-[540px] overflow-hidden rounded-t-full shadow-2xl">
-                            <div class="aspect-[3/4] overflow-hidden">
-                                <x-responsive-image :src="$slide['img']" :alt="$slide['label']"
-                                    sizes="(min-width: 1280px) 540px, (min-width: 1024px) 480px, (min-width: 640px) 400px, 300px"
-                                    class="w-full h-full object-cover"
-                                    :loading="$i === 0 ? 'eager' : 'lazy'"
-                                    :fetchpriority="$i === 0 ? 'high' : null" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-
-            {{-- Brand label --}}
-            <div class="relative z-[2] text-center mt-5">
-                <p id="svc-arch-label" class="text-delos-gold text-[10px] tracking-[0.5em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.arch_carousel.default_label') }}</p>
-            </div>
-        </div>
-    </div>
-</section>
-
 {{-- Bottom info row --}}
 <section class="bg-delos-cream pb-16 lg:pb-20">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
