@@ -26,8 +26,10 @@
         <span class="text-delos-gold text-[10px] lg:text-[11px] tracking-[0.5em] uppercase font-semibold" style="font-family: 'Inter', sans-serif;">{{ pcontent('services.hero.overline') }}</span>
     </div>
 
-    {{-- Bottom-left composition: heading + categories + scroll cue --}}
-    <div class="absolute inset-x-0 bottom-0 z-[2] px-6 lg:px-12 pb-12 lg:pb-16">
+    {{-- Bottom-left composition: heading anchored in the lower-third
+         (not flush at bottom) so it has breathing room above the
+         scroll cue and feels visually balanced. --}}
+    <div class="absolute inset-x-0 bottom-0 z-[2] px-6 lg:px-12 pb-28 lg:pb-36">
         <div class="max-w-[1400px] mx-auto">
             <h1 class="font-serif text-delos-cream font-light leading-[1.05] text-4xl sm:text-5xl lg:text-7xl xl:text-[5.5rem] [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
                 <span data-motion="fade-up" class="block">{{ pcontent('services.hero.heading_1_before') }}</span>
