@@ -117,6 +117,6 @@ for (const c of borderLandmarks) {
 }
 console.log('');
 
-console.log(`Dataset: Natural Earth 1:50m via unpkg.com/world-atlas@2`);
+console.log(`Dataset: Natural Earth 1:10m via unpkg.com/world-atlas@2`);
 console.log(`         (public domain, used by NYT/BBC/Economist for editorial maps)`);
-console.log(`Pipeline: TopoJSON → feature id=368 (Iraq) → ${points.length} vertices after Douglas-Peucker (tolerance 0.6)\n`);
+console.log(`Pipeline: TopoJSON → feature id=368 (Iraq) → ${points.length} vertices after Douglas-Peucker (tolerance 0.15)\n`);

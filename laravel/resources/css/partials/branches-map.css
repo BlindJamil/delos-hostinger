@@ -91,12 +91,29 @@
     stroke: rgba(196, 154, 122, 0.42);
     stroke-width: 1.0;
     stroke-linecap: round;
+    stroke-linejoin: round;
     fill: none;
     opacity: 0;
     transition: opacity 1.4s ease 1.2s;
 }
 
 .iraq-map.is-revealed .iraq-map__river {
+    opacity: 1;
+}
+
+/* Neighbor countries — faint context layer so Iraq reads as situated,
+   not floating. Hair-line borders, no fill, drawn behind Iraq. */
+.iraq-map__neighbor {
+    stroke: rgba(60, 46, 42, 0.18);
+    stroke-width: 0.7;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    fill: none;
+    opacity: 0;
+    transition: opacity 1.2s ease 0.8s;
+}
+
+.iraq-map.is-revealed .iraq-map__neighbor {
     opacity: 1;
 }
 
@@ -301,6 +318,7 @@ body.has-custom-cursor .iraq-map__pin-group {
         stroke-dashoffset: 0 !important;
     }
     .iraq-map__river,
+    .iraq-map__neighbor,
     .iraq-map__cartouche,
     .iraq-map__compass {
         opacity: 1;
