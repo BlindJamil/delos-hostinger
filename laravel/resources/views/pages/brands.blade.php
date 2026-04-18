@@ -36,8 +36,14 @@
                     $bName = $b->name;
                     $bCategory = $b->localized('category');
                     $bSince = $b->since;
+                    // Render as <a> when the brand has an official URL,
+                    // fall back to <div> so the card still renders intact.
+                    $tag = $b->url ? 'a' : 'div';
                 @endphp
-                <div class="brand-card card-tilt relative" data-brand-index="{{ $i }}">
+                <{{ $tag }}
+                    @if($b->url) href="{{ $b->url }}" target="_blank" rel="noopener" aria-label="{{ $bName }} — visit official website" @endif
+                    class="brand-card card-tilt relative block"
+                    data-brand-index="{{ $i }}">
                     <x-admin-edit-pill :href="route('admin.brands.edit', $b)" :label="'Edit ' . $bName" />
                     <div class="brand-card-inner">
                         <div class="brand-card-image">
@@ -66,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </{{ $tag }}>
             @endforeach
         </div>
     </div>
