@@ -59,6 +59,9 @@ return [
         'request_consultation' => 'طلب استشارة',
         'find_nearest_showroom' => 'ابحث عن أقرب معرض إليك',
         'visit_official_website' => 'زيارة الموقع الرسمي',
+        'back_to_team' => 'العودة إلى الفريق',
+        'work_with_team' => 'اعمل مع فريقنا',
+        'about_company' => 'عن الشركة',
     ],
 
     'language_picker' => [

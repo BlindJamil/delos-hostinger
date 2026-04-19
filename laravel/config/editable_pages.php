@@ -325,19 +325,6 @@ return [
                     ['key' => 'services.hero.heading_2', 'label' => 'Heading line 2', 'type' => 'text'],
                 ],
             ],
-            'arch_carousel' => [
-                'label' => 'Architecture carousel',
-                'fields' => [
-                    ['key' => 'services.arch_carousel.default_label', 'label' => 'Default slide label', 'type' => 'text'],
-                ],
-            ],
-            'info' => [
-                'label' => 'Info row',
-                'fields' => [
-                    ['key' => 'services.info_row.blurb', 'label' => 'Blurb', 'type' => 'textarea'],
-                    ['key' => 'services.info_row.est', 'label' => 'Est. label', 'type' => 'text'],
-                ],
-            ],
             'intro' => [
                 'label' => 'Section intro',
                 'fields' => [
@@ -457,8 +444,7 @@ return [
                 'label' => 'Button labels',
                 'fields' => [
                     ['key' => 'branches.directions_cta', 'label' => 'Get Directions', 'type' => 'text'],
-                    ['key' => 'branches.call_cta', 'label' => 'Call', 'type' => 'text'],
-                    ['key' => 'branches.whatsapp_cta', 'label' => 'WhatsApp', 'type' => 'text'],
+                    ['key' => 'branches.whatsapp_cta', 'label' => 'WhatsApp (only shown when branch has a WhatsApp number)', 'type' => 'text'],
                     ['key' => 'branches.photo_pending', 'label' => '"Photos forthcoming" placeholder', 'type' => 'text'],
                 ],
             ],
@@ -565,7 +551,6 @@ return [
                 'fields' => [
                     ['key' => 'common.brand.name_primary', 'label' => 'Primary name (DELOS)', 'type' => 'text'],
                     ['key' => 'common.brand.name_secondary', 'label' => 'Secondary name (INTERNATIONAL)', 'type' => 'text'],
-                    ['key' => 'common.brand.tagline', 'label' => 'Tagline', 'type' => 'text'],
                 ],
             ],
             'nav' => [
@@ -618,18 +603,13 @@ return [
                     ['key' => 'common.ctas.book_consultation', 'label' => 'Book consultation', 'type' => 'text'],
                     ['key' => 'common.ctas.visit_showroom', 'label' => 'Visit showroom', 'type' => 'text'],
                     ['key' => 'common.ctas.visit_official_website', 'label' => 'Visit official website', 'type' => 'text'],
-                    ['key' => 'common.ctas.request_consultation', 'label' => 'Request consultation', 'type' => 'text'],
                     ['key' => 'common.ctas.learn_more', 'label' => 'Learn more', 'type' => 'text'],
                     ['key' => 'common.ctas.call_us', 'label' => 'Call us', 'type' => 'text'],
                     ['key' => 'common.ctas.start_project', 'label' => 'Start your project', 'type' => 'text'],
                     ['key' => 'common.ctas.find_nearest_showroom', 'label' => 'Find nearest showroom', 'type' => 'text'],
-                ],
-            ],
-            'language_switcher' => [
-                'label' => 'Language switcher',
-                'fields' => [
-                    ['key' => 'common.language_switcher.aria_label', 'label' => 'Accessibility label', 'type' => 'text'],
-                    ['key' => 'common.language_switcher.switch_to', 'label' => '"Switch language" heading', 'type' => 'text'],
+                    ['key' => 'common.ctas.back_to_team', 'label' => 'Back to team (employee profile)', 'type' => 'text'],
+                    ['key' => 'common.ctas.work_with_team', 'label' => 'Work with our team (employee profile)', 'type' => 'text'],
+                    ['key' => 'common.ctas.about_company', 'label' => 'About the company (employee profile)', 'type' => 'text'],
                 ],
             ],
         ],

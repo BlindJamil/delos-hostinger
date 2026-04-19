@@ -10,11 +10,15 @@
 
     {{-- Full-bleed background image with slow Ken-Burns parallax zoom --}}
     <div class="svc-hero__image absolute inset-0">
-        <img src="{{ pcontent_url('services.hero.image', asset('images/collection-lube-classic.jpg')) }}"
-             alt=""
-             class="w-full h-full object-cover"
-             fetchpriority="high"
-             decoding="async">
+        <x-responsive-image
+            :src="pcontent('services.hero.image', 'collection-lube-classic.jpg')"
+            :mobile-src="pcontent_optional('services.hero.image_mobile')"
+            :focal="pcontent_optional('services.hero.image_focal')"
+            alt=""
+            sizes="100vw"
+            loading="eager"
+            fetchpriority="high"
+            class="w-full h-full object-cover" />
     </div>
 
     {{-- Bottom-anchored gradient — keeps image vivid at top, text legible at bottom --}}

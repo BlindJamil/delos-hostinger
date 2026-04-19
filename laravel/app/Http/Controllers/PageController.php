@@ -62,7 +62,7 @@ class PageController extends Controller
             ->filter(fn ($p) => $p->type)
             ->groupBy('type')
             ->map(fn ($group) => $group->first()->localized('type_label') ?: ucfirst($group->first()->type))
-            ->prepend(__('projects.filters.all'), 'all');
+            ->prepend(pcontent('projects.filters.all'), 'all');
 
         return view('pages.projects', compact('projects', 'heroProjects', 'filters'));
     }
