@@ -27,6 +27,8 @@
         @foreach([0,1,2,3,4] as $i)
             <x-responsive-image
                 :src="pcontent('home.hero.slides.' . $i . '.img')"
+                :mobile-src="pcontent_optional('home.hero.slides.' . $i . '.img_mobile')"
+                :focal="pcontent_optional('home.hero.slides.' . $i . '.img_focal')"
                 :alt="pcontent('home.hero.slides.' . $i . '.alt')"
                 sizes="100vw"
                 class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
@@ -125,7 +127,13 @@
             @endphp
             @foreach($collectionSlugs as $idx => $slug)
                 <a href="{{ lroute('projects') }}" data-motion="{{ $motionVariants[$idx] }}" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
-                    <x-responsive-image :src="pcontent('home.collection.items.' . $slug . '.img')" :alt="pcontent('home.collection.items.' . $slug . '.title')" sizes="(min-width: 768px) 50vw, 100vw" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" />
+                    <x-responsive-image
+                        :src="pcontent('home.collection.items.' . $slug . '.img')"
+                        :mobile-src="pcontent_optional('home.collection.items.' . $slug . '.img_mobile')"
+                        :focal="pcontent_optional('home.collection.items.' . $slug . '.img_focal')"
+                        :alt="pcontent('home.collection.items.' . $slug . '.title')"
+                        sizes="(min-width: 768px) 50vw, 100vw"
+                        class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" />
                     <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
                     <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">{{ pcontent("home.collection.items.{$slug}.num") }}</span>
                     <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
@@ -177,7 +185,11 @@
                     <span class="sr-only">{{ $empName }}</span>
                 </a>
                 @if($emp->imageIsLegacy())
-                    <x-responsive-image :src="$emp->image" :alt="$empName . ' — ' . $empRole" sizes="(min-width: 1024px) 420px, 350px" class="absolute inset-0 w-full h-full object-cover opacity-60" />
+                    <x-responsive-image :src="$emp->image"
+                        :mobile-src="$emp->image_mobile"
+                        :focal="$emp->focal_point"
+                        :alt="$empName . ' — ' . $empRole" sizes="(min-width: 1024px) 420px, 350px"
+                        class="absolute inset-0 w-full h-full object-cover opacity-60" />
                 @elseif($emp->image_url)
                     <img src="{{ $emp->image_url }}" alt="{{ $empName }} — {{ $empRole }}" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover opacity-60">
                 @endif

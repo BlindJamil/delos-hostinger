@@ -72,14 +72,13 @@
 
                     {{-- Image --}}
                     <div class="relative aspect-[4/3] overflow-hidden bg-delos-dark">
-                        @if($s->imageIsLegacy())
-                            <x-responsive-image :src="$s->image" :alt="$sName"
+                        @if($s->image)
+                            <x-responsive-image :src="$s->image"
+                                :mobile-src="$s->image_mobile"
+                                :focal="$s->focal_point"
+                                :alt="$sName"
                                 sizes="(min-width: 1024px) 50vw, 100vw"
                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
-                        @elseif($s->image_url)
-                            <img src="{{ $s->image_url }}" alt="{{ $sName }}" loading="lazy" decoding="async"
-                                sizes="(min-width: 1024px) 50vw, 100vw"
-                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
                         @endif
                     </div>
 

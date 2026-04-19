@@ -88,6 +88,28 @@ if (!function_exists('pcontent')) {
     }
 }
 
+if (!function_exists('pcontent_optional')) {
+    /**
+     * Like pcontent() but returns null (instead of the raw key string)
+     * when nothing is configured for this key in the DB OR lang files.
+     *
+     * Useful for optional sibling fields — e.g. "home.hero.slides.0.img_mobile"
+     * — where the caller wants to conditionally render only when a value
+     * actually exists, not when the resolver fell through to echoing the
+     * key itself as a placeholder.
+     */
+    function pcontent_optional(string $key): ?string
+    {
+        $value = pcontent($key, null);
+        // If pcontent() returned the raw key, the resolver found nothing
+        // — treat that as "unset".
+        if ($value === $key || $value === '') {
+            return null;
+        }
+        return $value;
+    }
+}
+
 if (!function_exists('pcontent_lang_resolve')) {
     /**
      * Resolve a dotted lang key using direct file inclusion + data_get().

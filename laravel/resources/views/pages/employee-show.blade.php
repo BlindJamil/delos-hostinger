@@ -37,16 +37,15 @@
                 <div class="lg:col-span-5 order-1">
                     <div data-motion="fade" class="employee-show__portrait relative overflow-hidden bg-delos-ivory">
                         <x-admin-edit-pill :href="route('admin.employees.edit', $employee)" :label="'Edit ' . $empName" />
-                        @if($employee->imageIsLegacy())
-                            <x-responsive-image :src="$employee->image" :alt="$empName"
+                        @if($employee->image)
+                            <x-responsive-image :src="$employee->image"
+                                :mobile-src="$employee->image_mobile"
+                                :focal="$employee->focal_point"
+                                :alt="$empName"
                                 sizes="(min-width: 1024px) 540px, 100vw"
                                 loading="eager"
                                 fetchpriority="high"
                                 class="w-full h-full object-cover" />
-                        @elseif($employee->image_url)
-                            <img src="{{ $employee->image_url }}" alt="{{ $empName }}"
-                                 loading="eager" fetchpriority="high" decoding="async"
-                                 class="w-full h-full object-cover">
                         @else
                             <div class="absolute inset-0 flex items-center justify-center text-delos-gold/40 font-serif text-7xl font-light">
                                 {{ mb_substr($empName, 0, 1) }}

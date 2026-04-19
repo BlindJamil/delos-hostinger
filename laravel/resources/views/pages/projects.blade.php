@@ -25,25 +25,17 @@
                 $pCity = $p->city;
                 $pYear = $p->year;
             @endphp
-            @if($p->imageIsLegacy())
+            @if($p->image)
                 <x-responsive-image
                     :src="$p->image"
+                    :mobile-src="$p->image_mobile"
+                    :focal="$p->focal_point"
                     :alt="$pTitle"
                     sizes="100vw"
                     class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
                 :loading="$i === 0 ? 'eager' : 'lazy'"
                 :fetchpriority="$i === 0 ? 'high' : null"
                 data-meta="{{ trim(collect([$pBrand, $pCity, $pYear])->filter()->join(' · ')) }}" />
-            @elseif($p->image_url)
-                <img
-                    src="{{ $p->image_url }}"
-                    alt="{{ $pTitle }}"
-                    sizes="100vw"
-                    class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
-                    loading="{{ $i === 0 ? 'eager' : 'lazy' }}"
-                    @if($i === 0) fetchpriority="high" @endif
-                    decoding="async"
-                    data-meta="{{ trim(collect([$pBrand, $pCity, $pYear])->filter()->join(' · ')) }}">
             @endif
         @endforeach
     </div>
@@ -123,14 +115,13 @@
                      data-type="{{ $project->type }}"
                      style="--motion-delay: {{ ($i % 3) * 100 }}ms;">
                     <x-admin-edit-pill :href="route('admin.projects.edit', $project)" :label="'Edit ' . $projTitle" />
-                    @if($project->imageIsLegacy())
-                        <x-responsive-image :src="$project->image" :alt="$projTitle"
+                    @if($project->image)
+                        <x-responsive-image :src="$project->image"
+                            :mobile-src="$project->image_mobile"
+                            :focal="$project->focal_point"
+                            :alt="$projTitle"
                             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                             class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700" />
-                    @elseif($project->image_url)
-                        <img src="{{ $project->image_url }}" alt="{{ $projTitle }}" loading="lazy" decoding="async"
-                            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                            class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700">
                     @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/20 to-transparent"></div>
 

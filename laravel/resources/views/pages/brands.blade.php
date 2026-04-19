@@ -52,19 +52,15 @@
                     @endif
                     <div class="brand-card-inner">
                         <div class="brand-card-image">
-                            @if($b->imageIsLegacy())
-                                <x-responsive-image :src="$b->image" :alt="$bName"
+                            @if($b->image)
+                                <x-responsive-image :src="$b->image"
+                                    :mobile-src="$b->image_mobile"
+                                    :focal="$b->focal_point"
+                                    :alt="$bName"
                                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                                     class="w-full h-full object-cover"
                                     :loading="$i === 0 ? 'eager' : 'lazy'"
                                     :fetchpriority="$i === 0 ? 'high' : null" />
-                            @elseif($b->image_url)
-                                <img src="{{ $b->image_url }}" alt="{{ $bName }}"
-                                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                                    class="w-full h-full object-cover"
-                                    loading="{{ $i === 0 ? 'eager' : 'lazy' }}"
-                                    @if($i === 0) fetchpriority="high" @endif
-                                    decoding="async">
                             @else
                                 {{-- Editorial placeholder for brands without
                                      an image yet — luxury catalogue look
@@ -136,14 +132,13 @@
                     <x-admin-edit-pill :href="route('admin.brands.edit', $brand)" :label="'Edit ' . $brandName" />
                     {{-- Image --}}
                     <div class="relative aspect-[4/3] overflow-hidden bg-delos-dark">
-                        @if($brand->imageIsLegacy())
-                            <x-responsive-image :src="$brand->image" :alt="$brandName"
+                        @if($brand->image)
+                            <x-responsive-image :src="$brand->image"
+                                :mobile-src="$brand->image_mobile"
+                                :focal="$brand->focal_point"
+                                :alt="$brandName"
                                 sizes="(min-width: 1024px) 50vw, 100vw"
                                 class="w-full h-full object-cover opacity-65 hover:scale-105 transition-transform duration-700" />
-                        @elseif($brand->image_url)
-                            <img src="{{ $brand->image_url }}" alt="{{ $brandName }}" loading="lazy" decoding="async"
-                                sizes="(min-width: 1024px) 50vw, 100vw"
-                                class="w-full h-full object-cover opacity-65 hover:scale-105 transition-transform duration-700">
                         @endif
                         <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/60 to-transparent"></div>
                         <div class="absolute bottom-6 left-6">
