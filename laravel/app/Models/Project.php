@@ -72,11 +72,6 @@ class Project extends Model
         });
     }
 
-    public function imageIsLegacy(): bool
-    {
-        return $this->image && !str_contains($this->image, '/') && !preg_match('#^https?://#i', $this->image);
-    }
-
     /** Mobile variant (phones ≤ 767px). Same resolution rules as imageUrl(). */
     protected function mobileImageUrl(): Attribute
     {

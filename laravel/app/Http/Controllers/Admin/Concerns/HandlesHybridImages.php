@@ -57,9 +57,14 @@ trait HandlesHybridImages
 
         // ─── focal_point ────────────────────────────────────────
         // Accept only well-formed "<0-100>% <0-100>%" strings. Anything
-        // else is silently coerced to null so a typo can't break CSS.
-        if ($request->filled('focal_point')) {
-            $raw = trim((string) $request->input('focal_point'));
+        // else is silently ignored so a typo can't break CSS. The
+        // is_string guard covers the bizarre "someone POST'd an array
+        // for a string field" case — the FormRequest already rejects
+        // that via the 'string' rule, but being defensive keeps this
+        // trait safely reusable in other contexts.
+        $focalRaw = $request->input('focal_point');
+        if (is_string($focalRaw) && $focalRaw !== '') {
+            $raw = trim($focalRaw);
             if (preg_match('/^(\d{1,3})%\s+(\d{1,3})%$/', $raw, $m)
                 && (int) $m[1] <= 100 && (int) $m[2] <= 100) {
                 $normalized = "{$m[1]}% {$m[2]}%";
