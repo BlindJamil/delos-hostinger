@@ -31,13 +31,22 @@
             <h2 class="font-serif text-3xl text-delos-dark-2 font-light mb-1">{{ $greeting }}, <span class="font-medium">{{ explode(' ', $admin->name)[0] }}</span></h2>
             <p class="text-sm text-delos-muted">Here's what's happening with your site today.</p>
         </div>
-        <a href="{{ route('admin.self-test') }}"
-           class="flex-none inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-delos-gold/10 border border-delos-dark/10 hover:border-delos-gold/50 text-delos-dark-2 rounded-lg text-[11px] font-semibold tracking-[0.2em] uppercase transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-            </svg>
-            Run Self-Test
-        </a>
+        <div class="flex-none flex items-center gap-2">
+            <a href="{{ route('admin.apply-iraqi-copy') }}"
+               class="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-delos-gold/10 border border-delos-dark/10 hover:border-delos-gold/50 text-delos-dark-2 rounded-lg text-[11px] font-semibold tracking-[0.2em] uppercase transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+                </svg>
+                Apply Iraqi Copy
+            </a>
+            <a href="{{ route('admin.self-test') }}"
+               class="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-delos-gold/10 border border-delos-dark/10 hover:border-delos-gold/50 text-delos-dark-2 rounded-lg text-[11px] font-semibold tracking-[0.2em] uppercase transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                Run Self-Test
+            </a>
+        </div>
     </div>
 
     {{-- Stats grid --}}
