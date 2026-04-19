@@ -184,14 +184,12 @@
                    aria-label="View profile of {{ $empName }}">
                     <span class="sr-only">{{ $empName }}</span>
                 </a>
-                @if($emp->imageIsLegacy())
+                @if($emp->image)
                     <x-responsive-image :src="$emp->image"
                         :mobile-src="$emp->image_mobile"
                         :focal="$emp->focal_point"
                         :alt="$empName . ' — ' . $empRole" sizes="(min-width: 1024px) 420px, 350px"
                         class="absolute inset-0 w-full h-full object-cover opacity-60" />
-                @elseif($emp->image_url)
-                    <img src="{{ $emp->image_url }}" alt="{{ $empName }} — {{ $empRole }}" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover opacity-60">
                 @endif
                 <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3] pointer-events-none">
                     @if($empBranch)
