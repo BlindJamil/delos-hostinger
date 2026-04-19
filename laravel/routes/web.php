@@ -103,6 +103,12 @@ Route::prefix('verify-admin-panel-7k3m')->name('admin.')->group(function () {
                 ->where('key', '[a-z0-9._-]+')->name('media.store');
             Route::delete('/media/{key}', [AdminPageContentMediaController::class, 'destroy'])
                 ->where('key', '[a-z0-9._-]+')->name('media.destroy');
+            // Focal point (object-position) for an image key, stored as
+            // a "<key>_focal" sibling row with value "X% Y%".
+            Route::post('/media/{key}/focal', [AdminPageContentMediaController::class, 'focal'])
+                ->where('key', '[a-z0-9._-]+')->name('media.focal');
+            Route::delete('/media/{key}/focal', [AdminPageContentMediaController::class, 'focalReset'])
+                ->where('key', '[a-z0-9._-]+')->name('media.focal-reset');
         });
 
         // Site Settings (single-page bulk edit + add/remove custom keys)

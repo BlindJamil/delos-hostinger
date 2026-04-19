@@ -86,6 +86,26 @@
         ? asset('storage/' . $currentMedia)
         : $defaultMediaUrl;
 
+    // Hybrid-image sibling rows — only relevant to image fields. Mobile
+    // variant lives at "<key>_mobile"; focal point at "<key>_focal" stored
+    // as "X% Y%". Both are nullable — if neither is set the image renders
+    // identically to today (centered, single file).
+    $mobileKey = $type === 'image' ? $key . '_mobile' : null;
+    $focalKey  = $type === 'image' ? $key . '_focal'  : null;
+    $mobileRow = $mobileKey ? \App\Models\PageContent::where('key', $mobileKey)->first() : null;
+    $focalRow  = $focalKey  ? \App\Models\PageContent::where('key', $focalKey)->first()  : null;
+
+    $mobileStored = $mobileRow?->value_en;
+    $mobileIsCustom = $mobileStored && str_starts_with($mobileStored, 'uploads/');
+    $mobileEffectiveUrl = $mobileIsCustom ? asset('storage/' . $mobileStored) : null;
+
+    // Parse focal into {x, y} integer percent. Default to centered.
+    $focalX = 50; $focalY = 50;
+    if ($focalRow && preg_match('/^(\d{1,3})%\s+(\d{1,3})%$/', trim((string) $focalRow->value_en), $fm)) {
+        $focalX = max(0, min(100, (int) $fm[1]));
+        $focalY = max(0, min(100, (int) $fm[2]));
+    }
+
     // If this image field has a sibling video field (like the homepage
     // video poster), resolve that video's effective URL so we can render
     // a "Capture frame" button that pulls a poster from any timestamp.
@@ -144,13 +164,37 @@
             'videoSourceUrl' => $videoSourceUrl ?? null,
             'uploadUrl' => route('admin.page-content.media.store', $key),
             'deleteUrl' => route('admin.page-content.media.destroy', $key),
+            // Hybrid-image fields only — null on video/other types so the
+            // Alpine component just ignores the mobile + focal blocks.
+            'hybrid' => $type === 'image',
+            'mobileUrl' => $mobileEffectiveUrl ?? null,
+            'mobileIsCustom' => $type === 'image' ? (bool) $mobileIsCustom : false,
+            'mobileUploadUrl' => $type === 'image' ? route('admin.page-content.media.store', $key) . '?variant=mobile' : null,
+            'mobileDeleteUrl' => $type === 'image' ? route('admin.page-content.media.destroy', $key) . '?variant=mobile' : null,
+            'focalX' => $type === 'image' ? $focalX : 50,
+            'focalY' => $type === 'image' ? $focalY : 50,
+            'focalUrl' => $type === 'image' ? route('admin.page-content.media.focal', $key) : null,
+            'focalResetUrl' => $type === 'image' ? route('admin.page-content.media.focal-reset', $key) : null,
             'csrf' => csrf_token(),
         ]) }})" class="space-y-3">
             <div x-show="currentUrl" class="relative rounded-lg overflow-hidden bg-delos-ivory/60 border border-delos-dark/8">
                 <span x-show="isCustom" class="absolute top-3 left-3 z-10 inline-flex items-center gap-1 px-2 py-1 rounded text-[9px] tracking-[0.15em] uppercase font-semibold text-delos-dark bg-delos-gold">Customized</span>
                 <span x-show="!isCustom" class="absolute top-3 left-3 z-10 inline-flex items-center gap-1 px-2 py-1 rounded text-[9px] tracking-[0.15em] uppercase font-medium text-delos-dark-2 bg-white/80">Current default</span>
                 @if($type === 'image')
-                    <img :src="currentUrl" alt="" class="w-full h-auto max-h-[300px] object-cover">
+                    {{-- The preview is also the focal-point picker: clicking
+                         anywhere on the image moves the gold crosshair to
+                         that point and persists the coordinate via AJAX. --}}
+                    <div class="relative" x-ref="focalTarget"
+                         @click="hybrid && setFocalFromEvent($event)"
+                         :style="hybrid ? 'cursor: crosshair' : ''">
+                        <img :src="currentUrl" alt=""
+                             :style="hybrid ? `object-position: ${focalX}% ${focalY}%` : ''"
+                             class="w-full max-h-[300px] object-cover block">
+                        <div x-show="hybrid" class="absolute pointer-events-none"
+                             :style="`left: ${focalX}%; top: ${focalY}%; transform: translate(-50%, -50%);`">
+                            <div class="w-6 h-6 rounded-full border-2 border-delos-gold bg-delos-gold/25 shadow-[0_0_0_3px_rgba(196,154,122,0.15)]"></div>
+                        </div>
+                    </div>
                 @else
                     <video :src="currentUrl" controls class="w-full h-auto max-h-[400px]"></video>
                 @endif
@@ -159,6 +203,17 @@
                     Reset to default
                 </button>
             </div>
+
+            {{-- Focal-point readout + reset control (only for image fields). --}}
+            @if($type === 'image')
+                <div x-show="hybrid && currentUrl" class="flex items-center justify-between px-3 py-2 bg-white/70 rounded-lg border border-delos-dark/5 text-[10px] tracking-[0.15em] uppercase">
+                    <span class="text-delos-muted">Focal point
+                        <span class="text-delos-dark font-mono font-semibold normal-case tracking-normal ml-2" x-text="`${focalX}% / ${focalY}%`"></span>
+                        <span x-show="focalSaving" class="text-delos-gold normal-case tracking-normal ml-2">saving…</span>
+                    </span>
+                    <button type="button" @click="resetFocal()" class="text-delos-muted hover:text-delos-gold normal-case tracking-normal font-sans">Reset to centre</button>
+                </div>
+            @endif
 
             <label class="block border-2 border-dashed border-delos-dark/15 hover:border-delos-gold rounded-lg p-5 text-center cursor-pointer transition-colors">
                 <svg class="w-7 h-7 mx-auto text-delos-muted mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -178,6 +233,37 @@
                        accept="@if($type === 'video') video/mp4,video/webm,video/quicktime @else image/jpeg,image/png,image/webp @endif"
                        class="sr-only">
             </label>
+
+            {{-- Mobile variant slot — image fields only. Optional upload
+                 that overrides the default photo when the viewport is
+                 ≤ 767px (matches Tailwind's md: breakpoint). --}}
+            @if($type === 'image')
+                <div class="pt-4 border-t border-delos-dark/5 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <p class="text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium">
+                            Mobile variant
+                            <span class="normal-case tracking-normal text-delos-muted/60">(optional — shown on phones)</span>
+                        </p>
+                        <button type="button" x-show="mobileIsCustom" @click="clearMobile()"
+                                class="text-[10px] tracking-[0.15em] uppercase text-delos-muted hover:text-red-600 transition-colors">
+                            Remove
+                        </button>
+                    </div>
+
+                    <div x-show="mobileUrl" x-cloak class="rounded-lg overflow-hidden bg-delos-ivory/60 border border-delos-dark/8">
+                        <img :src="mobileUrl" alt="" class="w-full max-h-[240px] object-cover block">
+                    </div>
+
+                    <label class="block border-2 border-dashed border-delos-dark/15 hover:border-delos-gold rounded-lg p-3 text-center cursor-pointer transition-colors">
+                        <p class="text-xs text-delos-dark-2 font-medium" x-text="mobileIsCustom ? 'Replace mobile variant' : 'Upload mobile variant'"></p>
+                        <p class="text-[10px] text-delos-muted mt-0.5">JPG, PNG, WebP · max 5MB</p>
+                        <input type="file"
+                               @change="onMobileFile($event)"
+                               accept="image/jpeg,image/png,image/webp"
+                               class="sr-only">
+                    </label>
+                </div>
+            @endif
 
             @if($type === 'image' && !empty($videoSourceUrl))
                 {{-- "Capture poster from video" — opens an inline player,
@@ -317,6 +403,16 @@
                     captureBusy: false,
                     status: '',
                     statusType: '',
+                    // Hybrid-image state (mobile variant + focal point). When
+                    // hybrid is false (video fields etc.) every method below
+                    // short-circuits so non-image fields stay unchanged.
+                    hybrid: !!config.hybrid,
+                    mobileUrl: config.mobileUrl || null,
+                    mobileIsCustom: !!config.mobileIsCustom,
+                    focalX: typeof config.focalX === 'number' ? config.focalX : 50,
+                    focalY: typeof config.focalY === 'number' ? config.focalY : 50,
+                    focalSaving: false,
+                    _focalTimer: null,
                     async onFile(event) {
                         const file = event.target.files[0];
                         if (!file) return;
@@ -446,6 +542,115 @@
                         } catch (e) {
                             this.status = 'Failed to reset.';
                             this.statusType = 'error';
+                        }
+                    },
+
+                    // ─── Mobile variant upload ────────────────────────
+                    async onMobileFile(event) {
+                        if (!this.hybrid) return;
+                        const file = event.target.files[0];
+                        if (!file) return;
+                        const maxBytes = 5 * 1024 * 1024;
+                        if (file.size > maxBytes) {
+                            this.status = `Mobile variant too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Max 5MB.`;
+                            this.statusType = 'error';
+                            event.target.value = '';
+                            return;
+                        }
+                        this.status = 'Uploading mobile variant…';
+                        this.statusType = '';
+                        const fd = new FormData();
+                        fd.append('file', file);
+                        fd.append('_token', config.csrf);
+                        try {
+                            const r = await fetch(config.mobileUploadUrl, {
+                                method: 'POST', body: fd,
+                                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+                            });
+                            const raw = await r.text();
+                            let data = {};
+                            try { data = JSON.parse(raw); } catch (_) {}
+                            if (!r.ok) throw new Error(data.error || data.message || `Upload failed (HTTP ${r.status})`);
+                            this.mobileUrl = data.url;
+                            this.mobileIsCustom = true;
+                            this.status = 'Mobile variant saved.';
+                            setTimeout(() => this.status = '', 2500);
+                        } catch (e) {
+                            this.status = 'Failed: ' + e.message;
+                            this.statusType = 'error';
+                        }
+                    },
+                    async clearMobile() {
+                        if (!this.hybrid) return;
+                        if (!confirm('Remove the mobile variant? The main image will be shown on phones.')) return;
+                        try {
+                            await fetch(config.mobileDeleteUrl, {
+                                method: 'DELETE',
+                                headers: { 'X-CSRF-TOKEN': config.csrf, 'Accept': 'application/json' },
+                            });
+                            this.mobileUrl = null;
+                            this.mobileIsCustom = false;
+                            this.status = 'Mobile variant removed.';
+                            setTimeout(() => this.status = '', 2500);
+                        } catch (e) {
+                            this.status = 'Failed to remove mobile variant.';
+                            this.statusType = 'error';
+                        }
+                    },
+
+                    // ─── Focal-point picker ───────────────────────────
+                    setFocalFromEvent(event) {
+                        if (!this.hybrid) return;
+                        const el = this.$refs.focalTarget;
+                        if (!el) return;
+                        const rect = el.getBoundingClientRect();
+                        const x = ((event.clientX - rect.left) / rect.width)  * 100;
+                        const y = ((event.clientY - rect.top)  / rect.height) * 100;
+                        this.focalX = Math.max(0, Math.min(100, Math.round(x)));
+                        this.focalY = Math.max(0, Math.min(100, Math.round(y)));
+                        this._persistFocalDebounced();
+                    },
+                    resetFocal() {
+                        if (!this.hybrid) return;
+                        this.focalX = 50;
+                        this.focalY = 50;
+                        // Use the dedicated reset endpoint — it deletes the
+                        // sibling row so the image reverts to the default
+                        // (no object-position emitted in the public HTML).
+                        fetch(config.focalResetUrl, {
+                            method: 'DELETE',
+                            headers: { 'X-CSRF-TOKEN': config.csrf, 'Accept': 'application/json' },
+                        }).then(() => {
+                            this.status = 'Focal reset to centre.';
+                            setTimeout(() => this.status = '', 2000);
+                        }).catch(() => {
+                            this.status = 'Failed to reset focal.';
+                            this.statusType = 'error';
+                        });
+                    },
+                    // Debounce rapid clicks so we don't spam the server while
+                    // the admin is dialing in the perfect spot.
+                    _persistFocalDebounced() {
+                        if (this._focalTimer) clearTimeout(this._focalTimer);
+                        this._focalTimer = setTimeout(() => this._persistFocal(), 400);
+                    },
+                    async _persistFocal() {
+                        this.focalSaving = true;
+                        try {
+                            const fd = new FormData();
+                            fd.append('x', this.focalX);
+                            fd.append('y', this.focalY);
+                            fd.append('_token', config.csrf);
+                            const r = await fetch(config.focalUrl, {
+                                method: 'POST', body: fd,
+                                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+                            });
+                            if (!r.ok) throw new Error(`Focal save failed (${r.status})`);
+                        } catch (e) {
+                            this.status = 'Failed to save focal point.';
+                            this.statusType = 'error';
+                        } finally {
+                            this.focalSaving = false;
                         }
                     },
                 }));

@@ -24,20 +24,26 @@ class PageContentMediaController extends Controller
 {
     public function store(Request $request, string $key): JsonResponse
     {
-        // Find (or create) the DB row for this key. When creating we need
-        // to know which page/section it belongs to — look it up from the
-        // registry since the key uniquely identifies the field.
-        $row = PageContent::firstOrNew(['key' => $key]);
+        // Admins upload either the default image or an optional mobile-only
+        // variant. The variant lives in its own sibling key ("<key>_mobile")
+        // so it can carry independent file lifecycle (delete/replace) without
+        // touching the primary row.
+        $variant = $request->query('variant');
+        $targetKey = $variant === 'mobile' ? "{$key}_mobile" : $key;
 
+        // Metadata (page/section/type) always comes from the PRIMARY key
+        // entry in the registry, even when we're writing a sibling row.
+        $context = $this->findKeyInRegistry($key);
+        if (!$context) {
+            return response()->json(['error' => "Unknown content key: {$key}"], 422);
+        }
+
+        $row = PageContent::firstOrNew(['key' => $targetKey]);
         if (!$row->exists) {
-            $context = $this->findKeyInRegistry($key);
-            if (!$context) {
-                return response()->json(['error' => "Unknown content key: {$key}"], 422);
-            }
             $row->page = $context['page'];
             $row->section = $context['section'];
             $row->sort_order = $context['sort_order'];
-            $row->type = $context['type'];
+            $row->type = $context['type']; // same as primary (image or video)
         }
 
         $isVideo = $row->type === 'video';
@@ -80,9 +86,12 @@ class PageContentMediaController extends Controller
         ]);
     }
 
-    public function destroy(string $key): JsonResponse
+    public function destroy(Request $request, string $key): JsonResponse
     {
-        $row = PageContent::where('key', $key)->first();
+        $variant = $request->query('variant');
+        $targetKey = $variant === 'mobile' ? "{$key}_mobile" : $key;
+
+        $row = PageContent::where('key', $targetKey)->first();
         if (!$row) {
             return response()->json(['status' => 'already-empty']);
         }
@@ -93,6 +102,55 @@ class PageContentMediaController extends Controller
         }
 
         $row->delete();
+        return response()->json(['status' => 'reset-to-default']);
+    }
+
+    /**
+     * Save a focal-point coordinate against a primary image key. Stored as
+     * a plain text row with key "<key>_focal" and value "X% Y%" so the
+     * public <x-responsive-image :focal="..."/> prop picks it up without
+     * any extra resolution logic.
+     */
+    public function focal(Request $request, string $key): JsonResponse
+    {
+        $validated = $request->validate([
+            'x' => 'required|integer|min:0|max:100',
+            'y' => 'required|integer|min:0|max:100',
+        ]);
+
+        $context = $this->findKeyInRegistry($key);
+        if (!$context) {
+            return response()->json(['error' => "Unknown content key: {$key}"], 422);
+        }
+
+        $focalKey = "{$key}_focal";
+        $row = PageContent::firstOrNew(['key' => $focalKey]);
+        $row->page = $context['page'];
+        $row->section = $context['section'];
+        $row->sort_order = $context['sort_order'];
+        $row->type = 'text';
+        $focalValue = "{$validated['x']}% {$validated['y']}%";
+        $row->value_en = $focalValue;
+        $row->value_ar = $focalValue;
+        $row->value_it = $focalValue;
+        $row->save(); // busts PageContent cache
+
+        return response()->json([
+            'focal' => $focalValue,
+            'x' => (int) $validated['x'],
+            'y' => (int) $validated['y'],
+        ]);
+    }
+
+    /**
+     * Delete the focal-point override so the image reverts to centered.
+     */
+    public function focalReset(string $key): JsonResponse
+    {
+        $row = PageContent::where('key', "{$key}_focal")->first();
+        if ($row) {
+            $row->delete();
+        }
         return response()->json(['status' => 'reset-to-default']);
     }
 
