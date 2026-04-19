@@ -25,6 +25,9 @@ class EmployeeRequest extends FormRequest
             'achievement_ar' => ['nullable', 'string', 'max:1000'],
             'achievement_it' => ['nullable', 'string', 'max:1000'],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'image_mobile' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'focal_point' => ['nullable', 'string', 'regex:/^\d{1,3}%\s+\d{1,3}%$/'],
+            'clear_image_mobile' => ['nullable'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'active' => ['nullable', 'boolean'],
         ];

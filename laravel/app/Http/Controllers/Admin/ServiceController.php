@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\HandlesHybridImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ServiceRequest;
 use App\Models\Service;
@@ -12,6 +13,8 @@ use Illuminate\View\View;
 
 class ServiceController extends Controller
 {
+    use HandlesHybridImages;
+
     public function index(Request $request): View
     {
         $query = Service::query()->ordered();
@@ -57,6 +60,7 @@ class ServiceController extends Controller
         }
 
         $service = Service::create($data);
+        $this->applyHybridImageFields($service, $request, 'uploads/services');
 
         return redirect()
             ->route('admin.services.edit', $service)
@@ -91,6 +95,7 @@ class ServiceController extends Controller
         }
 
         $service->update($data);
+        $this->applyHybridImageFields($service, $request, 'uploads/services');
 
         return redirect()
             ->route('admin.services.edit', $service)
@@ -103,6 +108,7 @@ class ServiceController extends Controller
             && Storage::disk('public')->exists($service->image)) {
             Storage::disk('public')->delete($service->image);
         }
+        $this->deleteHybridImageFiles($service);
 
         $service->delete();
 

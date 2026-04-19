@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\HandlesHybridImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BranchRequest;
 use App\Models\Branch;
@@ -13,6 +14,8 @@ use Illuminate\View\View;
 
 class BranchController extends Controller
 {
+    use HandlesHybridImages;
+
     public function index(Request $request): View
     {
         $query = Branch::query()->ordered();
@@ -55,6 +58,7 @@ class BranchController extends Controller
         }
 
         $branch = Branch::create($data);
+        $this->applyHybridImageFields($branch, $request, 'uploads/branches');
 
         return redirect()
             ->route('admin.branches.edit', $branch)
@@ -77,6 +81,7 @@ class BranchController extends Controller
         }
 
         $branch->update($data);
+        $this->applyHybridImageFields($branch, $request, 'uploads/branches');
 
         return redirect()
             ->route('admin.branches.edit', $branch)
@@ -89,6 +94,7 @@ class BranchController extends Controller
             && Storage::disk('public')->exists($branch->image)) {
             Storage::disk('public')->delete($branch->image);
         }
+        $this->deleteHybridImageFiles($branch);
 
         $branch->delete();
 

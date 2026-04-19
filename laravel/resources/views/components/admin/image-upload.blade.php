@@ -7,6 +7,11 @@
     // to "focal_point" (which is a fixed column name on all 5 models).
     'fieldName' => 'image',
 
+    // Controllers already check a hidden input named "remove_image" to
+    // null out the main image column when the admin hits Remove. Expose
+    // its name so non-default fieldNames can use a matching clear flag.
+    'clearMainFieldName' => 'remove_image',
+
     // Currently-saved image URLs shown in the preview area. Either may be
     // null to indicate "nothing uploaded yet" — the widget still renders.
     'currentUrl' => null,
@@ -45,7 +50,13 @@
 
     {{-- ─── Desktop upload ─────────────────────────────────────── --}}
     <div>
-        <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">{{ $label }}</label>
+        <div class="flex items-center justify-between mb-2">
+            <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium">{{ $label }}</label>
+            <button type="button" x-show="displayUrl && desktopInitialUrl" x-cloak @click="clearDesktop()"
+                    class="text-[10px] tracking-[0.15em] uppercase text-delos-muted hover:text-red-600 transition-colors">
+                Remove
+            </button>
+        </div>
 
         {{-- Preview with focal-point picker overlay. Clicking anywhere on
              the image moves the gold crosshair to that point and updates
@@ -121,6 +132,7 @@
     {{-- Hidden state inputs submitted with the parent form. --}}
     <input type="hidden" name="focal_point" x-bind:value="`${focalX}% ${focalY}%`">
     <input type="hidden" name="clear_{{ $mobileFieldName }}" x-bind:value="clearMobileFlag ? '1' : ''">
+    <input type="hidden" name="{{ $clearMainFieldName }}" x-bind:value="clearDesktopFlag ? '1' : '0'">
 
 </div>
 
@@ -138,11 +150,13 @@
                     focalX: config.focalX,
                     focalY: config.focalY,
                     clearMobileFlag: false,
+                    clearDesktopFlag: false,
                     maxBytes: config.maxBytes,
 
                     // Either the just-picked file (for instant preview) or
                     // the existing DB URL. Drives the preview <img>.
                     get displayUrl() {
+                        if (this.clearDesktopFlag) return null;
                         return this.desktopPreviewUrl || this.desktopInitialUrl || null;
                     },
                     get mobileDisplayUrl() {
@@ -159,9 +173,17 @@
                             return;
                         }
                         this.desktopError = '';
+                        // Picking a new file cancels any pending clear.
+                        this.clearDesktopFlag = false;
                         const reader = new FileReader();
                         reader.onload = (e) => { this.desktopPreviewUrl = e.target.result; };
                         reader.readAsDataURL(file);
+                    },
+                    clearDesktop() {
+                        if (!confirm('Remove this image? The field will fall back to its default on save.')) return;
+                        this.desktopPreviewUrl = null;
+                        this.desktopInitialUrl = null;
+                        this.clearDesktopFlag = true;
                     },
 
                     onMobileFile(event) {

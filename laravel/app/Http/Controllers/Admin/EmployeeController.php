@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\HandlesHybridImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\EmployeeRequest;
 use App\Models\Employee;
@@ -12,6 +13,8 @@ use Illuminate\View\View;
 
 class EmployeeController extends Controller
 {
+    use HandlesHybridImages;
+
     public function index(Request $request): View
     {
         $query = Employee::query()->ordered();
@@ -52,6 +55,7 @@ class EmployeeController extends Controller
         }
 
         $employee = Employee::create($data);
+        $this->applyHybridImageFields($employee, $request, 'uploads/employees');
 
         return redirect()
             ->route('admin.employees.edit', $employee)
@@ -84,6 +88,7 @@ class EmployeeController extends Controller
         }
 
         $employee->update($data);
+        $this->applyHybridImageFields($employee, $request, 'uploads/employees');
 
         return redirect()
             ->route('admin.employees.edit', $employee)
@@ -95,6 +100,7 @@ class EmployeeController extends Controller
         if ($employee->image && Storage::disk('public')->exists($employee->image)) {
             Storage::disk('public')->delete($employee->image);
         }
+        $this->deleteHybridImageFiles($employee);
 
         $employee->delete();
 

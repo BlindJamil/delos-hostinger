@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\HandlesHybridImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BrandRequest;
 use App\Models\Brand;
@@ -12,6 +13,8 @@ use Illuminate\View\View;
 
 class BrandController extends Controller
 {
+    use HandlesHybridImages;
+
     public function index(Request $request): View
     {
         $query = Brand::query()->ordered();
@@ -53,6 +56,7 @@ class BrandController extends Controller
         }
 
         $brand = Brand::create($data);
+        $this->applyHybridImageFields($brand, $request, 'uploads/brands');
 
         return redirect()
             ->route('admin.brands.edit', $brand)
@@ -87,6 +91,7 @@ class BrandController extends Controller
         }
 
         $brand->update($data);
+        $this->applyHybridImageFields($brand, $request, 'uploads/brands');
 
         return redirect()
             ->route('admin.brands.edit', $brand)
@@ -99,6 +104,7 @@ class BrandController extends Controller
             && Storage::disk('public')->exists($brand->image)) {
             Storage::disk('public')->delete($brand->image);
         }
+        $this->deleteHybridImageFiles($brand);
 
         $brand->delete();
 

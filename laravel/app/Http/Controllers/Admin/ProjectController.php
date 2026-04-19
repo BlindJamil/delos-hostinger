@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\HandlesHybridImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProjectRequest;
 use App\Models\Project;
@@ -12,6 +13,8 @@ use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
+    use HandlesHybridImages;
+
     public function index(Request $request): View
     {
         $query = Project::query()->ordered();
@@ -66,6 +69,7 @@ class ProjectController extends Controller
         }
 
         $project = Project::create($data);
+        $this->applyHybridImageFields($project, $request, 'uploads/projects');
 
         return redirect()
             ->route('admin.projects.edit', $project)
@@ -100,6 +104,7 @@ class ProjectController extends Controller
         }
 
         $project->update($data);
+        $this->applyHybridImageFields($project, $request, 'uploads/projects');
 
         return redirect()
             ->route('admin.projects.edit', $project)
@@ -112,6 +117,7 @@ class ProjectController extends Controller
             && Storage::disk('public')->exists($project->image)) {
             Storage::disk('public')->delete($project->image);
         }
+        $this->deleteHybridImageFiles($project);
 
         $project->delete();
 

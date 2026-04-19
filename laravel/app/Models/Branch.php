@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Branch extends Model
 {
-    protected $appends = ['image_url', 'directions_href'];
+    protected $appends = ['image_url', 'mobile_image_url', 'directions_href'];
 
     protected $fillable = [
         'slug',
@@ -21,6 +21,8 @@ class Branch extends Model
         'latitude', 'longitude',
         'directions_url',
         'image',
+        'image_mobile',
+        'focal_point',
         'is_flagship',
         'sort_order',
         'active',
@@ -84,6 +86,24 @@ class Branch extends Model
     public function imageIsLegacy(): bool
     {
         return $this->image && !str_contains($this->image, '/') && !preg_match('#^https?://#i', $this->image);
+    }
+
+    /** Mobile variant (phones ≤ 767px). Same resolution rules as imageUrl(). */
+    protected function mobileImageUrl(): Attribute
+    {
+        return Attribute::get(function () {
+            $path = $this->image_mobile;
+            if (!$path) {
+                return null;
+            }
+            if (preg_match('#^https?://#i', $path)) {
+                return $path;
+            }
+            if (str_starts_with($path, 'uploads/') || str_contains($path, '/')) {
+                return asset('storage/' . ltrim($path, '/'));
+            }
+            return asset('images/' . $path);
+        });
     }
 
     /**

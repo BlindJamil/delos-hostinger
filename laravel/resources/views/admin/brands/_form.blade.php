@@ -145,38 +145,17 @@
             </label>
         </div>
 
-        <div class="bg-white rounded-xl border border-delos-dark/5 shadow-card p-5" x-data="{
-            preview: {{ $brand->image_url ? json_encode($brand->image_url) : 'null' }},
-            removing: false,
-            onFile(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-                this.removing = false;
-                const reader = new FileReader();
-                reader.onload = e => this.preview = e.target.result;
-                reader.readAsDataURL(file);
-            },
-            clear() { this.preview = null; this.removing = true; this.$refs.file.value = ''; }
-        }">
+        <div class="bg-white rounded-xl border border-delos-dark/5 shadow-card p-5">
             <h3 class="font-serif text-base text-delos-dark-2 font-medium mb-3">Image</h3>
-            <input type="hidden" name="remove_image" :value="removing ? '1' : '0'">
-
-            <div x-show="preview" class="mb-3">
-                <div class="aspect-[4/3] rounded-lg overflow-hidden bg-delos-ivory/60 border border-delos-dark/8">
-                    <img :src="preview" alt="" class="w-full h-full object-cover">
-                </div>
-                <button type="button" @click="clear()" class="mt-2 text-xs text-red-600 hover:text-red-800 flex items-center gap-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    Remove image
-                </button>
-            </div>
-            <label x-show="!preview" class="block border-2 border-dashed border-delos-dark/15 hover:border-delos-gold rounded-lg p-6 text-center cursor-pointer transition-colors">
-                <svg class="w-10 h-10 mx-auto text-delos-muted mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                <p class="text-sm text-delos-dark-2 font-medium mb-1">Click to upload</p>
-                <p class="text-xs text-delos-muted">JPG, PNG, WebP · max 5MB</p>
-                <input type="file" name="image" accept="image/jpeg,image/png,image/webp" class="sr-only" @change="onFile" x-ref="file">
-            </label>
+            <x-admin.image-upload
+                label="Brand image"
+                :current-url="$brand->image_url"
+                :mobile-current-url="$brand->mobile_image_url"
+                :focal="$brand->focal_point"
+            />
             @error('image')<p class="text-xs text-red-600 mt-2">{{ $message }}</p>@enderror
+            @error('image_mobile')<p class="text-xs text-red-600 mt-2">{{ $message }}</p>@enderror
+            @error('focal_point')<p class="text-xs text-red-600 mt-2">{{ $message }}</p>@enderror
         </div>
 
         <div class="flex flex-col gap-2">
