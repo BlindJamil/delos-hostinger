@@ -136,5 +136,57 @@
     </div>
 
     @stack('scripts')
+
+    {{--
+        CSRF token refresh. Long admin forms (home page editor has 278+
+        fields) can take longer than the session lifetime to fill out,
+        causing the embedded _token to go stale. When the admin clicks
+        Save with a stale token, Laravel rejects with 419 Page Expired —
+        presenting as a silent failure with no flash message.
+
+        Every 10 minutes, fetch a fresh token from /dashboard/csrf-refresh
+        and rewrite every input[name="_token"] + the <meta> tag in place.
+        Also rotates the token immediately before any admin form submits,
+        and on window focus (common pattern: admin switches back to the
+        tab after a long break, clicks Save right away).
+    --}}
+    <script>
+        (function () {
+            if (typeof window === 'undefined' || !window.fetch) return;
+            const refreshUrl = @json(route('admin.csrf-refresh'));
+            const meta = document.querySelector('meta[name="csrf-token"]');
+
+            async function refreshCsrf() {
+                try {
+                    const r = await fetch(refreshUrl, { credentials: 'same-origin', headers: { 'Accept': 'application/json' } });
+                    if (!r.ok) return;
+                    const { token } = await r.json();
+                    if (!token) return;
+                    if (meta) meta.setAttribute('content', token);
+                    document.querySelectorAll('input[name="_token"]').forEach(i => { i.value = token; });
+                } catch (_) { /* network error — silently skip; next cycle will retry */ }
+            }
+
+            // Background cadence so idle admins always have a fresh token.
+            setInterval(refreshCsrf, 10 * 60 * 1000);
+            // Tab re-focus is when stale-token bugs usually bite.
+            window.addEventListener('focus', refreshCsrf);
+            // Refresh right before any admin form submits — guarantees the
+            // token the server validates is one it just issued.
+            document.addEventListener('submit', async (e) => {
+                const form = e.target;
+                if (!(form instanceof HTMLFormElement)) return;
+                const tokenInput = form.querySelector('input[name="_token"]');
+                if (!tokenInput) return;
+                // If we already refreshed in the last 10s, skip to keep save latency down.
+                const now = Date.now();
+                if (window.__delosLastCsrfRefresh && (now - window.__delosLastCsrfRefresh) < 10_000) return;
+                e.preventDefault();
+                await refreshCsrf();
+                window.__delosLastCsrfRefresh = Date.now();
+                form.submit();
+            }, true);
+        })();
+    </script>
 </body>
 </html>

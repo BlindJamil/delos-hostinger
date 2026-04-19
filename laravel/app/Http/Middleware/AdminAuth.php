@@ -11,7 +11,8 @@ class AdminAuth
 {
     /**
      * Protect admin routes. Redirects to login if not authenticated.
-     * Also enforces 2-hour idle session timeout.
+     * Idle timeout tracks config('session.lifetime') so we never expire
+     * an admin ahead of the framework's own session window.
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -21,9 +22,12 @@ class AdminAuth
                 : redirect()->route('admin.login');
         }
 
-        // Idle timeout: 2 hours
+        // Match the framework's configured session lifetime so a long edit
+        // (e.g. home-page form with 278+ fields) never triggers a CSRF
+        // regeneration mid-flow. AppServiceProvider forces this to 480 min.
+        $idleLimitMinutes = (int) (config('session.lifetime') ?? 120);
         $lastActivity = $request->session()->get('admin_last_activity');
-        if ($lastActivity && now()->diffInMinutes($lastActivity) > 120) {
+        if ($lastActivity && now()->diffInMinutes($lastActivity) > $idleLimitMinutes) {
             Auth::guard('admin')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();

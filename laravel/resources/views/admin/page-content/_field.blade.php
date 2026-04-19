@@ -8,38 +8,33 @@
         'it' => $langDefault['it'] ?? '',
     ];
 
-    // Compute the CURRENT effective value for each locale — exactly what a
-    // public visitor would see on the site right now. Matches pcontent()'s
-    // own fallback chain so the editor is a faithful mirror of live state:
+    // Return the admin-editable value for this locale ONLY — never fall
+    // back to a different locale's value. Falling back to English for an
+    // empty AR input caused a silent pollution bug: on save, the English
+    // text got written into value_ar, and the next editor load showed
+    // English inside the Arabic textarea (now persisted).
     //
-    //     DB override (this locale)
-    //   → lang file (this locale)
-    //   → DB override (English)
-    //   → lang file (English)
-    //   → '' (nothing configured)
-    //
-    // This is the fix the admin asked for: every input shows what the page
-    // currently renders, making fields easy to identify at a glance.
+    // Instead: textarea/input `value=` is strictly this-locale DB → this-
+    // locale lang file → empty. The visual cue for "this locale is empty
+    // and will fall back to English on the public site" lives in the
+    // `placeholder=` attribute on the rendered input (already set to
+    // $defaults[$locale] in the textarea/input markup below), AND in the
+    // "fills" state logic that marks unfilled locales.
     $effective = function (string $locale) use ($row, $defaults, $key) {
-        $candidates = [
-            $row?->{"value_{$locale}"},
-            $defaults[$locale] ?? null,
-            $row?->value_en,
-            $defaults['en'] ?? null,
-        ];
-        foreach ($candidates as $v) {
-            if ($v !== null && $v !== '') return (string) $v;
-        }
-        // Last resort: resolve directly from the lang file using
-        // data_get() which handles numeric array indices. This
-        // guarantees the field always shows a value even when
-        // both the DB row and controller-provided defaults are empty.
+        $dbValue = $row?->{"value_{$locale}"};
+        if ($dbValue !== null && $dbValue !== '') return (string) $dbValue;
+
+        $langValue = $defaults[$locale] ?? null;
+        if ($langValue !== null && $langValue !== '') return (string) $langValue;
+
+        // Lang file lookup with data_get() for numeric-index-dot paths
+        // (e.g. 'home.stats.items.0.value') that Laravel's translator
+        // otherwise can't resolve.
         $dotPos = strpos($key, '.');
         if ($dotPos !== false) {
             $group = substr($key, 0, $dotPos);
             $path = substr($key, $dotPos + 1);
             $file = lang_path("{$locale}/{$group}.php");
-            if (!file_exists($file)) $file = lang_path("en/{$group}.php");
             if (file_exists($file)) {
                 $val = data_get(include $file, $path);
                 if ($val !== null && !is_array($val)) return (string) $val;

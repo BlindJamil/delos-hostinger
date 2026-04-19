@@ -3,6 +3,17 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
+// Runtime safety net for PHP input limits. The admin page-content editor
+// can submit 280+ localized fields in a single POST. On Hostinger shared
+// hosting, .user.ini is not always respected depending on the doc-root
+// layout — these ini_set calls are a belt-and-suspenders override that
+// works when the host allows runtime changes. Silent @ prefix so a locked
+// server doesn't emit a warning.
+@ini_set('max_input_vars', '5000');
+@ini_set('post_max_size', '64M');
+@ini_set('upload_max_filesize', '64M');
+@ini_set('memory_limit', '256M');
+
 define('LARAVEL_START', microtime(true));
 
 /*

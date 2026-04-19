@@ -11,7 +11,18 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        // Force reliable session config for shared hosting (Hostinger LiteSpeed).
+        // We cannot trust the production .env to have these set — file-based
+        // sessions on LiteSpeed get garbage-collected between workers, which
+        // causes silent CSRF mismatches (419 Page Expired) that look to the
+        // admin user like "save didn't work." Database sessions are atomic
+        // and survive worker rotation. 8-hour lifetime = a full workday of
+        // editing without being booted for CSRF reasons.
+        config([
+            'session.driver' => 'database',
+            'session.lifetime' => 480,
+            'session.expire_on_close' => false,
+        ]);
     }
 
     public function boot(): void

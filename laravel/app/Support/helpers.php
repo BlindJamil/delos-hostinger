@@ -204,6 +204,45 @@ if (!function_exists('pcontent_url')) {
     }
 }
 
+if (!function_exists('delos_commit_marker')) {
+    /**
+     * Resolve the current deploy's commit hash + build timestamp as a short
+     * HTML-safe string, e.g. "commit:a3f0c21 built:2026-04-19T08:30:00Z".
+     *
+     * Emitted as an HTML comment at the top of every rendered page so we can
+     * `curl` the public site and immediately know which code is live. Without
+     * this marker there's no way to tell whether a Hostinger deploy has
+     * actually landed — every cache-bust attempt becomes a guess.
+     *
+     * Memoized per request. Reads .git/HEAD when available (dev); falls back
+     * to public/index.php mtime on shared hosting where .git is pruned.
+     */
+    function delos_commit_marker(): string
+    {
+        static $cached = null;
+        if ($cached !== null) return $cached;
+
+        $commit = 'nogit';
+        $head = base_path('.git/HEAD');
+        if (is_file($head)) {
+            $ref = trim(@file_get_contents($head) ?: '');
+            if (str_starts_with($ref, 'ref: ')) {
+                $refFile = base_path('.git/' . substr($ref, 5));
+                if (is_file($refFile)) {
+                    $commit = substr(trim(@file_get_contents($refFile) ?: ''), 0, 7) ?: 'nogit';
+                }
+            } elseif ($ref !== '') {
+                $commit = substr($ref, 0, 7);
+            }
+        }
+
+        $indexPhp = public_path('index.php');
+        $built = is_file($indexPhp) ? gmdate('Y-m-d\TH:i:s\Z', filemtime($indexPhp)) : 'unknown';
+
+        return $cached = "commit:{$commit} built:{$built}";
+    }
+}
+
 if (!function_exists('wa_digits')) {
     /**
      * Normalise an Iraqi phone number to the digit-only form wa.me expects.

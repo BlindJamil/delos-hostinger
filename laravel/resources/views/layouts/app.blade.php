@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Delos {{ delos_commit_marker() }} -->
 <html lang="{{ $locale }}" dir="{{ $dir }}" class="locale-{{ $locale }}">
 <head>
     <meta charset="UTF-8">

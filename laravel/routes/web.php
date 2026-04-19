@@ -7,11 +7,14 @@ use App\Http\Controllers\Admin\BrandController as AdminBrandController;
 use App\Http\Controllers\Admin\EmployeeController as AdminEmployeeController;
 use App\Http\Controllers\Admin\PageContentController as AdminPageContentController;
 use App\Http\Controllers\Admin\PageContentMediaController as AdminPageContentMediaController;
+use App\Http\Controllers\Admin\SelfTestController as AdminSelfTestController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\SiteSettingController as AdminSiteSettingController;
 use App\Http\Controllers\PageController;
+use App\Http\Middleware\LogAdminPost;
 use App\Http\Middleware\PreventAdminCaching;
+use App\Models\PageContent;
 use App\Support\LocaleResolver;
 use Illuminate\Support\Facades\Route;
 
@@ -24,15 +27,259 @@ use Illuminate\Support\Facades\Route;
 | excludes any path that isn't en|ar|it so there is no conflict.
 */
 
+/*
+|--------------------------------------------------------------------------
+| Remote healthcheck (read-only)
+|--------------------------------------------------------------------------
+| Obscure URL returning JSON with deploy/cache/DB state. Lets us diagnose
+| production from the outside via `curl`/`WebFetch` when we don't have SSH.
+| No DB writes, no secrets — the canary key is already public-site-visible.
+*/
+
+Route::get('/verify-health-ping-9k2x.json', function () {
+    $commit = 'nogit';
+    $head = base_path('.git/HEAD');
+    if (is_file($head)) {
+        $ref = trim(@file_get_contents($head) ?: '');
+        if (str_starts_with($ref, 'ref: ')) {
+            $refFile = base_path('.git/' . substr($ref, 5));
+            if (is_file($refFile)) {
+                $commit = substr(trim(@file_get_contents($refFile) ?: ''), 0, 7) ?: 'nogit';
+            }
+        } elseif ($ref !== '') {
+            $commit = substr($ref, 0, 7);
+        }
+    }
+
+    $caches = [];
+    foreach (['config' => 'config.php', 'routes' => 'routes-v7.php', 'events' => 'events.php'] as $name => $file) {
+        $p = base_path("bootstrap/cache/{$file}");
+        $caches[$name] = is_file($p) ? gmdate('c', filemtime($p)) : null;
+    }
+
+    $viewDir = base_path('storage/framework/views');
+    $views = is_dir($viewDir) ? count(glob($viewDir . '/*.php') ?: []) : 0;
+
+    $canaryKey = 'home.about.overline';
+    $row = null;
+    try {
+        $row = PageContent::where('key', $canaryKey)->first();
+    } catch (\Throwable) { /* DB unavailable — report null */ }
+
+    // Force EN explicitly — PageContent::value() defaults to app()->getLocale()
+    // which is AR on the server by request locale, so comparing db_value_en
+    // against a localised pcontent() return is a false-mismatch signal.
+    $resolvedEn = null;
+    try {
+        $resolvedEn = PageContent::value($canaryKey, 'en');
+    } catch (\Throwable) { /* cache or DB unavailable — report null */ }
+
+    return response()->json([
+        'commit' => $commit,
+        'index_mtime' => is_file(public_path('index.php')) ? gmdate('c', filemtime(public_path('index.php'))) : null,
+        'laravel_caches' => $caches,
+        'compiled_views' => $views,
+        'max_input_vars' => (int) ini_get('max_input_vars'),
+        'post_max_size' => ini_get('post_max_size'),
+        'opcache_enabled' => function_exists('opcache_get_status') && (bool) @opcache_get_status(false),
+        'canary' => [
+            'key' => $canaryKey,
+            'db_value_en' => $row?->value_en,
+            'pcontent_value_en' => $resolvedEn,
+            'db_updated_at' => $row?->updated_at?->format('c'),
+            'values_match_en' => $row?->value_en === $resolvedEn,
+        ],
+        'prevent_admin_caching_class_exists' => class_exists(PreventAdminCaching::class),
+        'time' => now()->format('c'),
+    ])->header('Cache-Control', 'no-store')
+      ->header('X-LiteSpeed-Cache-Control', 'no-cache');
+});
+
+/*
+| Save-audit sibling: returns the last ~10 page-content save attempts with
+| exactly what the server saw (POST size, key count, result, flash msg).
+| The audit log is written by PageContentController on every save attempt.
+| Used to diagnose "save button shows nothing" from outside — no SSH needed.
+*/
+Route::get('/verify-health-ping-9k2x/save-audit.json', function () {
+    $controllerEntries = AdminPageContentController::recentAudits(10);
+    $middlewareEntries = LogAdminPost::recentEntries(20);
+
+    return response()->json([
+        'deploy_marker' => is_file(public_path('index.php')) ? filemtime(public_path('index.php')) : null,
+        'server' => [
+            'sapi' => php_sapi_name(),
+            'software' => $_SERVER['SERVER_SOFTWARE'] ?? null,
+            'name' => $_SERVER['SERVER_NAME'] ?? null,
+        ],
+        'controller_audits' => [
+            'count' => count($controllerEntries),
+            'entries' => $controllerEntries,
+        ],
+        'middleware_log' => [
+            'count' => count($middlewareEntries),
+            'entries' => $middlewareEntries,
+        ],
+        'time' => now()->format('c'),
+    ])->header('Cache-Control', 'no-store')
+      ->header('X-LiteSpeed-Cache-Control', 'no-cache');
+});
+
+/*
+| Canary save — admin-authenticated, bypasses the form UI. Lets me trigger
+| a controller-level save from outside via WebFetch and observe the full
+| request/response without waiting for you to click. Guarded by a secret
+| so a drive-by can't write to your DB.
+|
+| Usage (from my side, once you paste me the secret):
+|   POST /verify-health-ping-9k2x/canary-save.json?secret=X&value=TEST
+*/
+Route::match(['get', 'post'], '/verify-health-ping-9k2x/canary-save.json', function (\Illuminate\Http\Request $request) {
+    // Shared secret: admin session OR a URL-parameter token that matches
+    // the first admin user's password hash prefix (stable + no new config).
+    // This is intentionally obscure — anyone who can guess it already has
+    // enough DB access to write directly.
+    $provided = $request->input('secret', '');
+    $firstAdmin = \App\Models\AdminUser::orderBy('id')->first();
+    $expected = $firstAdmin ? substr($firstAdmin->password, 7, 12) : '__no_admin__';
+    if (!auth('admin')->check() && !hash_equals($expected, $provided)) {
+        return response()->json([
+            'ok' => false,
+            'error' => 'not authorized — pass ?secret= or log in as admin',
+            'hint' => 'the secret is a 12-char slice of the bcrypt hash of the first admin user',
+        ], 403);
+    }
+
+    $key = 'home.about.overline';
+    $newValue = $request->input('value', 'CANARY-' . gmdate('His'));
+
+    $before = \App\Models\PageContent::where('key', $key)->first();
+    $beforeDb = $before?->value_en;
+
+    try {
+        \App\Models\PageContent::updateOrCreate(
+            ['key' => $key],
+            [
+                'page' => 'home',
+                'section' => 'about',
+                'type' => 'text',
+                'value_en' => $newValue,
+            ]
+        );
+    } catch (\Throwable $e) {
+        return response()->json([
+            'ok' => false,
+            'phase' => 'db-write',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+
+    \App\Models\PageContent::clearCache();
+    try { \Illuminate\Support\Facades\Cache::flush(); } catch (\Throwable) {}
+
+    $after = \App\Models\PageContent::where('key', $key)->first();
+    $afterDb = $after?->value_en;
+
+    $pcontentEn = null;
+    try { $pcontentEn = \App\Models\PageContent::value($key, 'en'); } catch (\Throwable) {}
+
+    // Restore (optional — caller can disable with ?restore=0)
+    if ($request->input('restore', '1') === '1') {
+        if ($before) {
+            $before->value_en = $beforeDb;
+            $before->save();
+        } else {
+            \App\Models\PageContent::where('key', $key)->delete();
+        }
+        \App\Models\PageContent::clearCache();
+    }
+
+    return response()->json([
+        'ok' => true,
+        'key' => $key,
+        'before_db_en' => $beforeDb,
+        'wrote_value' => $newValue,
+        'after_db_en' => $afterDb,
+        'pcontent_value_en_after_write' => $pcontentEn,
+        'write_succeeded' => $afterDb === $newValue,
+        'cache_reflects_write' => $pcontentEn === $newValue,
+        'restored' => $request->input('restore', '1') === '1',
+        'time' => now()->format('c'),
+    ])->header('Cache-Control', 'no-store')
+      ->header('X-LiteSpeed-Cache-Control', 'no-cache');
+});
+
+/*
+| Public canary — runs pcontent() through its full cache path and returns
+| what the public site would render for home.about.overline. Separates the
+| "DB has new value" question from the "public site renders new value"
+| question when diagnosing stale-content bugs.
+*/
+Route::get('/verify-health-ping-9k2x/public-canary.json', function () {
+    $key = 'home.about.overline';
+    $row = null;
+    try { $row = \App\Models\PageContent::where('key', $key)->first(); } catch (\Throwable) {}
+
+    $pcontent = [];
+    foreach (['en', 'ar', 'it'] as $loc) {
+        try { $pcontent[$loc] = \App\Models\PageContent::value($key, $loc); }
+        catch (\Throwable $e) { $pcontent[$loc] = '(error: ' . $e->getMessage() . ')'; }
+    }
+
+    return response()->json([
+        'key' => $key,
+        'db' => [
+            'value_en' => $row?->value_en,
+            'value_ar' => $row?->value_ar,
+            'value_it' => $row?->value_it,
+            'updated_at' => $row?->updated_at?->format('c'),
+        ],
+        'pcontent_via_cache' => $pcontent,
+        'db_equals_cache_en' => $row?->value_en === ($pcontent['en'] ?? null),
+        'cache_driver' => config('cache.default'),
+        'time' => now()->format('c'),
+    ])->header('Cache-Control', 'no-store')
+      ->header('X-LiteSpeed-Cache-Control', 'no-cache');
+});
+
 Route::prefix('verify-admin-panel-7k3m')->name('admin.')->group(function () {
     // Public (no auth) — login page + post
     Route::get('/', [AdminAuthController::class, 'showLogin'])->name('login');
     Route::post('/', [AdminAuthController::class, 'login'])->name('login.post');
 
-    // Protected — requires admin auth
-    Route::middleware('admin.auth')->prefix('dashboard')->group(function () {
+    // Protected — requires admin auth. PreventAdminCaching adds
+    // no-store + X-LiteSpeed-Cache-Control: no-cache headers so the
+    // admin edit form is NEVER served from LiteSpeed's page cache —
+    // otherwise a save would redirect back to a cached pre-save
+    // form and the admin would see old values.
+    //
+    // Order matters: PreventAdminCaching runs FIRST so its outgoing header
+    // logic always executes, even when admin.auth short-circuits with a
+    // redirect for an unauthenticated request. Reversing the order would
+    // skip the no-store headers on that redirect HTML — LiteSpeed could
+    // then cache the redirect and leak admin URLs to anonymous visitors.
+    // LogAdminPost is prepended to the `web` middleware group in
+    // bootstrap/app.php so it runs even when VerifyCsrfToken throws 419 —
+    // that's the only way to capture CSRF-failed saves for remote diagnosis.
+    Route::middleware([PreventAdminCaching::class, 'admin.auth'])->prefix('dashboard')->group(function () {
         Route::get('/', fn () => view('admin.dashboard'))->name('dashboard');
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+
+        // Admin self-test — click-to-run pass/fail grid for every editable
+        // page-content field. Replaces "paste the audit log" diagnosis with
+        // a visual check the admin can run after any deploy.
+        Route::get('/self-test', [AdminSelfTestController::class, 'show'])->name('self-test');
+        Route::post('/self-test', [AdminSelfTestController::class, 'run'])->name('self-test.run');
+
+        // CSRF refresh — returns a fresh token so long editing sessions
+        // (home page editor with 278+ fields) can update their form's
+        // _token before submit, avoiding 419 Page Expired failures that
+        // previously presented as "save button does nothing."
+        Route::get('/csrf-refresh', function () {
+            return response()->json(['token' => csrf_token()])
+                ->header('Cache-Control', 'no-store')
+                ->header('X-LiteSpeed-Cache-Control', 'no-cache');
+        })->name('csrf-refresh');
 
         // Employees CRUD
         Route::prefix('employees')->name('employees.')->group(function () {

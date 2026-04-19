@@ -89,6 +89,93 @@ class PageContentController extends Controller
         $pageConfig = $this->pageOrAbort($page);
         $values = $request->input('values', []);
 
+        // Compute the registry's text-submittable field count so partial
+        // truncation (silent max_input_vars drop) is detectable. image/video
+        // fields don't participate in this form POST — they're AJAX-only.
+        $textFieldKeys = [];
+        foreach ($pageConfig['sections'] ?? [] as $section) {
+            foreach ($section['fields'] ?? [] as $field) {
+                $type = $field['type'] ?? 'text';
+                if (!in_array($type, ['image', 'video'], true)) {
+                    $textFieldKeys[] = $field['key'];
+                }
+            }
+        }
+        $expectedFieldCount = count($textFieldKeys);
+
+        // Remote-diagnosable audit trail: every save attempt appends one
+        // JSONL line to storage/app/admin-save-audit.jsonl. Exposed read-only
+        // via /verify-health-ping-9k2x/save-audit.json so we can see from
+        // outside what the server actually received. This is the only way
+        // to diagnose "save silently fails" on shared hosting without SSH.
+        // Server fingerprint: unambiguously distinguishes a local HTTP-kernel
+        // simulation (SAPI=cli-server, LOCALHOST) from a real production LiteSpeed
+        // request (SAPI=litespeed, public IP). Solves the "is this audit entry
+        // from local or prod?" problem the prior rounds couldn't answer.
+        $indexPhp = public_path('index.php');
+        $auditBase = [
+            'ts' => now()->format('c'),
+            // Reuse the upstream middleware's request_id if present so a save
+            // attempt can be traced across middleware_log ↔ controller_audits.
+            'request_id' => $request->attributes->get('request_id') ?? (string) \Illuminate\Support\Str::uuid(),
+            'page' => $page,
+            'method' => $request->method(),
+            'uri' => $request->getRequestUri(),
+            'content_length' => (int) ($request->header('Content-Length') ?? 0),
+            'raw_body_length' => strlen($request->getContent() ?? ''),
+            'all_post_keys' => array_keys($request->all()),
+            'values_is_array' => is_array($values),
+            'values_count' => is_array($values) ? count($values) : 0,
+            // Full keys list so a remote diff against the registry can pinpoint
+            // exactly which field got dropped if truncation occurred.
+            'values_keys' => is_array($values) ? array_keys($values) : [],
+            'expected_field_count' => $expectedFieldCount,
+            'has_csrf' => $request->has('_token'),
+            'has_method_spoof' => $request->input('_method'),
+            'max_input_vars' => (int) ini_get('max_input_vars'),
+            'post_max_size' => ini_get('post_max_size'),
+            'admin_user_id' => auth('admin')->id(),
+            'server' => [
+                'sapi' => php_sapi_name(),
+                'software' => $_SERVER['SERVER_SOFTWARE'] ?? null,
+                'name' => $_SERVER['SERVER_NAME'] ?? null,
+                'remote_addr' => $request->ip(),
+                'forwarded_for' => $request->header('X-Forwarded-For'),
+            ],
+            'deploy_marker' => is_file($indexPhp) ? filemtime($indexPhp) : null,
+        ];
+
+        // Watchlist: for a small set of high-interest keys, capture the exact
+        // submitted value per locale (truncated to keep the public audit log
+        // compact) AND the DB pre-save value. This is the diagnostic that
+        // was missing in prior rounds — it tells us whether the user's input
+        // actually reached the server as they typed it, vs. being replaced
+        // by a form pre-population fallback or stripped by a WAF.
+        $watchlist = ['home.about.body', 'home.about.overline', 'home.about.quote', 'home.hero.overline'];
+        $watchlistData = [];
+        foreach ($watchlist as $wk) {
+            if (!is_array($values) || !isset($values[$wk])) {
+                $watchlistData[$wk] = ['status' => 'not_in_payload'];
+                continue;
+            }
+            $row = PageContent::where('key', $wk)->first();
+            $trunc = fn ($v) => $v === null ? null : mb_substr((string) $v, 0, 200);
+            $submitted = is_array($values[$wk]) ? $values[$wk] : [];
+            $watchlistData[$wk] = [
+                'status' => 'in_payload',
+                'submitted_en' => $trunc($submitted['en'] ?? null),
+                'submitted_ar' => $trunc($submitted['ar'] ?? null),
+                'submitted_it' => $trunc($submitted['it'] ?? null),
+                'db_before_en' => $trunc($row?->value_en),
+                'db_before_ar' => $trunc($row?->value_ar),
+                'db_before_it' => $trunc($row?->value_it),
+                'changed_en' => ($submitted['en'] ?? null) !== ($row?->value_en ?? null),
+                'changed_ar' => ($submitted['ar'] ?? null) !== ($row?->value_ar ?? null),
+                'changed_it' => ($submitted['it'] ?? null) !== ($row?->value_it ?? null),
+            ];
+        }
+        $auditBase['watchlist'] = $watchlistData;
+
         // Defensive: if PHP truncated the payload (max_input_vars) or the
         // client sent nothing, fail loudly instead of silently redirecting
         // back with no changes — that silent failure was the "save doesn't
@@ -100,9 +187,45 @@ class PageContentController extends Controller
                 'max_input_vars' => ini_get('max_input_vars'),
                 'post_max_size' => ini_get('post_max_size'),
             ]);
+            $this->appendSaveAudit($auditBase + [
+                'result' => 'empty',
+                'saved_count' => 0,
+                'skipped_count' => 0,
+            ]);
             return redirect()
-                ->route('admin.page-content.edit', $page)
+                ->route('admin.page-content.edit', ['page' => $page, '_t' => time()])
                 ->with('error', 'Nothing was saved — the form submission arrived empty. This often means PHP dropped the payload (max_input_vars limit). Check the server logs.');
+        }
+
+        // Partial-truncation guard: if the browser sent the full form but
+        // PHP silently truncated the nested values[] array at some per-host
+        // max_input_vars ceiling, we'd overwrite the DB with only the
+        // earlier fields — losing the user's edit on later fields without
+        // any visible error. Reject rather than partially write.
+        $receivedCount = count($values);
+        if ($expectedFieldCount > 20 && $receivedCount < (int) ceil($expectedFieldCount * 0.9)) {
+            $missingKeys = array_values(array_diff($textFieldKeys, array_keys($values)));
+            Log::warning('PageContent update received truncated payload', [
+                'page' => $page,
+                'expected' => $expectedFieldCount,
+                'received' => $receivedCount,
+                'missing_sample' => array_slice($missingKeys, 0, 10),
+                'max_input_vars' => ini_get('max_input_vars'),
+                'content_length' => $request->header('Content-Length'),
+            ]);
+            $this->appendSaveAudit($auditBase + [
+                'result' => 'truncated',
+                'saved_count' => 0,
+                'skipped_count' => 0,
+                'missing_keys' => $missingKeys,
+            ]);
+            return redirect()
+                ->route('admin.page-content.edit', ['page' => $page, '_t' => time()])
+                ->with('error', sprintf(
+                    'Save rejected — only %d of %d expected fields arrived at the server (PHP max_input_vars may have truncated the payload). Nothing was written so no data was lost.',
+                    $receivedCount,
+                    $expectedFieldCount
+                ));
         }
 
         // Build a map of key → type from the registry so we can store type
@@ -152,8 +275,15 @@ class PageContentController extends Controller
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
+            $this->appendSaveAudit($auditBase + [
+                'result' => 'exception',
+                'error_class' => get_class($e),
+                'error_message' => $e->getMessage(),
+                'saved_count' => $saved,
+                'skipped_count' => count($skipped),
+            ]);
             return redirect()
-                ->route('admin.page-content.edit', $page)
+                ->route('admin.page-content.edit', ['page' => $page, '_t' => time()])
                 ->with('error', 'Save failed: ' . $e->getMessage());
         }
 
@@ -161,6 +291,30 @@ class PageContentController extends Controller
         // bust if a write happens inside a transaction on certain DBs. Bust
         // once more after commit so the public site is guaranteed fresh.
         PageContent::clearCache();
+
+        // Stale-cache defense for shared hosting (Hostinger in particular):
+        // any of Laravel's artisan-cached layers (config, routes, views) can
+        // silently serve pre-change content if they were generated before
+        // the latest deploy. Clearing them on every successful admin save
+        // guarantees the next public page render reads from live source.
+        // Cheap — these caches regenerate on first request.
+        try {
+            \Illuminate\Support\Facades\Cache::flush();
+        } catch (\Throwable) { /* cache driver unavailable — skip */ }
+        // Compiled-views cache is a directory of .php files; wipe it so
+        // blade re-compiles with the fresh pcontent values.
+        $viewsCache = base_path('storage/framework/views');
+        if (is_dir($viewsCache)) {
+            foreach (glob($viewsCache . '/*.php') ?: [] as $f) {
+                @unlink($f);
+            }
+        }
+        // OPcache holds compiled PHP bytecode, including the pcontent
+        // resolver's generated closures. Reset so the next request reads
+        // the current source.
+        if (function_exists('opcache_reset')) {
+            @opcache_reset();
+        }
 
         $message = "Content saved — {$saved} field" . ($saved === 1 ? '' : 's') . " written.";
         if (!empty($skipped)) {
@@ -171,8 +325,34 @@ class PageContentController extends Controller
             $message .= ' (' . count($skipped) . ' unknown key' . (count($skipped) === 1 ? '' : 's') . ' skipped — see server log.)';
         }
 
+        // Capture the post-save DB state for watchlist keys so the
+        // save-audit endpoint shows both "what was submitted" and "what
+        // ended up in DB" side-by-side — pinpointing cache vs form vs DB
+        // layer problems without further guessing.
+        $watchlistAfter = [];
+        $trunc = fn ($v) => $v === null ? null : mb_substr((string) $v, 0, 200);
+        foreach (array_keys($watchlistData) as $wk) {
+            $row = PageContent::where('key', $wk)->first();
+            $watchlistAfter[$wk] = [
+                'db_after_en' => $trunc($row?->value_en),
+                'db_after_ar' => $trunc($row?->value_ar),
+                'db_after_it' => $trunc($row?->value_it),
+            ];
+        }
+
+        $this->appendSaveAudit($auditBase + [
+            'result' => 'saved',
+            'saved_count' => $saved,
+            'skipped_count' => count($skipped),
+            'skipped_sample' => array_slice($skipped, 0, 6),
+            'flash_message' => $message,
+            'watchlist_after' => $watchlistAfter,
+        ]);
+
+        // `_t` makes the redirect URL unique so LiteSpeed / browsers cannot
+        // serve a stale pre-save HTML copy of this edit form after the POST.
         return redirect()
-            ->route('admin.page-content.edit', $page)
+            ->route('admin.page-content.edit', ['page' => $page, '_t' => time()])
             ->with('success', $message);
     }
 
@@ -192,6 +372,62 @@ class PageContentController extends Controller
     }
 
     // ─── Internals ─────────────────────────────────────────────
+
+    /**
+     * Audit log path. Stored under storage/app/ (writable on all hosts
+     * including Hostinger shared). Bounded size — we keep at most 30 entries
+     * so the file never balloons.
+     */
+    private const AUDIT_FILE = 'admin-save-audit.jsonl';
+    private const AUDIT_MAX_ENTRIES = 30;
+
+    /**
+     * Append one JSON line describing a save attempt. Keeps the file bounded
+     * by trimming oldest entries when over AUDIT_MAX_ENTRIES.
+     * Best-effort — never throws, because a logging failure must not break
+     * a successful save response.
+     */
+    private function appendSaveAudit(array $entry): void
+    {
+        try {
+            $path = storage_path('app/' . self::AUDIT_FILE);
+            if (!is_dir(dirname($path))) {
+                @mkdir(dirname($path), 0775, true);
+            }
+            // Wipe stale pre-deploy entries: if the audit file is older than
+            // the current deploy (public/index.php), any existing entries were
+            // written before this code shipped and will confuse diagnosis.
+            $deployMark = is_file(public_path('index.php')) ? filemtime(public_path('index.php')) : 0;
+            $fileMtime = is_file($path) ? filemtime($path) : 0;
+            $lines = (is_file($path) && $fileMtime >= $deployMark)
+                ? (file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [])
+                : [];
+            $lines[] = json_encode($entry, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            if (count($lines) > self::AUDIT_MAX_ENTRIES) {
+                $lines = array_slice($lines, -self::AUDIT_MAX_ENTRIES);
+            }
+            @file_put_contents($path, implode(PHP_EOL, $lines) . PHP_EOL, LOCK_EX);
+        } catch (\Throwable) { /* swallow — never block a save over a log write */ }
+    }
+
+    /**
+     * Read recent audit entries (latest first). Used by the public
+     * healthcheck endpoint to expose server-side save state to a remote
+     * operator without SSH access.
+     */
+    public static function recentAudits(int $limit = 10): array
+    {
+        $path = storage_path('app/' . self::AUDIT_FILE);
+        if (!is_file($path)) return [];
+        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+        $lines = array_slice($lines, -$limit);
+        $out = [];
+        foreach (array_reverse($lines) as $line) {
+            $decoded = json_decode($line, true);
+            if (is_array($decoded)) $out[] = $decoded;
+        }
+        return $out;
+    }
 
     private function pageOrAbort(string $page): array
     {
