@@ -138,6 +138,39 @@
     @stack('scripts')
 
     {{--
+        Reset-to-default helper for page-content fields. Previously a nested
+        <form> inside the outer "Save all" form — HTML forbids nested forms,
+        so the browser silently closed the outer form at the reset button's
+        <form> tag. Any field following the first customized (overridden)
+        field was then outside the form and never submitted on Save All —
+        which is why home page saves only ever wrote the first 6 fields.
+    --}}
+    <script>
+        function delosResetPageContentField(key, url) {
+            if (!confirm('Reset this field back to the default? Your custom value will be lost.')) return;
+            const tokenEl = document.querySelector('meta[name="csrf-token"]');
+            const token = tokenEl ? tokenEl.getAttribute('content') : '';
+            const params = new URLSearchParams({ _token: token, key });
+            fetch(url, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'text/html,application/xhtml+xml',
+                    'X-CSRF-TOKEN': token,
+                },
+                body: params.toString(),
+            }).then((r) => {
+                if (r.ok || r.redirected || r.status === 302) {
+                    window.location.reload();
+                } else {
+                    alert('Reset failed with HTTP ' + r.status + '. Please reload and try again.');
+                }
+            }).catch((e) => alert('Network error: ' + e.message));
+        }
+    </script>
+
+    {{--
         CSRF token refresh. Long admin forms (home page editor has 278+
         fields) can take longer than the session lifetime to fill out,
         causing the embedded _token to go stale. When the admin clicks

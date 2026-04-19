@@ -135,14 +135,18 @@
             <p class="text-[10px] tracking-[0.15em] uppercase text-delos-muted/60 font-mono mt-0.5 truncate">{{ $key }} · {{ $type }}</p>
         </div>
         @if($row && $isOverridden)
-            <form action="{{ route('admin.page-content.reset', $pageSlug) }}" method="POST" class="inline flex-shrink-0"
-                  onsubmit="return confirm('Reset this field back to the default? Your custom value will be lost.');">
-                @csrf
-                <input type="hidden" name="key" value="{{ $key }}">
-                <button type="submit" class="text-[10px] tracking-[0.15em] uppercase text-delos-muted hover:text-red-600 transition-colors whitespace-nowrap">
-                    Reset to default
-                </button>
-            </form>
+            {{--
+                JS-fetch instead of a nested <form>. HTML forbids nested forms and
+                browsers implicitly close the outer "Save all" form at the inner
+                <form> opening tag — that silently killed every admin save on
+                pages where any field was customized, because 48 of 54 inputs
+                ended up outside the main form and were never submitted.
+                delosResetPageContentField() is defined in admin/layout.blade.php.
+            --}}
+            <button type="button" class="text-[10px] tracking-[0.15em] uppercase text-delos-muted hover:text-red-600 transition-colors whitespace-nowrap flex-shrink-0"
+                    onclick="delosResetPageContentField({{ Js::from($key) }}, {{ Js::from(route('admin.page-content.reset', $pageSlug)) }})">
+                Reset to default
+            </button>
         @endif
     </div>
 
