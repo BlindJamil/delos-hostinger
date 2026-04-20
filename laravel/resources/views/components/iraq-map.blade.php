@@ -160,6 +160,8 @@
                         >
                             <div xmlns="http://www.w3.org/1999/xhtml"
                                  class="iraq-map__pin-sublabel"
+                                 lang="{{ app()->getLocale() }}"
+                                 dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}"
                                  style="text-align: {{ $htmlAlign }};">{{ $b->localized('established') }}</div>
                         </foreignObject>
                     @endif

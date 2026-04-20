@@ -505,10 +505,18 @@ body.has-custom-cursor .iraq-map__pin-group {
 
 /* --- RTL flipping ------------------------------------------- */
 
-/* Labels + sublabels are now HTML elements via <foreignObject>; the
- * browser handles RTL/LTR via the `dir` attribute on the div itself,
- * so no CSS direction override is needed. Only the sublabel (year
- * digits) stays LTR across locales for consistent digit rendering. */
-[dir="rtl"] .iraq-map__pin-sublabel {
-    direction: ltr;
+/* Sublabel on /en: "Est. 2020" rendered LTR with 0.4em tracking + Inter
+ * looks like a proper small-caps caption. On /ar the content is
+ * "تأسّس 2020" — Arabic + digits mixed — and the same styling breaks it:
+ *   • letter-spacing disconnects Arabic ligatures (letters isolated)
+ *   • Inter has zero Arabic glyphs (falls through to system default)
+ *   • uppercase does nothing on Arabic
+ *   • force-LTR reverses the Arabic word order
+ * On Arabic pages we restore the sublabel to a normal RTL Cairo run. */
+[lang="ar"] .iraq-map__pin-sublabel {
+    font-family: 'Cairo', 'Amiri', ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0;
+    text-transform: none;
+    direction: rtl;
+    font-size: 11px;
 }
