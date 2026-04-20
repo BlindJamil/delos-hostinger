@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminUserController as AdminAdminUserController;
-use App\Http\Controllers\Admin\ApplyIraqiCopyController as AdminApplyIraqiCopyController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\BranchController as AdminBranchController;
 use App\Http\Controllers\Admin\BrandController as AdminBrandController;
@@ -272,10 +271,6 @@ Route::prefix('verify-admin-panel-7k3m')->name('admin.')->group(function () {
         Route::get('/self-test', [AdminSelfTestController::class, 'show'])->name('self-test');
         Route::post('/self-test', [AdminSelfTestController::class, 'run'])->name('self-test.run');
 
-        // Iraqi-flavored Arabic copy refresh — one-click preview + apply.
-        // Reads from IraqiArabicContentSeeder so dev/prod stay in lockstep.
-        Route::get('/apply-iraqi-copy', [AdminApplyIraqiCopyController::class, 'show'])->name('apply-iraqi-copy');
-        Route::post('/apply-iraqi-copy', [AdminApplyIraqiCopyController::class, 'apply'])->name('apply-iraqi-copy.apply');
 
         // CSRF refresh — returns a fresh token so long editing sessions
         // (home page editor with 278+ fields) can update their form's
