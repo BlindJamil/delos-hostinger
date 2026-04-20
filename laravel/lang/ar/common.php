@@ -43,7 +43,7 @@ return [
             'phone' => '0750 200 1003',
         ],
         'other_cities' => 'كركوك · السليمانية · بغداد',
-        'partners_heading' => 'الشركاء الإيطاليون',
+        'partners_heading' => 'الوكلاء الإيطاليون',
         'copyright' => 'ديلوس إنترناشونال. جميع الحقوق محفوظة.',
         'bottom_tagline' => 'حلول الفخامة الإيطالية — العراق',
     ],
@@ -51,7 +51,7 @@ return [
     'ctas' => [
         'learn_more' => 'اقرأ المزيد',
         'view_all_projects' => 'عرض جميع المشاريع',
-        'explore_partners' => 'تعرّف على شركائنا',
+        'explore_partners' => 'تعرّف على وكلائنا',
         'book_consultation' => 'احجز استشارة',
         'call_us' => 'اتّصل بنا: 1701 100 0750',
         'visit_showroom' => 'زُر معرضنا',
