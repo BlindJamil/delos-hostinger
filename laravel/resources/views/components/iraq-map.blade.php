@@ -72,8 +72,12 @@
                     $labelAnchor = $pin['x'] > 780 ? 'end' : 'start';
                     $labelDx = $pin['x'] > 780 ? -14 : 14;
                     // Default: label sits beside the pin at y=4.
+                    // sublabelDy bumped 20 → 28 so the year caption sits
+                    // clearly below the 22px city name without overlapping
+                    // its descenders (the bigger gap also suits Arabic
+                    // which has taller glyphs than the Latin baseline).
                     $labelDy = 4;
-                    $sublabelDy = 20;
+                    $sublabelDy = 28;
                     $connectorY2 = 0;
                     // Collision check — if any earlier pin sits within 14 SVG units
                     // vertically AND points its label the same direction, push this
@@ -82,7 +86,7 @@
                         $priorSide = $prior['x'] > 780 ? 'end' : 'start';
                         if (abs($pin['y'] - $prior['y']) < 14 && $priorSide === $labelAnchor) {
                             $labelDy = 26;
-                            $sublabelDy = 42;
+                            $sublabelDy = 50;
                             $connectorY2 = 16;
                             break;
                         }
@@ -120,20 +124,20 @@
                          of SVG's brittle Arabic rendering. `dir` + `lang` on
                          the inner div let the browser handle RTL/LTR naturally. --}}
                     @php
-                        // HTML labels need a bounding box. Width 160 covers the
-                        // longest city name at 22px Cairo/Cormorant. Height 36
-                        // gives the glyphs vertical room (Arabic has tall marks).
-                        // When labelAnchor is 'end', the text must sit to the
-                        // LEFT of the anchor point → shift the foreignObject
-                        // left by its width. Otherwise it sits to the right.
+                        // HTML labels inside <foreignObject>. Keep the boxes
+                        // TIGHT around their text so the label and sublabel
+                        // can sit close but never overlap. Height values:
+                        //  • label box: 26 — fits 22px font + line-height 1.2
+                        //  • sublabel box: 14 — fits 11px font + line-height 1.2
+                        // foreignObject's y is the top edge; to make the DIV
+                        // text baseline align with the old SVG-text baseline
+                        // at $labelDy, offset up by roughly 80% of font-size.
                         $boxWidth = 160;
-                        $boxHeight = 36;
+                        $boxHeight = 26;
+                        $boxHeightSub = 14;
                         $boxX = $labelAnchor === 'end' ? $labelDx - $boxWidth : $labelDx;
-                        // Vertically center on the old SVG baseline: SVG text y
-                        // was the baseline, foreignObject y is the top edge, so
-                        // shift up by ~half font-size.
-                        $boxY = $labelDy - ($boxHeight / 2) + 2;
-                        $boxYSub = $sublabelDy - ($boxHeight / 2) + 2;
+                        $boxY = $labelDy - 18;      // 22px font baseline ≈ top + 18
+                        $boxYSub = $sublabelDy - 9; // 11px font baseline ≈ top + 9
                         $htmlAlign = $labelAnchor === 'end' ? 'right' : 'left';
                     @endphp
                     <foreignObject
@@ -155,7 +159,7 @@
                             x="{{ $boxX }}"
                             y="{{ $boxYSub }}"
                             width="{{ $boxWidth }}"
-                            height="{{ $boxHeight }}"
+                            height="{{ $boxHeightSub }}"
                             style="overflow: visible;"
                         >
                             <div xmlns="http://www.w3.org/1999/xhtml"
