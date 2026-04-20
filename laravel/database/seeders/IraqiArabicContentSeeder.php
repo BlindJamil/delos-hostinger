@@ -529,7 +529,7 @@ class IraqiArabicContentSeeder extends Seeder
         'common.nav.projects' => ['page'=>'layout','section'=>'nav','type'=>'text','value_ar'=>'المشاريع'],
         'common.nav.about' => ['page'=>'layout','section'=>'nav','type'=>'text','value_ar'=>'عن ديلوس'],
         'common.nav.branches' => ['page'=>'layout','section'=>'nav','type'=>'text','value_ar'=>'الفروع'],
-        'common.nav.contact' => ['page'=>'layout','section'=>'nav','type'=>'text','value_ar'=>'تواصلوا وياه'],
+        'common.nav.contact' => ['page'=>'layout','section'=>'nav','type'=>'text','value_ar'=>'تواصل معنا'],
         'common.nav.menu_toggle' => ['page'=>'layout','section'=>'nav','type'=>'text','value_ar'=>'فتح قائمة التنقّل'],
 
         'common.marquee.tagline' => ['page'=>'layout','section'=>'marquee','type'=>'text',
