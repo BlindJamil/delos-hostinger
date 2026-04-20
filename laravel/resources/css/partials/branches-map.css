@@ -494,8 +494,12 @@ body.has-custom-cursor .iraq-map__pin-group {
 
 /* --- RTL flipping ------------------------------------------- */
 
-[dir="rtl"] .iraq-map__pin-label,
+/* Only the sublabel (year digits) stays LTR. The pin-label contains the
+ * city name which is pure Arabic on /ar — forcing direction:ltr breaks
+ * Arabic letter-shaping and visually reverses the letters (e.g. "أربيل"
+ * rendered as "ليبرأ" in the SVG text). Let the label inherit the
+ * surrounding RTL direction so the shaping engine connects letters
+ * correctly. */
 [dir="rtl"] .iraq-map__pin-sublabel {
-    /* Labels keep LTR text direction since city names mix scripts */
     direction: ltr;
 }
