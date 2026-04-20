@@ -40,7 +40,7 @@
                 <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">Password @if(!$isEdit)<span class="text-red-500">*</span>@endif</label>
                 <input type="password" name="password" autocomplete="new-password" @if(!$isEdit) required @endif
                        class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm font-mono focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
-                <p class="text-xs text-delos-muted mt-1">Min 12 chars · letters · numbers · symbols</p>
+                <p class="text-xs text-delos-muted mt-1">Min 12 chars · letters · symbols</p>
                 @error('password')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
             </div>
 

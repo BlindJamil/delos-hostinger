@@ -30,7 +30,6 @@ class AdminUserRequest extends FormRequest
                 'string',
                 Password::min(12)
                     ->letters()
-                    ->numbers()
                     ->symbols(),
                 'confirmed',
             ],

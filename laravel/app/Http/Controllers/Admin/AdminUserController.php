@@ -112,7 +112,7 @@ class AdminUserController extends Controller implements HasMiddleware
         $request->validate([
             'password' => [
                 'required', 'string',
-                Password::min(12)->letters()->numbers()->symbols(),
+                Password::min(12)->letters()->symbols(),
                 'confirmed',
             ],
         ]);

@@ -99,7 +99,7 @@
     </div>
 
     <div class="mt-6 p-4 bg-delos-ivory/30 border border-delos-dark/5 rounded-xl text-xs text-delos-muted leading-relaxed">
-        <strong class="text-delos-dark-2/80">Password policy:</strong> at least 12 characters, including letters, numbers, and symbols.
+        <strong class="text-delos-dark-2/80">Password policy:</strong> at least 12 characters, including letters and symbols.
         <strong class="text-delos-dark-2/80 ml-4">Super admin</strong> can manage other admins; regular admins can edit content only.
         <strong class="text-delos-dark-2/80 ml-4">Lockout:</strong> 5 failed login attempts from one IP triggers a 15-minute ban.
     </div>
