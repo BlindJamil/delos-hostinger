@@ -239,22 +239,32 @@ body.has-custom-cursor .iraq-map__pin-group {
 }
 
 .iraq-map__pin-label {
+    /* The label is now an HTML <div> inside <foreignObject>, so use `color`
+     * for text color. `fill` kept as a fallback in case any upstream env
+     * still renders SVG <text>. Arabic shaping now uses the browser's
+     * native HTML text renderer which handles RTL + letter joining
+     * perfectly — no more isolated/reversed letters. */
+    color: var(--color-delos-dark, #3D2E2A);
     fill: var(--color-delos-dark, #3D2E2A);
     font-family: var(--font-serif-delos, 'Cormorant Garamond', serif);
     font-size: 22px;
     font-weight: 400;
     letter-spacing: 0.02em;
+    line-height: 1.2;
     pointer-events: none;
-    transition: fill 0.3s ease;
+    transition: color 0.3s ease, fill 0.3s ease;
+    white-space: nowrap;
 }
 
 .iraq-map__pin-sublabel {
+    color: rgba(60, 46, 42, 0.5);
     fill: rgba(60, 46, 42, 0.5);
     font-family: 'Inter', sans-serif;
     font-size: 9px;
     letter-spacing: 0.4em;
     text-transform: uppercase;
     pointer-events: none;
+    white-space: nowrap;
 }
 
 /* Hover / active state — JS adds .is-active to a group when its matching
@@ -268,6 +278,7 @@ body.has-custom-cursor .iraq-map__pin-group {
 
 .iraq-map__pin-group:hover .iraq-map__pin-label,
 .iraq-map__pin-group.is-active .iraq-map__pin-label {
+    color: var(--color-delos-gold, #C49A7A);
     fill: var(--color-delos-gold, #C49A7A);
 }
 
@@ -494,26 +505,10 @@ body.has-custom-cursor .iraq-map__pin-group {
 
 /* --- RTL flipping ------------------------------------------- */
 
-/* Only the sublabel (year digits) stays LTR. */
+/* Labels + sublabels are now HTML elements via <foreignObject>; the
+ * browser handles RTL/LTR via the `dir` attribute on the div itself,
+ * so no CSS direction override is needed. Only the sublabel (year
+ * digits) stays LTR across locales for consistent digit rendering. */
 [dir="rtl"] .iraq-map__pin-sublabel {
     direction: ltr;
-}
-
-/* SVG <text> elements do NOT reliably inherit `dir` from the HTML root
- * in all browsers, and `Cormorant Garamond` (first in the serif fallback
- * chain) contains zero Arabic glyphs — so the browser silently falls
- * through to a system serif that renders each Arabic letter in isolated
- * form (ك و ك ر ك instead of كركوك).
- *
- * Two forces combine here to fix it:
- *   1. Explicit direction:rtl so the browser's Arabic shaping engine
- *      treats the label as an RTL run.
- *   2. Font stack forced to Cairo/Amiri FIRST (bypassing Cormorant), so
- *      shaping lookups go to a font that actually has Arabic glyphs.
- * !important beats the base .iraq-map__pin-label rule.
- */
-[lang="ar"] .iraq-map__pin-label {
-    direction: rtl !important;
-    unicode-bidi: isolate !important;
-    font-family: 'Cairo', 'Amiri', ui-sans-serif, system-ui, sans-serif !important;
 }

@@ -115,30 +115,53 @@
                         <circle class="iraq-map__pin" r="{{ $radius }}" />
                     </a>
 
-                    {{-- City label (Cormorant, positioned outside pin).
-                         lang+dir are explicit so SVG's text-shaping engine
-                         handles Arabic city names correctly. Without this,
-                         some browsers render Arabic letters isolated/backwards
-                         because SVG <text> does NOT reliably inherit the HTML
-                         root's dir="rtl". --}}
-                    <text
-                        class="iraq-map__pin-label"
-                        x="{{ $labelDx }}"
-                        y="{{ $labelDy }}"
-                        text-anchor="{{ $labelAnchor }}"
-                        lang="{{ app()->getLocale() }}"
-                        xml:lang="{{ app()->getLocale() }}"
-                        direction="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}"
-                    >{{ $name }}</text>
+                    {{-- City label + year, rendered as HTML inside <foreignObject>
+                         so Arabic text gets full browser text-shaping instead
+                         of SVG's brittle Arabic rendering. `dir` + `lang` on
+                         the inner div let the browser handle RTL/LTR naturally. --}}
+                    @php
+                        // HTML labels need a bounding box. Width 160 covers the
+                        // longest city name at 22px Cairo/Cormorant. Height 36
+                        // gives the glyphs vertical room (Arabic has tall marks).
+                        // When labelAnchor is 'end', the text must sit to the
+                        // LEFT of the anchor point → shift the foreignObject
+                        // left by its width. Otherwise it sits to the right.
+                        $boxWidth = 160;
+                        $boxHeight = 36;
+                        $boxX = $labelAnchor === 'end' ? $labelDx - $boxWidth : $labelDx;
+                        // Vertically center on the old SVG baseline: SVG text y
+                        // was the baseline, foreignObject y is the top edge, so
+                        // shift up by ~half font-size.
+                        $boxY = $labelDy - ($boxHeight / 2) + 2;
+                        $boxYSub = $sublabelDy - ($boxHeight / 2) + 2;
+                        $htmlAlign = $labelAnchor === 'end' ? 'right' : 'left';
+                    @endphp
+                    <foreignObject
+                        x="{{ $boxX }}"
+                        y="{{ $boxY }}"
+                        width="{{ $boxWidth }}"
+                        height="{{ $boxHeight }}"
+                        style="overflow: visible;"
+                    >
+                        <div xmlns="http://www.w3.org/1999/xhtml"
+                             class="iraq-map__pin-label"
+                             lang="{{ app()->getLocale() }}"
+                             dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}"
+                             style="text-align: {{ $htmlAlign }};">{{ $name }}</div>
+                    </foreignObject>
 
-                    {{-- Sub-label: established year, smaller --}}
                     @if($b->localized('established'))
-                        <text
-                            class="iraq-map__pin-sublabel"
-                            x="{{ $labelDx }}"
-                            y="{{ $sublabelDy }}"
-                            text-anchor="{{ $labelAnchor }}"
-                        >{{ $b->localized('established') }}</text>
+                        <foreignObject
+                            x="{{ $boxX }}"
+                            y="{{ $boxYSub }}"
+                            width="{{ $boxWidth }}"
+                            height="{{ $boxHeight }}"
+                            style="overflow: visible;"
+                        >
+                            <div xmlns="http://www.w3.org/1999/xhtml"
+                                 class="iraq-map__pin-sublabel"
+                                 style="text-align: {{ $htmlAlign }};">{{ $b->localized('established') }}</div>
+                        </foreignObject>
                     @endif
                 </g>
             @endforeach
