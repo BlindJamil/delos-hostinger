@@ -67,7 +67,7 @@ return [
 
     'employees' => [
         'overline' => 'Il nostro team',
-        'heading' => 'I migliori del mese',
+        'heading' => "I migliori dell'anno",
         'sub' => 'Un riconoscimento ai professionisti che stanno dietro a ogni progetto Delos eccezionale.',
         'items' => [
             'ahmed_k' => [

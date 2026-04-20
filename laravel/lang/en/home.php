@@ -72,7 +72,7 @@ return [
 
     'employees' => [
         'overline' => 'Our Team',
-        'heading' => 'Best Employees of the Month',
+        'heading' => 'Best Employees of the Year',
         'sub' => 'Recognizing the dedicated professionals behind every exceptional Delos project.',
         'items' => [
             'ahmed_k' => [

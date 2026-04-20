@@ -106,7 +106,7 @@ class IraqiArabicContentSeeder extends Seeder
             'value_ar'=>'أناقة خارجية خالدة، مستوحاة من دفء ساحل البحر المتوسّط.'],
 
         'home.employees.overline' => ['page'=>'home','section'=>'employees','type'=>'text',
-            'value_ar'=>'أفضل موظفي الشهر'],
+            'value_ar'=>'أفضل موظفي السنة'],
         'home.employees.heading' => ['page'=>'home','section'=>'employees','type'=>'text',
             'value_ar'=>'فريقنا هو سرّ التميّز'],
         'home.employees.sub' => ['page'=>'home','section'=>'employees','type'=>'textarea',
