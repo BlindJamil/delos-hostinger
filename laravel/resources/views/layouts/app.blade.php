@@ -308,7 +308,7 @@
                                     <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ $footerBranch->localized('address') }}</p>
                                 @endif
                                 @if($footerBranch->phone)
-                                    <p class="font-sans text-delos-muted text-xs">{{ $footerBranch->phone }}</p>
+                                    <p class="font-sans text-delos-muted text-xs" dir="ltr" style="unicode-bidi: isolate;">{{ $footerBranch->phone }}</p>
                                 @endif
                             </li>
                         @empty
@@ -318,12 +318,12 @@
                             <li>
                                 <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.showroom_erbil_soran.title') }}</p>
                                 <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ pcontent('common.footer.showroom_erbil_soran.address') }}</p>
-                                <p class="font-sans text-delos-muted text-xs">{{ pcontent('common.footer.showroom_erbil_soran.phone') }}</p>
+                                <p class="font-sans text-delos-muted text-xs" dir="ltr" style="unicode-bidi: isolate;">{{ pcontent('common.footer.showroom_erbil_soran.phone') }}</p>
                             </li>
                             <li>
                                 <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.showroom_erbil_gulan.title') }}</p>
                                 <p class="font-sans text-delos-muted text-xs leading-relaxed">{{ pcontent('common.footer.showroom_erbil_gulan.address') }}</p>
-                                <p class="font-sans text-delos-muted text-xs">{{ pcontent('common.footer.showroom_erbil_gulan.phone') }}</p>
+                                <p class="font-sans text-delos-muted text-xs" dir="ltr" style="unicode-bidi: isolate;">{{ pcontent('common.footer.showroom_erbil_gulan.phone') }}</p>
                             </li>
                             <li>
                                 <p class="font-sans text-delos-gold text-[10px] tracking-[0.2em] uppercase mb-1">{{ pcontent('common.footer.other_cities') }}</p>

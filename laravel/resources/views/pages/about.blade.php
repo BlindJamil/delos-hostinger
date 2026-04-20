@@ -304,7 +304,7 @@
                         {{ pcontent("about.branches.items.{$slug}.city") }}
                     </h3>
                     <p class="text-delos-muted text-xs leading-relaxed mb-2" style="font-family: 'Inter', sans-serif;">{{ pcontent("about.branches.items.{$slug}.address") }}</p>
-                    <p class="text-delos-gold/70 text-xs" style="font-family: 'Inter', sans-serif;">{{ pcontent("about.branches.items.{$slug}.phone") }}</p>
+                    <p class="text-delos-gold/70 text-xs" dir="ltr" style="font-family: 'Inter', sans-serif; unicode-bidi: isolate;">{{ pcontent("about.branches.items.{$slug}.phone") }}</p>
                 </div>
             @endforeach
         </div>
