@@ -115,12 +115,20 @@
                         <circle class="iraq-map__pin" r="{{ $radius }}" />
                     </a>
 
-                    {{-- City label (Cormorant, positioned outside pin) --}}
+                    {{-- City label (Cormorant, positioned outside pin).
+                         lang+dir are explicit so SVG's text-shaping engine
+                         handles Arabic city names correctly. Without this,
+                         some browsers render Arabic letters isolated/backwards
+                         because SVG <text> does NOT reliably inherit the HTML
+                         root's dir="rtl". --}}
                     <text
                         class="iraq-map__pin-label"
                         x="{{ $labelDx }}"
                         y="{{ $labelDy }}"
                         text-anchor="{{ $labelAnchor }}"
+                        lang="{{ app()->getLocale() }}"
+                        xml:lang="{{ app()->getLocale() }}"
+                        direction="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}"
                     >{{ $name }}</text>
 
                     {{-- Sub-label: established year, smaller --}}

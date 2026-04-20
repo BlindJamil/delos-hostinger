@@ -494,12 +494,26 @@ body.has-custom-cursor .iraq-map__pin-group {
 
 /* --- RTL flipping ------------------------------------------- */
 
-/* Only the sublabel (year digits) stays LTR. The pin-label contains the
- * city name which is pure Arabic on /ar — forcing direction:ltr breaks
- * Arabic letter-shaping and visually reverses the letters (e.g. "أربيل"
- * rendered as "ليبرأ" in the SVG text). Let the label inherit the
- * surrounding RTL direction so the shaping engine connects letters
- * correctly. */
+/* Only the sublabel (year digits) stays LTR. */
 [dir="rtl"] .iraq-map__pin-sublabel {
     direction: ltr;
+}
+
+/* SVG <text> elements do NOT reliably inherit `dir` from the HTML root
+ * in all browsers, and `Cormorant Garamond` (first in the serif fallback
+ * chain) contains zero Arabic glyphs — so the browser silently falls
+ * through to a system serif that renders each Arabic letter in isolated
+ * form (ك و ك ر ك instead of كركوك).
+ *
+ * Two forces combine here to fix it:
+ *   1. Explicit direction:rtl so the browser's Arabic shaping engine
+ *      treats the label as an RTL run.
+ *   2. Font stack forced to Cairo/Amiri FIRST (bypassing Cormorant), so
+ *      shaping lookups go to a font that actually has Arabic glyphs.
+ * !important beats the base .iraq-map__pin-label rule.
+ */
+[lang="ar"] .iraq-map__pin-label {
+    direction: rtl !important;
+    unicode-bidi: isolate !important;
+    font-family: 'Cairo', 'Amiri', ui-sans-serif, system-ui, sans-serif !important;
 }
