@@ -21,7 +21,17 @@ class SiteSettingsSeeder extends Seeder
 {
     public function run(): void
     {
-        $settings = [
+        foreach (static::rows() as $row) {
+            SiteSetting::firstOrCreate(
+                ['key' => $row['key']],
+                $row
+            );
+        }
+    }
+
+    public static function rows(): array
+    {
+        return [
             // ─── General ─────────────────────────────────────────────
             [
                 'key' => 'site_tagline',
@@ -112,12 +122,5 @@ class SiteSettingsSeeder extends Seeder
                 'sort_order' => 50,
             ],
         ];
-
-        foreach ($settings as $row) {
-            SiteSetting::firstOrCreate(
-                ['key' => $row['key']],
-                $row
-            );
-        }
     }
 }

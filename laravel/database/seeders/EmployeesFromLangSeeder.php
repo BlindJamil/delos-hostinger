@@ -19,7 +19,17 @@ class EmployeesFromLangSeeder extends Seeder
 {
     public function run(): void
     {
-        $seed = [
+        foreach (static::rows() as $row) {
+            Employee::firstOrCreate(
+                ['name_en' => $row['name_en']],
+                $row
+            );
+        }
+    }
+
+    public static function rows(): array
+    {
+        return [
             [
                 'name_en' => 'Ahmed K.',
                 'name_ar' => 'أحمد ك.',
@@ -66,12 +76,5 @@ class EmployeesFromLangSeeder extends Seeder
                 'active' => true,
             ],
         ];
-
-        foreach ($seed as $row) {
-            Employee::firstOrCreate(
-                ['name_en' => $row['name_en']],
-                $row
-            );
-        }
     }
 }

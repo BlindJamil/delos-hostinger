@@ -21,7 +21,24 @@ class BranchesFromLangSeeder extends Seeder
 {
     public function run(): void
     {
-        $branches = [
+        foreach (static::rows() as $index => $row) {
+            $row['sort_order'] = ($index + 1) * 10;
+            $row['active'] = true;
+            Branch::firstOrCreate(
+                ['city_key' => $row['city_key']],
+                $row
+            );
+        }
+    }
+
+    /**
+     * Canonical branch rows — single source of truth for every seeder that
+     * needs this data (including the one-shot ResetArabicFromLangSeeder
+     * that reverts Arabic admin edits back to this formal MSA baseline).
+     */
+    public static function rows(): array
+    {
+        return [
             [
                 'city_key' => 'erbil',
                 'slug' => 'erbil',
@@ -104,14 +121,5 @@ class BranchesFromLangSeeder extends Seeder
                 'is_flagship' => false,
             ],
         ];
-
-        foreach ($branches as $index => $row) {
-            $row['sort_order'] = ($index + 1) * 10;
-            $row['active'] = true;
-            Branch::firstOrCreate(
-                ['city_key' => $row['city_key']],
-                $row
-            );
-        }
     }
 }

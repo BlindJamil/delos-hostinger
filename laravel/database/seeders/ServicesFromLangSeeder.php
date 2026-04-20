@@ -14,7 +14,19 @@ class ServicesFromLangSeeder extends Seeder
 {
     public function run(): void
     {
-        $services = [
+        foreach (static::rows() as $index => $row) {
+            $row['sort_order'] = ($index + 1) * 10;
+            $row['active'] = true;
+            Service::firstOrCreate(
+                ['slug' => $row['slug']],
+                $row
+            );
+        }
+    }
+
+    public static function rows(): array
+    {
+        return [
             [
                 'slug' => 'italian-kitchens',
                 'num' => '01',
@@ -106,14 +118,5 @@ class ServicesFromLangSeeder extends Seeder
                 'image' => 'lube-project-mauritius.jpg',
             ],
         ];
-
-        foreach ($services as $index => $row) {
-            $row['sort_order'] = ($index + 1) * 10;
-            $row['active'] = true;
-            Service::firstOrCreate(
-                ['slug' => $row['slug']],
-                $row
-            );
-        }
     }
 }

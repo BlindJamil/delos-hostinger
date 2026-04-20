@@ -18,7 +18,19 @@ class ProjectsFromLangSeeder extends Seeder
 {
     public function run(): void
     {
-        $projects = [
+        foreach (static::rows() as $index => $row) {
+            $row['sort_order'] = ($index + 1) * 10;
+            $row['active'] = true;
+            Project::firstOrCreate(
+                ['title_en' => $row['title_en']],
+                $row
+            );
+        }
+    }
+
+    public static function rows(): array
+    {
+        return [
             [
                 'title_en' => 'Villa Moderna Kitchen',
                 'title_ar' => 'مطبخ ڤيلّا موديرنا',
@@ -146,14 +158,5 @@ class ProjectsFromLangSeeder extends Seeder
                 'featured' => false,
             ],
         ];
-
-        foreach ($projects as $index => $row) {
-            $row['sort_order'] = ($index + 1) * 10;
-            $row['active'] = true;
-            Project::firstOrCreate(
-                ['title_en' => $row['title_en']],
-                $row
-            );
-        }
     }
 }

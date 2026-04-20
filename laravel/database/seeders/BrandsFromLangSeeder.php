@@ -14,7 +14,19 @@ class BrandsFromLangSeeder extends Seeder
 {
     public function run(): void
     {
-        $brands = [
+        foreach (static::rows() as $index => $row) {
+            $row['sort_order'] = ($index + 1) * 10;
+            $row['active'] = true;
+            Brand::firstOrCreate(
+                ['slug' => $row['slug']],
+                $row
+            );
+        }
+    }
+
+    public static function rows(): array
+    {
+        return [
             [
                 'slug' => 'lube',
                 'name' => 'LUBE',
@@ -149,14 +161,5 @@ class BrandsFromLangSeeder extends Seeder
                 'url' => 'https://www.faer.it/en/',
             ],
         ];
-
-        foreach ($brands as $index => $row) {
-            $row['sort_order'] = ($index + 1) * 10;
-            $row['active'] = true;
-            Brand::firstOrCreate(
-                ['slug' => $row['slug']],
-                $row
-            );
-        }
     }
 }
