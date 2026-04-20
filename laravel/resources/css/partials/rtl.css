@@ -57,6 +57,19 @@
     font-weight: 500 !important;
 }
 
+/* .text-overline is 0.6875rem (11px) — the marquee uses it, along with
+ * decorative section labels across the site. In Cairo at 11px the Arabic
+ * letters nearly disappeared — the marquee looked like it had empty
+ * slots because users literally couldn't see the text. Bump to ~13.5px
+ * on Arabic for legibility; small variant 8px → 11.5px. Weight already
+ * 600 on the base class, which Cairo handles fine at this size. */
+[lang="ar"] .text-overline {
+    font-size: 0.85rem !important;
+}
+[lang="ar"] .text-overline-sm {
+    font-size: 0.72rem !important;
+}
+
 /* Arabic doesn't have small-caps / uppercase distinction like Latin. */
 [lang="ar"] .uppercase,
 [lang="ar"] [class*="uppercase"] {
