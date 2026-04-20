@@ -26,6 +26,20 @@
     font-size: 1.02em;
 }
 
+/*
+ * Blade templates have ~59 inline `style="font-family: 'Inter', sans-serif;"`
+ * declarations to pin decorative overlines / subs to the Latin typeface.
+ * Inter has no Arabic glyphs, so on `/ar` pages the browser falls through
+ * to whatever system Arabic font it picks — which usually renders thinner
+ * and visually smaller than Cairo. Force Cairo inheritance whenever an
+ * inline Inter declaration is present under lang="ar". Attribute selectors
+ * beat inline styles once we combine them with !important.
+ */
+[lang="ar"] [style*="'Inter'"],
+[lang="ar"] [style*="Inter,"] {
+    font-family: 'Cairo', 'Inter', ui-sans-serif, system-ui, sans-serif !important;
+}
+
 /* Arabic doesn't have small-caps / uppercase distinction like Latin. */
 [lang="ar"] .uppercase,
 [lang="ar"] [class*="uppercase"] {
