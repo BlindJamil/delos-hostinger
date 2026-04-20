@@ -314,15 +314,15 @@ class IraqiArabicContentSeeder extends Seeder
         'about.branches.items.kirkuk.city' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'كركوك'],
         'about.branches.items.kirkuk.year' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'2021'],
         'about.branches.items.kirkuk.address' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'معرض كركوك'],
-        'about.branches.items.kirkuk.phone' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'تواصلوا وياه'],
+        'about.branches.items.kirkuk.phone' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'للتواصل يرجى الاتصال'],
         'about.branches.items.sulaymaniyah.city' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'السليمانية'],
         'about.branches.items.sulaymaniyah.year' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'2022'],
         'about.branches.items.sulaymaniyah.address' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'معرض السليمانية'],
-        'about.branches.items.sulaymaniyah.phone' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'تواصلوا وياه'],
+        'about.branches.items.sulaymaniyah.phone' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'للتواصل يرجى الاتصال'],
         'about.branches.items.baghdad.city' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'بغداد'],
         'about.branches.items.baghdad.year' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'2024'],
         'about.branches.items.baghdad.address' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'معرض بغداد'],
-        'about.branches.items.baghdad.phone' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'تواصلوا وياه'],
+        'about.branches.items.baghdad.phone' => ['page'=>'about','section'=>'branches','type'=>'text','value_ar'=>'للتواصل يرجى الاتصال'],
 
         // ═══════════════════════════════════════════════════════════
         //  SERVICES
@@ -429,9 +429,9 @@ class IraqiArabicContentSeeder extends Seeder
         //  CONTACT
         // ═══════════════════════════════════════════════════════════
 
-        'contact.hero.overline' => ['page'=>'contact','section'=>'hero','type'=>'text','value_ar'=>'تواصلوا وياه'],
+        'contact.hero.overline' => ['page'=>'contact','section'=>'hero','type'=>'text','value_ar'=>'تواصل معنا'],
         'contact.hero.heading_1' => ['page'=>'contact','section'=>'hero','type'=>'text',
-            'value_ar'=>'تواصلوا وياه.'],
+            'value_ar'=>'تواصل معنا.'],
         'contact.hero.heading_accent' => ['page'=>'contact','section'=>'hero','type'=>'text',
             'value_ar'=>'إحنا موجودين الكم.'],
 
@@ -445,7 +445,7 @@ class IraqiArabicContentSeeder extends Seeder
             'value_ar'=>'خبيرنا راح يتواصل وياك خلال 24 ساعة، حتى يرتّب الك استشارة منزلية مجّانية وتصميم مفهوم ثلاثي الأبعاد.'],
 
         'contact.form.method_legend' => ['page'=>'contact','section'=>'form','type'=>'text',
-            'value_ar'=>'شلون تحب تتواصل وياه؟'],
+            'value_ar'=>'كيف تفضل التواصل معنا؟'],
         'contact.form.method_whatsapp' => ['page'=>'contact','section'=>'form','type'=>'text','value_ar'=>'واتساب'],
         'contact.form.method_email' => ['page'=>'contact','section'=>'form','type'=>'text','value_ar'=>'البريد الإلكتروني'],
         'contact.form.name' => ['page'=>'contact','section'=>'form','type'=>'text','value_ar'=>'الاسم الكامل'],
@@ -512,7 +512,7 @@ class IraqiArabicContentSeeder extends Seeder
         'seo.branches.description' => ['page'=>'seo','section'=>'branches','type'=>'textarea',
             'value_ar'=>'زوروا معارض ديلوس إنترناشيونال بأربيل وكركوك والسليمانية وبغداد، واختبروا الفخامة الإيطالية للتصميم الداخلي على الطبيعة.'],
         'seo.contact.title' => ['page'=>'seo','section'=>'contact','type'=>'text',
-            'value_ar'=>'تواصلوا وياه — ديلوس إنترناشيونال'],
+            'value_ar'=>'تواصل معنا — ديلوس إنترناشيونال'],
         'seo.contact.description' => ['page'=>'seo','section'=>'contact','type'=>'textarea',
             'value_ar'=>'احجز استشارة تصميمية مجّانية وية ديلوس إنترناشيونال. خبراؤنا يساعدوك تصمّم البيت الإيطالي الفاخر اللي تحلم بيه.'],
 
@@ -578,7 +578,7 @@ class IraqiArabicContentSeeder extends Seeder
             'value_ar'=>'زيارة الموقع الرسمي'],
         'common.ctas.learn_more' => ['page'=>'layout','section'=>'ctas','type'=>'text','value_ar'=>'اقرأ المزيد'],
         'common.ctas.call_us' => ['page'=>'layout','section'=>'ctas','type'=>'text',
-            'value_ar'=>'اتّصلوا وياه: 1701 100 0750'],
+            'value_ar'=>'اتّصلوا بنا: 1701 100 0750'],
         'common.ctas.start_project' => ['page'=>'layout','section'=>'ctas','type'=>'text',
             'value_ar'=>'ابدأ مشروعك'],
         'common.ctas.find_nearest_showroom' => ['page'=>'layout','section'=>'ctas','type'=>'text',
