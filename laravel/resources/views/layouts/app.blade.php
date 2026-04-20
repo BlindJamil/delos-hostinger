@@ -92,8 +92,17 @@
 
         {{-- Marquee Banner --}}
         <div id="marquee-bar" class="bg-delos-dark-2 overflow-hidden py-2.5 border-b border-white/5 transition-all duration-500">
+            {{--
+                Marquee loop math: the CSS animation translates -50% of track
+                width, so the number of content copies MUST be an even
+                multiple of the visual unit for the loop to be seamless. With
+                3 copies, -50% lands mid-copy-2 → when the animation resets
+                back to 0 there's a visible jump. 2 copies makes -50% exactly
+                one copy wide, so end-state == start-state and the loop is
+                perfectly seamless.
+            --}}
             <div class="marquee-track flex gap-12 whitespace-nowrap">
-                @for($j = 0; $j < 3; $j++)
+                @for($j = 0; $j < 2; $j++)
                     <span class="text-overline text-delos-gold/60 font-medium">{{ pcontent('common.marquee.tagline') }}
                         <span class="italian-flag">
                             <span class="flag-green"></span>
