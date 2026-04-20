@@ -58,7 +58,7 @@
     >
         <div class="admin-bar__header">
             <span class="admin-bar__label">Viewing as</span>
-            <span class="admin-bar__name">{{ $adminUser?->name ?? 'admin' }}</span>
+            <span class="admin-bar__name">{{ $currentAdmin?->name ?? 'admin' }}</span>
         </div>
 
         <div class="admin-bar__links">

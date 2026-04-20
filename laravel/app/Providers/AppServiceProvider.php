@@ -37,11 +37,18 @@ class AppServiceProvider extends ServiceProvider
             // fresh deploy: missing auth guard (admin) in config, or
             // missing DB tables (site_settings) before migrations run.
             $isAdmin = false;
-            $adminUser = null;
+            // Intentionally named `$currentAdmin` (not `$adminUser`) to avoid
+            // shadowing the `$adminUser` variable that AdminUserController's
+            // create/edit actions pass to the admin-users form. Using the
+            // same name here made the composer overwrite the controller's
+            // fresh-model with the authed user, causing "New Admin" to
+            // render pre-filled with the current user's data and a
+            // reset-password form pointing at their own ID.
+            $currentAdmin = null;
             try {
                 if (config('auth.guards.admin')) {
                     $isAdmin = auth('admin')->check();
-                    $adminUser = auth('admin')->user();
+                    $currentAdmin = auth('admin')->user();
                 }
             } catch (\Throwable) {
                 // Swallow — fall through to the anonymous view.
@@ -64,7 +71,7 @@ class AppServiceProvider extends ServiceProvider
                 // bar on public pages. Cheap check (cookie + session read)
                 // via the admin guard.
                 'isAdmin' => $isAdmin,
-                'adminUser' => $adminUser,
+                'currentAdmin' => $currentAdmin,
                 'footerBranches' => $footerBranches,
 
                 'settingInstagram' => SiteSetting::value('social_instagram'),
