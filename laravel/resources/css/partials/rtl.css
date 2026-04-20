@@ -21,23 +21,40 @@
     letter-spacing: 0 !important;
 }
 
-/* Cairo runs slightly smaller than Inter — bump 2% to match visual weight. */
+/*
+ * Cairo has a noticeably smaller x-height than Inter at the same nominal
+ * font-size. The 2% body bump we used before was way too subtle — small
+ * labels (text-[9px], text-[11px], text-xs) rendered legibly in Inter
+ * ended up unreadable in Cairo. Bump body 8%, and bump Tailwind's tiny
+ * text utilities an extra step so they're readable under Cairo.
+ *
+ * Font-family override for inline `style="font-family: 'Inter'"` is
+ * already handled in theme.css:46-47 via `[lang="ar"] [style*="Inter"]`.
+ */
 [lang="ar"] body {
-    font-size: 1.02em;
+    font-size: 1.08em;
 }
 
-/*
- * Blade templates have ~59 inline `style="font-family: 'Inter', sans-serif;"`
- * declarations to pin decorative overlines / subs to the Latin typeface.
- * Inter has no Arabic glyphs, so on `/ar` pages the browser falls through
- * to whatever system Arabic font it picks — which usually renders thinner
- * and visually smaller than Cairo. Force Cairo inheritance whenever an
- * inline Inter declaration is present under lang="ar". Attribute selectors
- * beat inline styles once we combine them with !important.
- */
-[lang="ar"] [style*="'Inter'"],
-[lang="ar"] [style*="Inter,"] {
-    font-family: 'Cairo', 'Inter', ui-sans-serif, system-ui, sans-serif !important;
+/* Tiny Tailwind text utilities bump harder — Cairo needs the extra mass
+ * to stay legible at 9-12px nominal sizes. text-[9px] → effectively 10.4px,
+ * text-[11px] → 12.7px, text-xs (0.75rem) → ~0.84rem. */
+[lang="ar"] .text-xs,
+[lang="ar"] [class*="text-[9px]"],
+[lang="ar"] [class*="text-[10px]"],
+[lang="ar"] [class*="text-[11px]"],
+[lang="ar"] [class*="text-[12px]"] {
+    font-size: 1.15em !important;
+}
+
+/* Cairo 300/400 render thinner than Inter 300/400 — nudge weight up for
+ * small labels where stroke thinness makes letters visually fade. */
+[lang="ar"] [class*="text-[9px]"],
+[lang="ar"] [class*="text-[10px]"],
+[lang="ar"] [class*="text-[11px]"],
+[lang="ar"] .text-xs.font-light,
+[lang="ar"] .text-xs.font-normal,
+[lang="ar"] .text-xs.font-medium {
+    font-weight: 500 !important;
 }
 
 /* Arabic doesn't have small-caps / uppercase distinction like Latin. */
