@@ -165,20 +165,12 @@
                     },
 
                     async onDesktopFile(event) {
-                        const file = event.target.files[0];
+                        let file = event.target.files[0];
                         if (!file) return;
-                        if (file.size > this.maxBytes) {
-                            this.desktopError = `File too large — max ${(this.maxBytes / 1024 / 1024).toFixed(0)}MB.`;
-                            event.target.value = '';
-                            return;
-                        }
-                        // Source-resolution guard. Without this, users routinely
-                        // upload 1200–1600px stock photos into full-width hero/
-                        // brand rows that paint at 2880 physical px on retina —
-                        // the page ships sharp HTML but the image is already
-                        // blurred by the time the browser resamples it. Variant
-                        // generation can only shrink, not invent detail, so the
-                        // ceiling has to be enforced at upload.
+
+                        // Source-resolution guard. Runs first — no point
+                        // auto-compressing a 1200px image we're going to reject
+                        // for the full-width / hero row.
                         const minWidth = 2000;
                         const width = await this._imageWidth(file);
                         if (width && width < minWidth) {
@@ -188,6 +180,31 @@
                             event.target.value = '';
                             return;
                         }
+
+                        // Auto-compress if the upload busts the server's 5MB
+                        // ceiling. High-res originals from manufacturers are
+                        // routinely 10–30MB; without this, the admin would
+                        // have to re-export JPEGs by hand. Full pixel
+                        // dimensions preserved — only quality steps down.
+                        if (file.size > this.maxBytes) {
+                            try {
+                                const compressed = await this._compressImage(file, this.maxBytes);
+                                if (compressed.size > this.maxBytes) {
+                                    this.desktopError =
+                                        `Can't get this image under ${(this.maxBytes/1024/1024).toFixed(0)}MB even at q=0.82. ` +
+                                        `The source is probably 8K+ — please downscale to ~3200px before uploading.`;
+                                    event.target.value = '';
+                                    return;
+                                }
+                                file = compressed;
+                                this._swapInputFile(event.target, file);
+                            } catch (e) {
+                                this.desktopError = 'Could not compress image: ' + (e.message || e);
+                                event.target.value = '';
+                                return;
+                            }
+                        }
+
                         this.desktopError = '';
                         // Picking a new file cancels any pending clear.
                         this.clearDesktopFlag = false;
@@ -203,13 +220,9 @@
                     },
 
                     async onMobileFile(event) {
-                        const file = event.target.files[0];
+                        let file = event.target.files[0];
                         if (!file) return;
-                        if (file.size > this.maxBytes) {
-                            this.mobileError = `File too large — max ${(this.maxBytes / 1024 / 1024).toFixed(0)}MB.`;
-                            event.target.value = '';
-                            return;
-                        }
+
                         // Mobile variant — lower threshold, phone viewports top
                         // out around 430 CSS px (~1290 physical px on DPR-3
                         // iPhone Pro Max). 1200px is the smallest width that
@@ -223,6 +236,27 @@
                             event.target.value = '';
                             return;
                         }
+
+                        // Same auto-compression path as desktop.
+                        if (file.size > this.maxBytes) {
+                            try {
+                                const compressed = await this._compressImage(file, this.maxBytes);
+                                if (compressed.size > this.maxBytes) {
+                                    this.mobileError =
+                                        `Can't get this mobile image under ${(this.maxBytes/1024/1024).toFixed(0)}MB at q=0.82. ` +
+                                        `Please downscale the source before uploading.`;
+                                    event.target.value = '';
+                                    return;
+                                }
+                                file = compressed;
+                                this._swapInputFile(event.target, file);
+                            } catch (e) {
+                                this.mobileError = 'Could not compress mobile image: ' + (e.message || e);
+                                event.target.value = '';
+                                return;
+                            }
+                        }
+
                         this.mobileError = '';
                         // Picking a new file cancels any pending "clear" action
                         // so the user doesn't accidentally wipe it on submit.
@@ -257,6 +291,60 @@
                             img.onerror = () => { URL.revokeObjectURL(url); resolve(0); };
                             img.src = url;
                         });
+                    },
+
+                    // Browser-side re-encode to hit the server's 5MB ceiling
+                    // without bouncing the upload back to the admin. Full
+                    // pixel dimensions are preserved — only JPEG quality is
+                    // stepped down. Ladder floors at q=0.82 because below
+                    // that photographic content bands visibly. Same contract
+                    // as page-content/_field.blade.php::_compressImage so the
+                    // two forms behave identically.
+                    async _compressImage(file, maxBytes) {
+                        if (!file.type || !file.type.startsWith('image/')) return file;
+                        if (file.size <= maxBytes) return file;
+
+                        const url = URL.createObjectURL(file);
+                        const img = await new Promise((resolve, reject) => {
+                            const i = new Image();
+                            i.onload = () => resolve(i);
+                            i.onerror = () => reject(new Error('could not decode image'));
+                            i.src = url;
+                        });
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        URL.revokeObjectURL(url);
+
+                        // Walk quality down. Early-exit the first time the
+                        // blob fits; otherwise return the last (smallest)
+                        // attempt so the caller can decide whether it's good
+                        // enough or whether to show an error.
+                        let bestBlob = null;
+                        for (const q of [0.92, 0.90, 0.88, 0.85, 0.82]) {
+                            const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', q));
+                            if (!blob) continue;
+                            bestBlob = blob;
+                            if (blob.size <= maxBytes) break;
+                        }
+                        if (!bestBlob) throw new Error('encoder returned no blob');
+
+                        const newName = (file.name || 'image').replace(/\.\w+$/, '') + '.jpg';
+                        return new File([bestBlob], newName, { type: 'image/jpeg' });
+                    },
+
+                    // Replace the File object on a native <input type=file>
+                    // so a regular form submit POSTs the compressed blob.
+                    // DataTransfer is the only cross-browser path for this;
+                    // Safari/WebKit doesn't support the older input.files
+                    // assignment otherwise.
+                    _swapInputFile(inputEl, file) {
+                        const dt = new DataTransfer();
+                        dt.items.add(file);
+                        inputEl.files = dt.files;
                     },
 
                     // Convert a click on the preview into an object-position
