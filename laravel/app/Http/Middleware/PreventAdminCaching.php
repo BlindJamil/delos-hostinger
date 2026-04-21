@@ -40,13 +40,6 @@ class PreventAdminCaching
         $response->headers->set('Expires', '0');
         // LiteSpeed-specific opt-out for Hostinger's default page cache.
         $response->headers->set('X-LiteSpeed-Cache-Control', 'no-cache');
-        // Temporary nuclear option — tells the browser to drop every
-        // cached resource and storage bucket for this origin on the
-        // next response. Added to recover users whose Safari got
-        // pinned to a stale HTTP/2 stream after a deploy. Should be
-        // removed once the stuck-Safari incident is over; otherwise
-        // every public page load costs a full asset re-download.
-        $response->headers->set('Clear-Site-Data', '"cache", "storage"');
 
         if (auth('admin')->check()) {
             $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
