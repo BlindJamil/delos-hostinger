@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\GeneratesResponsiveVariants;
 use App\Http\Controllers\Admin\Concerns\HandlesHybridImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProjectRequest;
@@ -13,6 +14,7 @@ use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
+    use GeneratesResponsiveVariants;
     use HandlesHybridImages;
 
     public function index(Request $request): View
@@ -64,6 +66,7 @@ class ProjectController extends Controller
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('uploads/projects', 'public');
+            $this->generateResponsiveVariants($data['image']);
         } else {
             unset($data['image']);
         }
@@ -89,8 +92,10 @@ class ProjectController extends Controller
             if ($project->image && str_starts_with($project->image, 'uploads/')
                 && Storage::disk('public')->exists($project->image)) {
                 Storage::disk('public')->delete($project->image);
+                $this->deleteResponsiveVariants($project->image);
             }
             $data['image'] = $request->file('image')->store('uploads/projects', 'public');
+            $this->generateResponsiveVariants($data['image']);
         } else {
             unset($data['image']);
         }
@@ -99,6 +104,7 @@ class ProjectController extends Controller
             if (str_starts_with($project->image, 'uploads/')
                 && Storage::disk('public')->exists($project->image)) {
                 Storage::disk('public')->delete($project->image);
+                $this->deleteResponsiveVariants($project->image);
             }
             $data['image'] = null;
         }
@@ -116,6 +122,7 @@ class ProjectController extends Controller
         if ($project->image && str_starts_with($project->image, 'uploads/')
             && Storage::disk('public')->exists($project->image)) {
             Storage::disk('public')->delete($project->image);
+            $this->deleteResponsiveVariants($project->image);
         }
         $this->deleteHybridImageFiles($project);
 

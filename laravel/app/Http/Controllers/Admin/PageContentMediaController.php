@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\GeneratesResponsiveVariants;
 use App\Http\Controllers\Controller;
 use App\Models\PageContent;
 use Illuminate\Http\JsonResponse;
@@ -22,6 +23,8 @@ use Illuminate\Support\Facades\Storage;
  */
 class PageContentMediaController extends Controller
 {
+    use GeneratesResponsiveVariants;
+
     public function store(Request $request, string $key): JsonResponse
     {
         // Admins upload either the default image or an optional mobile-only
@@ -237,88 +240,5 @@ class PageContentMediaController extends Controller
         }
 
         imagedestroy($img);
-    }
-
-    /**
-     * Generate responsive WebP + JPEG variants next to an admin-uploaded image.
-     *
-     * Mirrors what `scripts/generate-responsive-images.mjs` does for legacy
-     * assets in public/images/, but runs per-upload for CMS files living
-     * under storage/uploads/page-content/. Output lives in a sibling
-     * `responsive/` folder so the upload and its variants can be cleaned up
-     * together.
-     *
-     * Widths match the legacy generator. Each width caps at the source's
-     * native dimensions — we never upscale, since that just inflates bytes
-     * without adding detail.
-     *
-     * Runs best-effort: a GD failure on one width doesn't take out the whole
-     * upload. The primary file is still saved; <x-responsive-image> falls
-     * back to the full-res fallback if the probe finds no variants.
-     */
-    private function generateResponsiveVariants(string $storagePath): void
-    {
-        static $widths = [768, 1200, 1600, 2000, 2560, 3200];
-
-        $disk = Storage::disk('public');
-        $absolute = $disk->path($storagePath);
-        if (!is_file($absolute)) {
-            return;
-        }
-
-        $mime = mime_content_type($absolute) ?: '';
-        $img = match ($mime) {
-            'image/jpeg' => @imagecreatefromjpeg($absolute),
-            'image/png'  => @imagecreatefrompng($absolute),
-            'image/webp' => @imagecreatefromwebp($absolute),
-            default      => null,
-        };
-        if (!$img) {
-            return;
-        }
-
-        $srcW = imagesx($img);
-        $srcH = imagesy($img);
-
-        $basename = pathinfo($storagePath, PATHINFO_FILENAME);
-        $dir = dirname($storagePath) . '/responsive';
-        $disk->makeDirectory($dir);
-        $outDir = $disk->path($dir);
-
-        foreach ($widths as $w) {
-            if ($w > $srcW) continue;
-            $h = (int) round($srcH * ($w / $srcW));
-
-            $resized = imagecreatetruecolor($w, $h);
-            // Flatten PNG/WebP alpha onto white so JPEG encoders don't emit
-            // grey halos on transparent pixels.
-            imagefilledrectangle($resized, 0, 0, $w, $h, imagecolorallocate($resized, 255, 255, 255));
-            imagecopyresampled($resized, $img, 0, 0, 0, 0, $w, $h, $srcW, $srcH);
-
-            @imagewebp($resized, "{$outDir}/{$basename}-{$w}.webp", 85);
-            @imagejpeg($resized, "{$outDir}/{$basename}-{$w}.jpg", 88);
-
-            imagedestroy($resized);
-        }
-
-        imagedestroy($img);
-    }
-
-    /**
-     * Remove the responsive ladder that accompanies an admin-uploaded image.
-     * Called whenever the primary file is deleted so we never leave orphans
-     * ballooning the public disk.
-     */
-    private function deleteResponsiveVariants(string $storagePath): void
-    {
-        $basename = pathinfo($storagePath, PATHINFO_FILENAME);
-        $dir = dirname($storagePath) . '/responsive';
-        $disk = Storage::disk('public');
-
-        foreach ($disk->files($dir) as $file) {
-            if (str_starts_with(basename($file), $basename . '-')) {
-                $disk->delete($file);
-            }
-        }
     }
 }

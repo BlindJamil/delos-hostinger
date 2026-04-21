@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\GeneratesResponsiveVariants;
 use App\Http\Controllers\Admin\Concerns\HandlesHybridImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\EmployeeRequest;
@@ -13,6 +14,7 @@ use Illuminate\View\View;
 
 class EmployeeController extends Controller
 {
+    use GeneratesResponsiveVariants;
     use HandlesHybridImages;
 
     public function index(Request $request): View
@@ -50,6 +52,7 @@ class EmployeeController extends Controller
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('uploads/employees', 'public');
+            $this->generateResponsiveVariants($data['image']);
         } else {
             unset($data['image']);
         }
@@ -74,8 +77,10 @@ class EmployeeController extends Controller
         if ($request->hasFile('image')) {
             if ($employee->image && Storage::disk('public')->exists($employee->image)) {
                 Storage::disk('public')->delete($employee->image);
+                $this->deleteResponsiveVariants($employee->image);
             }
             $data['image'] = $request->file('image')->store('uploads/employees', 'public');
+            $this->generateResponsiveVariants($data['image']);
         } else {
             unset($data['image']);
         }
@@ -83,6 +88,7 @@ class EmployeeController extends Controller
         if ($request->boolean('remove_image') && $employee->image) {
             if (Storage::disk('public')->exists($employee->image)) {
                 Storage::disk('public')->delete($employee->image);
+                $this->deleteResponsiveVariants($employee->image);
             }
             $data['image'] = null;
         }
@@ -99,6 +105,7 @@ class EmployeeController extends Controller
     {
         if ($employee->image && Storage::disk('public')->exists($employee->image)) {
             Storage::disk('public')->delete($employee->image);
+            $this->deleteResponsiveVariants($employee->image);
         }
         $this->deleteHybridImageFiles($employee);
 
