@@ -232,6 +232,17 @@ function initHeroSlideshow(context) {
         return;
     }
 
+    // Belt-and-suspenders alt-text leak guard. CSS `visibility: hidden`
+    // is the primary defence — this exists so a broken CSS load or an
+    // extension that strips `visibility` can't resurrect the stacked-
+    // text bug. Stash each slide's true alt in data-alt and clear the
+    // attribute on every inactive slide. On goTo we swap them back.
+    slides.forEach((slide, i) => {
+        const original = slide.getAttribute('alt') || '';
+        slide.dataset.alt = original;
+        if (i !== 0) slide.setAttribute('alt', '');
+    });
+
     let current = 0;
     let timer = null;
 
@@ -247,12 +258,16 @@ function initHeroSlideshow(context) {
         // reveal the incoming slide before GSAP's opacity tween, and
         // re-hide the outgoing one only after its fade completes.
         to.classList.remove('opacity-0');
+        to.setAttribute('alt', to.dataset.alt || '');
         gsap.to(from, {
             opacity: 0,
             scale: 1.04,
             duration: SLIDESHOW_CROSSFADE_S,
             ease: 'power2.inOut',
-            onComplete: () => from.classList.add('opacity-0'),
+            onComplete: () => {
+                from.classList.add('opacity-0');
+                from.setAttribute('alt', '');
+            },
         });
 
         gsap.fromTo(to, {
@@ -358,6 +373,14 @@ function initProjectSlideshow(context) {
         return;
     }
 
+    // Same alt-text guard as the home slideshow — stash + strip on init,
+    // swap back on goTo. Defence in depth behind `visibility: hidden`.
+    slides.forEach((slide, i) => {
+        const original = slide.getAttribute('alt') || '';
+        slide.dataset.alt = original;
+        if (i !== 0) slide.setAttribute('alt', '');
+    });
+
     let current = 0;
     let timer = null;
 
@@ -372,12 +395,16 @@ function initProjectSlideshow(context) {
         // Paired with `.hero-slide.opacity-0 { visibility: hidden }` —
         // keeps the 5 stacked <img>s from leaking their alt text.
         to.classList.remove('opacity-0');
+        to.setAttribute('alt', to.dataset.alt || '');
         gsap.to(from, {
             opacity: 0,
             scale: 1.04,
             duration: PROJECT_CROSSFADE_S,
             ease: 'power2.inOut',
-            onComplete: () => from.classList.add('opacity-0'),
+            onComplete: () => {
+                from.classList.add('opacity-0');
+                from.setAttribute('alt', '');
+            },
         });
 
         gsap.fromTo(to, {

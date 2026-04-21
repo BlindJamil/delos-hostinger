@@ -431,9 +431,10 @@
                             // dimensions preserved — only JPEG quality steps
                             // down (0.92 → 0.60) until the blob fits the budget.
                             try {
+                                await this._assertHeroMinWidth(picked, 2000);
                                 file = await this._compressImage(picked, 5 * 1024 * 1024);
                             } catch (e) {
-                                this.status = 'Could not read image: ' + e.message;
+                                this.status = e.message || 'Could not read image.';
                                 this.statusType = 'error';
                                 event.target.value = '';
                                 return;
@@ -563,9 +564,12 @@
                         if (!picked) return;
                         let file;
                         try {
+                            // Mobile variant — same hero-field minimum, just at a
+                            // lower threshold because phone viewports are smaller.
+                            await this._assertHeroMinWidth(picked, 1200);
                             file = await this._compressImage(picked, 5 * 1024 * 1024);
                         } catch (e) {
-                            this.status = 'Could not read mobile image: ' + e.message;
+                            this.status = e.message || 'Could not read mobile image.';
                             this.statusType = 'error';
                             event.target.value = '';
                             return;
@@ -658,6 +662,36 @@
                     // normal screen. The loop only drops lower if a photo
                     // is genuinely huge (20MP+) and won't fit at q=0.92.
                     // ----------------------------------------------------
+                    // Hero slides fill the screen at retina resolution. A 1600px
+                    // source stretched to a 2880px-wide MacBook hero is visibly
+                    // soft; by the time we noticed the live site, all four
+                    // admin-uploaded heroes were 1600x1067 and obviously blurry.
+                    // For any field whose key lives under `.hero.`, refuse the
+                    // upload below a minimum width so the CMS can't silently
+                    // regress image quality again.
+                    async _assertHeroMinWidth(file, minWidth) {
+                        if (!file.type || !file.type.startsWith('image/')) return;
+                        if (!this.key || !this.key.includes('.hero.')) return;
+
+                        const url = URL.createObjectURL(file);
+                        try {
+                            const img = await new Promise((resolve, reject) => {
+                                const i = new Image();
+                                i.onload = () => resolve(i);
+                                i.onerror = () => reject(new Error('Could not decode image for size check.'));
+                                i.src = url;
+                            });
+                            if (img.naturalWidth < minWidth) {
+                                throw new Error(
+                                    `Hero image must be at least ${minWidth}px wide — this one is ${img.naturalWidth}px. ` +
+                                    `Please upload a higher-resolution original (2560×1440+ recommended for retina sharpness).`
+                                );
+                            }
+                        } finally {
+                            URL.revokeObjectURL(url);
+                        }
+                    },
+
                     async _compressImage(file, maxBytes) {
                         if (!file.type || !file.type.startsWith('image/')) return file;
                         if (file.size <= maxBytes) return file;
