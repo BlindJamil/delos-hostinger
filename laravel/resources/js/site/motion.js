@@ -243,11 +243,17 @@ function initHeroSlideshow(context) {
         const from = slides[current];
         const to = slides[index];
 
+        // CSS rule `.hero-slide.opacity-0 { visibility: hidden }` is a
+        // Safari safeguard that keeps inactive slides from leaking
+        // their alt text. Toggle the class in sync with GSAP's opacity
+        // transitions or the incoming slide stays hidden.
+        to.classList.remove('opacity-0');
         gsap.to(from, {
             opacity: 0,
             scale: 1.04,
             duration: SLIDESHOW_CROSSFADE_S,
             ease: 'power2.inOut',
+            onComplete: () => from.classList.add('opacity-0'),
         });
 
         gsap.fromTo(to, {
