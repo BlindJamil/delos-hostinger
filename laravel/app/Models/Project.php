@@ -54,6 +54,21 @@ class Project extends Model
         return $this->{$field . '_' . $locale} ?: $this->{$field . '_en'};
     }
 
+    /**
+     * Canonicalize the room-type key on read so legacy rows that drifted in
+     * casing / whitespace (e.g. "Living Room " vs "living room") collapse
+     * into a single bucket for groupBy + filter matching. Writes remain the
+     * admin's responsibility — the admin controller normalizes before save.
+     */
+    protected function type(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value === null
+                ? null
+                : (mb_strtolower(trim((string) preg_replace('/\s+/u', ' ', $value))) ?: null),
+        );
+    }
+
     /** Legacy filename in public/images vs admin-uploaded file in storage. */
     protected function imageUrl(): Attribute
     {
