@@ -1091,4 +1091,64 @@ body.has-custom-cursor .admin-bar label.admin-bar__toggle * {
     .employee-show__name { font-size: clamp(2rem, 1rem + 2vw, 3.5rem); }
 }
 
+/* ============================================================
+   MOBILE HERO IMAGES — show the full image, no cropping.
+
+   On desktop, heroes are full-bleed dvh containers with
+   `object-cover` so imagery fills the fold. On phones that
+   aspect mismatch crops the image heavily. Per product request
+   we let the entire hero photo render on mobile — we drop the
+   dvh constraint, size the image container to a portrait
+   aspect so it still reads as a hero, and swap to
+   `object-contain` so nothing is clipped. Absolute overlays
+   (scroll cue, dots, headings) still anchor to their sections,
+   which now match the image's height.
+============================================================ */
+@media (max-width: 767px) {
+    /* --- Home hero slideshow --- */
+    #hero { min-height: 0; }
+    #hero > #hero-slideshow {
+        position: relative;
+        inset: auto;
+        aspect-ratio: 3 / 5;
+    }
+
+    /* --- Projects hero slideshow --- */
+    section[data-motion-hero]:has(> #project-slideshow) {
+        min-height: 0 !important;
+    }
+    #project-slideshow {
+        position: relative;
+        inset: auto;
+        aspect-ratio: 3 / 5;
+    }
+
+    /* --- Services hero --- */
+    .svc-hero { min-height: 0 !important; }
+    .svc-hero > .svc-hero__image {
+        position: relative;
+        inset: auto;
+        aspect-ratio: 3 / 5;
+    }
+
+    /* --- Contact hero: fixed-vh → aspect ratio on phone --- */
+    .contact-hero-section {
+        height: auto !important;
+    }
+    .contact-hero-img {
+        height: auto !important;
+        aspect-ratio: 3 / 4;
+    }
+
+    /* --- Un-crop: show full image on all hero pictures --- */
+    .hero-slide,
+    .svc-hero__image img,
+    .about-hero-img img,
+    .employee-show__portrait img,
+    .contact-hero-img {
+        object-fit: contain !important;
+        object-position: center !important;
+    }
+}
+
 

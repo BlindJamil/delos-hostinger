@@ -134,6 +134,7 @@ return [
                 'fields' => [
                     ['key' => 'home.cta.overline', 'label' => 'Overline', 'type' => 'text'],
                     ['key' => 'home.cta.heading', 'label' => 'Heading', 'type' => 'text'],
+                    ['key' => 'home.cta.image', 'label' => 'Background image', 'type' => 'image'],
                 ],
             ],
         ],
@@ -158,6 +159,8 @@ return [
                     ['key' => 'about.hero.stats.1.label', 'label' => 'Hero stat 2 · label', 'type' => 'text'],
                     ['key' => 'about.hero.stats.2.value', 'label' => 'Hero stat 3 · value', 'type' => 'text'],
                     ['key' => 'about.hero.stats.2.label', 'label' => 'Hero stat 3 · label', 'type' => 'text'],
+                    ['key' => 'about.hero.image', 'label' => 'Hero image (main)', 'type' => 'image'],
+                    ['key' => 'about.hero.showroom_image', 'label' => 'Showroom image (under hero copy, desktop only)', 'type' => 'image'],
                 ],
             ],
             'story' => [
@@ -172,6 +175,7 @@ return [
                     ['key' => 'about.story.paragraph_1', 'label' => 'Paragraph 1', 'type' => 'textarea'],
                     ['key' => 'about.story.paragraph_2', 'label' => 'Paragraph 2', 'type' => 'textarea'],
                     ['key' => 'about.story.paragraph_3', 'label' => 'Paragraph 3', 'type' => 'textarea'],
+                    ['key' => 'about.story.image', 'label' => 'Story image', 'type' => 'image'],
                 ],
             ],
             'direction' => [
@@ -200,6 +204,7 @@ return [
                     ['key' => 'about.philosophy.heading_accent', 'label' => 'Heading accent', 'type' => 'text'],
                     ['key' => 'about.philosophy.paragraph_1', 'label' => 'Paragraph 1', 'type' => 'textarea'],
                     ['key' => 'about.philosophy.paragraph_2', 'label' => 'Paragraph 2', 'type' => 'textarea'],
+                    ['key' => 'about.philosophy.image', 'label' => 'Philosophy image', 'type' => 'image'],
                 ],
             ],
             'materials' => [
@@ -213,6 +218,7 @@ return [
                     ['key' => 'about.materials.heading_3', 'label' => 'Heading "and"', 'type' => 'text'],
                     ['key' => 'about.materials.heading_4', 'label' => 'Heading last line', 'type' => 'text'],
                     ['key' => 'about.materials.body', 'label' => 'Body', 'type' => 'textarea'],
+                    ['key' => 'about.materials.image', 'label' => 'Materials background image', 'type' => 'image'],
                 ],
             ],
             'pillars' => [
@@ -415,6 +421,7 @@ return [
                     ['key' => 'brands.intro.heading_accent', 'label' => 'Heading accent', 'type' => 'text'],
                     ['key' => 'brands.intro.body', 'label' => 'Body', 'type' => 'textarea'],
                     ['key' => 'brands.intro.quote', 'label' => 'Quote overlay text', 'type' => 'text'],
+                    ['key' => 'brands.intro.image', 'label' => 'Intro background image (behind quote)', 'type' => 'image'],
                 ],
             ],
             'cta' => [

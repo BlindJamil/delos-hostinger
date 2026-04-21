@@ -105,7 +105,11 @@
                 </p>
             </div>
             <div data-motion="scale-in" class="relative aspect-square overflow-hidden bg-delos-dark">
-                <x-responsive-image src="italian-materials.jpg" alt="Italian Craftsmanship"
+                <x-admin-edit-pill page="brands" label="Edit Brands intro image & quote" />
+                <x-responsive-image :src="pcontent('brands.intro.image', 'italian-materials.jpg')"
+                    :mobile-src="pcontent_optional('brands.intro.image_mobile')"
+                    :focal="pcontent_optional('brands.intro.image_focal')"
+                    alt="Italian Craftsmanship"
                     sizes="(min-width: 1024px) 50vw, 100vw"
                     class="w-full h-full object-cover opacity-60" />
                 <div class="absolute inset-0 flex items-center justify-center">

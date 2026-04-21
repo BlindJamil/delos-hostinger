@@ -30,7 +30,11 @@
                     </div>
 
                     <div data-motion="fade-up" class="about-showroom hidden lg:block relative overflow-hidden mt-auto">
-                        <x-responsive-image src="delos-erbil-showroom-6.jpg" alt="Delos Erbil Showroom"
+                        <x-admin-edit-pill page="about" label="Edit About showroom image" />
+                        <x-responsive-image :src="pcontent('about.hero.showroom_image', 'delos-erbil-showroom-6.jpg')"
+                            :mobile-src="pcontent_optional('about.hero.showroom_image_mobile')"
+                            :focal="pcontent_optional('about.hero.showroom_image_focal')"
+                            alt="Delos Erbil Showroom"
                             sizes="(min-width: 1024px) 42vw, 100vw"
                             class="w-full h-full object-cover" />
                     </div>
@@ -38,7 +42,11 @@
 
                 <div class="lg:col-span-7 order-1 lg:order-none">
                     <div data-motion="fade" class="about-hero-img relative overflow-hidden">
-                        <x-responsive-image src="about-hero.jpg" alt="Delos International Showroom"
+                        <x-admin-edit-pill page="about" label="Edit About hero image" />
+                        <x-responsive-image :src="pcontent('about.hero.image', 'about-hero.jpg')"
+                            :mobile-src="pcontent_optional('about.hero.image_mobile')"
+                            :focal="pcontent_optional('about.hero.image_focal')"
+                            alt="Delos International Showroom"
                             sizes="(min-width: 1024px) 58vw, 100vw"
                             loading="eager"
                             fetchpriority="high"
@@ -70,7 +78,11 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
             <div data-motion="slide-left" class="relative aspect-[3/4] overflow-hidden bg-delos-dark">
-                <x-responsive-image src="about-story.jpg" alt="Delos International Showroom"
+                <x-admin-edit-pill page="about" label="Edit Our Story image" />
+                <x-responsive-image :src="pcontent('about.story.image', 'about-story.jpg')"
+                    :mobile-src="pcontent_optional('about.story.image_mobile')"
+                    :focal="pcontent_optional('about.story.image_focal')"
+                    alt="Delos International Showroom"
                     sizes="(min-width: 1024px) 50vw, 100vw"
                     class="w-full h-full object-cover opacity-80" />
                 <div class="absolute bottom-8 right-8 bg-delos-dark/90 backdrop-blur-sm px-6 py-4 border border-delos-gold/20">
@@ -144,7 +156,11 @@
             </div>
 
             <div data-motion="slide-right" class="relative aspect-[4/3] overflow-hidden bg-delos-dark">
-                <x-responsive-image src="about-philosophy.jpg" alt="Italian Design Philosophy"
+                <x-admin-edit-pill page="about" label="Edit Philosophy image" />
+                <x-responsive-image :src="pcontent('about.philosophy.image', 'about-philosophy.jpg')"
+                    :mobile-src="pcontent_optional('about.philosophy.image_mobile')"
+                    :focal="pcontent_optional('about.philosophy.image_focal')"
+                    alt="Italian Design Philosophy"
                     sizes="(min-width: 1024px) 50vw, 100vw"
                     class="w-full h-full object-cover opacity-75" />
                 <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/30 to-transparent"></div>
@@ -155,8 +171,12 @@
 
 {{-- ITALIAN MATERIALS --}}
 <section class="relative py-24 lg:py-40 overflow-hidden bg-delos-dark">
+    <x-admin-edit-pill page="about" label="Edit Italian Materials section & image" />
     <div class="absolute inset-0">
-        <x-responsive-image src="italian-materials.jpg" alt="Italian Materials"
+        <x-responsive-image :src="pcontent('about.materials.image', 'italian-materials.jpg')"
+            :mobile-src="pcontent_optional('about.materials.image_mobile')"
+            :focal="pcontent_optional('about.materials.image_focal')"
+            alt="Italian Materials"
             sizes="100vw"
             class="w-full h-full object-cover opacity-25" />
         <div class="absolute inset-0 bg-gradient-to-r from-delos-dark via-delos-dark/70 to-transparent"></div>

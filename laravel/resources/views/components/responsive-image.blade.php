@@ -4,7 +4,7 @@
     'focal' => null,               // optional — CSS object-position string e.g. '30% 60%'
     'alt' => '',
     'sizes' => '100vw',
-    'widths' => [480, 768, 1200, 1600, 2000],
+    'widths' => [480, 768, 1200, 1600, 2000, 2560, 3200],
     'loading' => 'lazy',
     'fetchpriority' => null,
     'decoding' => 'async',

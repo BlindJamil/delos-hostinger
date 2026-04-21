@@ -8,6 +8,8 @@
 {{-- Hero — magazine-cover full-bleed editorial layout --}}
 <section data-motion-hero class="svc-hero relative min-h-dvh overflow-hidden bg-delos-dark">
 
+    <x-admin-edit-pill page="services" label="Edit services hero image & copy" />
+
     {{-- Full-bleed background image with slow Ken-Burns parallax zoom --}}
     <div class="svc-hero__image absolute inset-0">
         <x-responsive-image

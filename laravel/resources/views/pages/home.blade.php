@@ -23,6 +23,7 @@
 
 {{-- 1. HERO SLIDESHOW --}}
 <section id="hero" data-motion-hero class="relative min-h-dvh flex flex-col overflow-hidden bg-delos-dark">
+    <x-admin-edit-pill page="home" label="Edit hero slides (images & copy)" />
     <div id="hero-slideshow" class="absolute inset-0">
         @foreach([0,1,2,3,4] as $i)
             <x-responsive-image
@@ -81,6 +82,7 @@
 <section class="section-padding bg-delos-cream">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion="scale-in" class="relative w-full rounded-xl overflow-hidden shadow-2xl" style="aspect-ratio: 16 / 9;">
+            <x-admin-edit-pill page="home" label="Edit brand video (file & poster)" />
             <video id="delos-video" class="absolute inset-0 w-full h-full object-cover"
                    preload="metadata" playsinline muted
                    poster="{{ pcontent_url('home.video.poster', asset('images/video-poster.jpg')) }}">
@@ -127,14 +129,14 @@
             @endphp
             @foreach($collectionSlugs as $idx => $slug)
                 <a href="{{ lroute('projects') }}" data-motion="{{ $motionVariants[$idx] }}" class="collection-card group relative aspect-[4/3] overflow-hidden bg-delos-dark block">
+                    <x-admin-edit-pill page="home" :label="'Edit collection card ' . ($idx + 1)" />
                     <x-responsive-image
                         :src="pcontent('home.collection.items.' . $slug . '.img')"
                         :mobile-src="pcontent_optional('home.collection.items.' . $slug . '.img_mobile')"
                         :focal="pcontent_optional('home.collection.items.' . $slug . '.img_focal')"
                         :alt="pcontent('home.collection.items.' . $slug . '.title')"
                         sizes="(min-width: 768px) 50vw, 100vw"
-                        class="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-all duration-700" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/30 to-transparent z-[3]"></div>
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">{{ pcontent("home.collection.items.{$slug}.num") }}</span>
                     <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                         <p class="text-overline-sm text-delos-gold mb-2">{{ pcontent("home.collection.items.{$slug}.brand") }}</p>
@@ -276,8 +278,12 @@
 
 {{-- 7. CTA --}}
 <section id="cta-section" class="relative section-padding overflow-hidden bg-delos-dark">
+    <x-admin-edit-pill page="home" label="Edit CTA content & background image" />
     <div class="absolute inset-0">
-        <x-responsive-image src="delos-erbil-showroom-5.jpg" alt="" sizes="100vw" class="w-full h-full object-cover opacity-22" />
+        <x-responsive-image :src="pcontent('home.cta.image', 'delos-erbil-showroom-5.jpg')"
+            :mobile-src="pcontent_optional('home.cta.image_mobile')"
+            :focal="pcontent_optional('home.cta.image_focal')"
+            alt="" sizes="100vw" class="w-full h-full object-cover opacity-22" />
     </div>
     <div data-motion-group="cta" class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
         <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mb-8"></div>

@@ -58,7 +58,7 @@ class PageContentMediaController extends Controller
         } else {
             $rules[] = 'image';
             $rules[] = 'mimes:jpg,jpeg,png,webp';
-            $rules[] = 'max:5120'; // 5MB
+            $rules[] = 'max:20480'; // 20MB
         }
         $request->validate(['file' => $rules]);
 
@@ -68,7 +68,17 @@ class PageContentMediaController extends Controller
             Storage::disk('public')->delete($old);
         }
 
-        $path = $request->file('file')->store('uploads/page-content', 'public');
+        // Auto-compress oversized images in place (>5MB). Full pixel dimensions
+        // are preserved — only the encoding quality is stepped down (starts at
+        // 92, drops to 85 if still over budget). At q92 the difference is
+        // imperceptible on any normal screen. Videos and small images are
+        // stored as-is.
+        $upload = $request->file('file');
+        if (!$isVideo && $upload->getSize() > 5 * 1024 * 1024) {
+            $this->compressInPlace($upload);
+        }
+
+        $path = $upload->store('uploads/page-content', 'public');
 
         // Same media asset across locales — store path on all three so the
         // public site serves it regardless of current locale.
@@ -171,5 +181,50 @@ class PageContentMediaController extends Controller
             }
         }
         return null;
+    }
+
+    /**
+     * Re-encode the uploaded image in place to get under 5 MB without
+     * visible quality loss. Starts at quality 92 (JPEG/WebP) and only
+     * steps down to 85 if the first pass still exceeds the budget.
+     * Full pixel dimensions are preserved — we only trade EXIF/profile
+     * bloat and excess JPEG quality for size. GD handles JPEG/PNG/WebP.
+     *
+     * If GD can't decode the source (corrupt or exotic format) the
+     * method is a no-op — the original file still gets stored and the
+     * 20 MB validator remains the hard ceiling.
+     */
+    private function compressInPlace(\Illuminate\Http\UploadedFile $file): void
+    {
+        $path = $file->getRealPath();
+        $mime = $file->getMimeType();
+
+        $img = match ($mime) {
+            'image/jpeg'           => @imagecreatefromjpeg($path),
+            'image/png'            => @imagecreatefrompng($path),
+            'image/webp'           => @imagecreatefromwebp($path),
+            default                => null,
+        };
+        if (!$img) {
+            return; // decode failed — keep original
+        }
+
+        // PNG is lossless-by-default — re-encode as high-quality JPEG
+        // instead (PNG at q9 often stays huge for photographs).
+        $encodeMime = $mime === 'image/png' ? 'image/jpeg' : $mime;
+        $budget = 5 * 1024 * 1024;
+
+        foreach ([92, 88, 85] as $quality) {
+            $ok = match ($encodeMime) {
+                'image/jpeg' => imagejpeg($img, $path, $quality),
+                'image/webp' => imagewebp($img, $path, $quality),
+                default      => false,
+            };
+            if (!$ok) { break; }
+            clearstatcache(true, $path);
+            if (filesize($path) <= $budget) { break; }
+        }
+
+        imagedestroy($img);
     }
 }

@@ -225,7 +225,7 @@
                 </svg>
                 <p class="text-sm text-delos-dark-2 font-medium mb-0.5" x-text="isCustom ? 'Replace with new upload' : ('Upload new ' + ('{{ $type }}' === 'video' ? 'video' : 'image'))"></p>
                 <p class="text-xs text-delos-muted">
-                    @if($type === 'video') MP4, WebM, MOV · max 50MB @else JPG, PNG, WebP · max 5MB @endif
+                    @if($type === 'video') MP4, WebM, MOV · max 50MB @else JPG, PNG, WebP · any size (auto-compressed) @endif
                 </p>
                 <input type="file"
                        @change="onFile($event)"
@@ -255,7 +255,7 @@
 
                     <label class="block border-2 border-dashed border-delos-dark/15 hover:border-delos-gold rounded-lg p-3 text-center cursor-pointer transition-colors">
                         <p class="text-xs text-delos-dark-2 font-medium" x-text="mobileIsCustom ? 'Replace mobile variant' : 'Upload mobile variant'"></p>
-                        <p class="text-[10px] text-delos-muted mt-0.5">JPG, PNG, WebP · max 5MB</p>
+                        <p class="text-[10px] text-delos-muted mt-0.5">JPG, PNG, WebP · any size (auto-compressed)</p>
                         <input type="file"
                                @change="onMobileFile($event)"
                                accept="image/jpeg,image/png,image/webp"
@@ -413,19 +413,31 @@
                     focalSaving: false,
                     _focalTimer: null,
                     async onFile(event) {
-                        const file = event.target.files[0];
-                        if (!file) return;
-                        // Hard client-side guard: PHP's default post_max_size is
-                        // 8M. If we let an oversize file go through, PHP drops
-                        // the body, returns HTML, and the user sees the
-                        // cryptic "string did not match expected pattern" JSON
-                        // parse error. Give them a real message up front.
-                        const maxBytes = config.type === 'video' ? 50 * 1024 * 1024 : 5 * 1024 * 1024;
-                        if (file.size > maxBytes) {
-                            this.status = `File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Max is ${maxBytes / (1024 * 1024)}MB.`;
-                            this.statusType = 'error';
-                            event.target.value = '';
-                            return;
+                        const picked = event.target.files[0];
+                        if (!picked) return;
+                        let file = picked;
+                        // Video: hard-reject over 50MB (browser can't re-encode video).
+                        if (config.type === 'video') {
+                            if (file.size > 50 * 1024 * 1024) {
+                                this.status = `Video too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Max 50MB.`;
+                                this.statusType = 'error';
+                                event.target.value = '';
+                                return;
+                            }
+                        } else {
+                            // Images: auto-compress in the browser to ≤5MB before
+                            // upload, so the server's size limit never blocks us
+                            // and visitors get a lighter file. Full pixel
+                            // dimensions preserved — only JPEG quality steps
+                            // down (0.92 → 0.60) until the blob fits the budget.
+                            try {
+                                file = await this._compressImage(picked, 5 * 1024 * 1024);
+                            } catch (e) {
+                                this.status = 'Could not read image: ' + e.message;
+                                this.statusType = 'error';
+                                event.target.value = '';
+                                return;
+                            }
                         }
                         this.status = 'Uploading…';
                         this.statusType = '';
@@ -547,11 +559,13 @@
                     // ─── Mobile variant upload ────────────────────────
                     async onMobileFile(event) {
                         if (!this.hybrid) return;
-                        const file = event.target.files[0];
-                        if (!file) return;
-                        const maxBytes = 5 * 1024 * 1024;
-                        if (file.size > maxBytes) {
-                            this.status = `Mobile variant too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Max 5MB.`;
+                        const picked = event.target.files[0];
+                        if (!picked) return;
+                        let file;
+                        try {
+                            file = await this._compressImage(picked, 5 * 1024 * 1024);
+                        } catch (e) {
+                            this.status = 'Could not read mobile image: ' + e.message;
                             this.statusType = 'error';
                             event.target.value = '';
                             return;
@@ -632,6 +646,59 @@
                     _persistFocalDebounced() {
                         if (this._focalTimer) clearTimeout(this._focalTimer);
                         this._focalTimer = setTimeout(() => this._persistFocal(), 400);
+                    },
+                    // ----------------------------------------------------
+                    // Client-side image compression. Runs in the browser so
+                    // the server size cap (5MB on older deploys, 20MB now)
+                    // never matters — files of any size are re-encoded to
+                    // a target budget before upload. Full pixel dimensions
+                    // are preserved; only JPEG quality is stepped down.
+                    //
+                    // At q=0.92 the difference is imperceptible on any
+                    // normal screen. The loop only drops lower if a photo
+                    // is genuinely huge (20MP+) and won't fit at q=0.92.
+                    // ----------------------------------------------------
+                    async _compressImage(file, maxBytes) {
+                        if (!file.type || !file.type.startsWith('image/')) return file;
+                        if (file.size <= maxBytes) return file;
+
+                        const origMB = (file.size / (1024 * 1024)).toFixed(1);
+                        this.status = `Compressing ${origMB}MB image…`;
+                        this.statusType = '';
+
+                        // Decode the file into an <img> via a blob URL.
+                        const url = URL.createObjectURL(file);
+                        const img = await new Promise((resolve, reject) => {
+                            const i = new Image();
+                            i.onload = () => resolve(i);
+                            i.onerror = () => reject(new Error('unsupported image format'));
+                            i.src = url;
+                        }).finally(() => {});
+
+                        // Draw at native resolution.
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        URL.revokeObjectURL(url);
+
+                        // Step quality down only as needed. Early-exit the
+                        // first time the blob fits under the budget.
+                        let bestBlob = null;
+                        for (const q of [0.92, 0.88, 0.85, 0.80, 0.75, 0.70, 0.65, 0.60]) {
+                            const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', q));
+                            if (!blob) continue;
+                            bestBlob = blob;
+                            if (blob.size <= maxBytes) break;
+                        }
+                        if (!bestBlob) throw new Error('encoder failed');
+
+                        const newName = (file.name || 'image').replace(/\.\w+$/, '') + '.jpg';
+                        const newFile = new File([bestBlob], newName, { type: 'image/jpeg' });
+                        const newMB = (newFile.size / (1024 * 1024)).toFixed(1);
+                        this.status = `Compressed ${origMB}MB → ${newMB}MB. Uploading…`;
+                        return newFile;
                     },
                     async _persistFocal() {
                         this.focalSaving = true;

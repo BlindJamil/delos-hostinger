@@ -6,7 +6,8 @@
 @section('content')
 
 {{-- Hero Image --}}
-<section class="relative h-[55vh] lg:h-[60vh] overflow-hidden">
+<section class="contact-hero-section relative h-[55vh] lg:h-[60vh] overflow-hidden bg-delos-dark">
+    <x-admin-edit-pill page="contact" label="Edit contact hero image" />
     <x-responsive-image :src="pcontent('contact.hero.image', 'delos-wall-branding.jpg')"
         :mobile-src="pcontent_optional('contact.hero.image_mobile')"
         :focal="pcontent_optional('contact.hero.image_focal')"
@@ -14,7 +15,7 @@
         sizes="100vw"
         loading="eager"
         fetchpriority="high"
-        class="w-full h-full object-cover" />
+        class="contact-hero-img w-full h-full object-cover" />
 </section>
 
 {{-- Page Title --}}
