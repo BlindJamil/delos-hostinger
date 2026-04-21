@@ -26,16 +26,20 @@
                 $pYear = $p->year;
             @endphp
             @if($p->image)
+                {{-- Hero slide alt intentionally empty — avoids the
+                     5-slide alt-text-leak overlap. The visible title +
+                     meta strip underneath carries the actual label. --}}
                 <x-responsive-image
                     :src="$p->image"
                     :mobile-src="$p->image_mobile"
                     :focal="$p->focal_point"
-                    :alt="$pTitle"
+                    alt=""
                     sizes="100vw"
                     class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
                 :loading="$i === 0 ? 'eager' : 'lazy'"
                 :fetchpriority="$i === 0 ? 'high' : null"
-                data-meta="{{ trim(collect([$pBrand, $pCity, $pYear])->filter()->join(' · ')) }}" />
+                data-meta="{{ trim(collect([$pBrand, $pCity, $pYear])->filter()->join(' · ')) }}"
+                data-title="{{ $pTitle }}" />
             @endif
         @endforeach
     </div>

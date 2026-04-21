@@ -430,7 +430,7 @@ function initProjectSlideshow(context) {
                 duration: 0.4,
                 ease: 'power2.in',
                 onComplete: () => {
-                    titleEl.textContent = to.alt || '';
+                    titleEl.textContent = to.dataset.title || to.dataset.alt || '';
                     metaEl.textContent = to.dataset.meta || '';
                     gsap.to([titleEl, metaEl], {
                         opacity: 1,

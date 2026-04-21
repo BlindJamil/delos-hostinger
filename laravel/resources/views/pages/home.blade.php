@@ -26,11 +26,17 @@
     <x-admin-edit-pill page="home" label="Edit hero slides (images & copy)" />
     <div id="hero-slideshow" class="absolute inset-0">
         @foreach([0,1,2,3,4] as $i)
+            {{-- Hero slide alt intentionally empty. Some browsers render
+                 the alt text as an inline box even on opacity:0 /
+                 visibility:hidden <img>s, which caused the 5 slides to
+                 leak overlapping garbled text at the bottom-left. Hero
+                 images here are decorative; the page title + overlines
+                 carry the accessible description. --}}
             <x-responsive-image
                 :src="pcontent('home.hero.slides.' . $i . '.img')"
                 :mobile-src="pcontent_optional('home.hero.slides.' . $i . '.img_mobile')"
                 :focal="pcontent_optional('home.hero.slides.' . $i . '.img_focal')"
-                :alt="pcontent('home.hero.slides.' . $i . '.alt')"
+                alt=""
                 sizes="100vw"
                 class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
                 :loading="$i === 0 ? 'eager' : 'lazy'"
