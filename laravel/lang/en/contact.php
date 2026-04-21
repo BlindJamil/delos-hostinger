@@ -44,7 +44,5 @@ return [
         'submit_email' => 'Send via Email',
         'branch_no_whatsapp' => 'This showroom hasn\'t published a WhatsApp number yet — please choose Email or another branch.',
         'branch_no_email' => 'This showroom hasn\'t published an email yet — please choose WhatsApp or another branch.',
-        'submit_error' => 'Your WhatsApp or email app didn\'t open. Please try again, switch method, or call us directly:',
-        'submit_error_call' => 'Call {city}',
     ],
 ];

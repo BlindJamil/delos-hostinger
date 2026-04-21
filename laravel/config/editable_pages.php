@@ -496,8 +496,6 @@ return [
                     ['key' => 'contact.form.submit_email', 'label' => 'Submit button — Email mode', 'type' => 'text'],
                     ['key' => 'contact.form.branch_no_whatsapp', 'label' => 'Warning — branch has no WhatsApp', 'type' => 'textarea'],
                     ['key' => 'contact.form.branch_no_email', 'label' => 'Warning — branch has no email', 'type' => 'textarea'],
-                    ['key' => 'contact.form.submit_error', 'label' => 'Submit fallback — shown when WhatsApp/email app fails to open', 'type' => 'textarea'],
-                    ['key' => 'contact.form.submit_error_call', 'label' => 'Submit fallback — "Call {city}" button label', 'type' => 'text'],
                     ['key' => 'contact.form.service_options.0', 'label' => 'Service option 1', 'type' => 'text'],
                     ['key' => 'contact.form.service_options.1', 'label' => 'Service option 2', 'type' => 'text'],
                     ['key' => 'contact.form.service_options.2', 'label' => 'Service option 3', 'type' => 'text'],
