@@ -148,8 +148,7 @@
                     :focal="pcontent_optional('about.philosophy.image_focal')"
                     alt="Italian Design Philosophy"
                     sizes="(min-width: 1024px) 50vw, 100vw"
-                    class="w-full h-full object-cover opacity-75" />
-                <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/30 to-transparent"></div>
+                    class="w-full h-full object-cover" />
             </div>
         </div>
     </div>
