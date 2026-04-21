@@ -26,17 +26,11 @@
     <x-admin-edit-pill page="home" label="Edit hero slides (images & copy)" />
     <div id="hero-slideshow" class="absolute inset-0">
         @foreach([0,1,2,3,4] as $i)
-            {{-- Hero slide alt intentionally empty. Some browsers render
-                 the alt text as an inline box even on opacity:0 /
-                 visibility:hidden <img>s, which caused the 5 slides to
-                 leak overlapping garbled text at the bottom-left. Hero
-                 images here are decorative; the page title + overlines
-                 carry the accessible description. --}}
             <x-responsive-image
                 :src="pcontent('home.hero.slides.' . $i . '.img')"
                 :mobile-src="pcontent_optional('home.hero.slides.' . $i . '.img_mobile')"
                 :focal="pcontent_optional('home.hero.slides.' . $i . '.img_focal')"
-                alt=""
+                :alt="pcontent('home.hero.slides.' . $i . '.alt')"
                 sizes="100vw"
                 class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
                 :loading="$i === 0 ? 'eager' : 'lazy'"
@@ -144,10 +138,10 @@
                         sizes="(min-width: 768px) 50vw, 100vw"
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     <span class="absolute top-6 left-7 font-serif text-delos-gold/20 text-6xl lg:text-7xl font-light z-[4] group-hover:text-delos-gold/40 transition-colors duration-500">{{ pcontent("home.collection.items.{$slug}.num") }}</span>
-                    <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4] translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <div aria-hidden="true" class="absolute inset-x-0 bottom-0 z-[3] pointer-events-none" style="height: 42%; background: linear-gradient(to top, rgba(18, 18, 18, 0.78) 0%, rgba(18, 18, 18, 0.45) 45%, rgba(18, 18, 18, 0) 100%);"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-7 lg:p-9 z-[4]">
                         <p class="text-overline-sm text-delos-gold mb-2">{{ pcontent("home.collection.items.{$slug}.brand") }}</p>
-                        <h3 class="font-serif text-delos-cream text-2xl lg:text-3xl font-light mb-3 group-hover:text-delos-gold transition-colors duration-300">{{ pcontent("home.collection.items.{$slug}.title") }}</h3>
-                        <p class="text-body-sm text-delos-cream/0 group-hover:text-delos-cream/60 transition-all duration-500 max-w-sm leading-relaxed">{{ pcontent("home.collection.items.{$slug}.desc") }}</p>
+                        <h3 class="font-serif text-delos-cream text-2xl lg:text-3xl font-light group-hover:text-delos-gold transition-colors duration-300">{{ pcontent("home.collection.items.{$slug}.title") }}</h3>
                     </div>
                     <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-delos-gold z-[5] group-hover:w-full transition-all duration-700 ease-out"></div>
                 </a>
