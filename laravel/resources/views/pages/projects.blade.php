@@ -109,15 +109,17 @@
                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     @endif
 
-                    {{-- Subtle bottom-only gradient so the gold category label
-                         stays legible on both light and dark photography.
-                         Top half of the image stays fully bright and clean. --}}
-                    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-delos-dark/70 via-delos-dark/30 to-transparent"></div>
+                    {{-- Bottom-only scrim — covers just the lower ~45% of each
+                         card and ramps from solid dark at the baseline to
+                         fully transparent. The label sits inside the opaque
+                         zone so it reads cleanly on both bright kitchens
+                         and dark bedroom photography. Top half stays
+                         untouched. --}}
+                    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-delos-dark/90 via-delos-dark/55 to-transparent"></div>
 
-                    {{-- Category label only — positioned and styled to match
-                         the old city/year overline slot. --}}
+                    {{-- Category label only — positioned bottom-left. --}}
                     <div class="absolute bottom-0 left-0 right-0 p-6 lg:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase" style="font-family: 'Inter', sans-serif;">
+                        <p class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium [text-shadow:0_1px_6px_rgba(0,0,0,0.6)]" style="font-family: 'Inter', sans-serif;">
                             {{ $project->localized('type_label') ?: ucfirst($project->type ?? '') }}
                         </p>
                     </div>
