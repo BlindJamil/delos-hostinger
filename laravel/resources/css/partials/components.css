@@ -1151,5 +1151,13 @@ body.has-custom-cursor .admin-bar label.admin-bar__toggle * {
     }
 }
 
-
+/* Hero slideshow alt-text leak guard: hide inactive slides completely.
+   `opacity: 0` alone lets some browsers render the <img>'s alt text as
+   an inline box when layout/paint is in progress — the 5 stacked slides
+   then bleed garbled overlap text at the bottom-left. `visibility:hidden`
+   is the bulletproof hide; motion.js toggles the class in sync with GSAP
+   so the active slide is unaffected. */
+.hero-slide.opacity-0 {
+    visibility: hidden;
+}
 

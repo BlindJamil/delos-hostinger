@@ -243,11 +243,16 @@ function initHeroSlideshow(context) {
         const from = slides[current];
         const to = slides[index];
 
+        // Paired with `.hero-slide.opacity-0 { visibility: hidden }`:
+        // reveal the incoming slide before GSAP's opacity tween, and
+        // re-hide the outgoing one only after its fade completes.
+        to.classList.remove('opacity-0');
         gsap.to(from, {
             opacity: 0,
             scale: 1.04,
             duration: SLIDESHOW_CROSSFADE_S,
             ease: 'power2.inOut',
+            onComplete: () => from.classList.add('opacity-0'),
         });
 
         gsap.fromTo(to, {
