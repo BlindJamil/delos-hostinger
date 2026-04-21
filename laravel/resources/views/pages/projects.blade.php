@@ -109,10 +109,15 @@
                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     @endif
 
+                    {{-- Subtle bottom-only gradient so the gold category label
+                         stays legible on both light and dark photography.
+                         Top half of the image stays fully bright and clean. --}}
+                    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-delos-dark/70 via-delos-dark/30 to-transparent"></div>
+
                     {{-- Category label only — positioned and styled to match
                          the old city/year overline slot. --}}
                     <div class="absolute bottom-0 left-0 right-0 p-6 lg:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]" style="font-family: 'Inter', sans-serif;">
+                        <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase" style="font-family: 'Inter', sans-serif;">
                             {{ $project->localized('type_label') ?: ucfirst($project->type ?? '') }}
                         </p>
                     </div>
