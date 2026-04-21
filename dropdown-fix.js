@@ -173,8 +173,14 @@
     document.addEventListener('click', function(e) { if (isOpen && !wrap.contains(e.target)) setOpen(false); });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && isOpen) setOpen(false); });
 
-    // Auto-expand on first visit
-    if (isFirstVisit) {
+    // Auto-expand on first visit — homepage only.
+    // pathWithoutLocale normalises /, /en, /en/, /ar, /it all to ''
+    // (see lines 15–16), so any other route is non-empty and will not
+    // pop the language panel open. Users navigating through about /
+    // brands / projects / … won't be nagged by the picker until they
+    // choose to click the globe themselves.
+    var isHomePage = pathWithoutLocale === '' || pathWithoutLocale === '/';
+    if (isFirstVisit && isHomePage) {
         setTimeout(function() { setOpen(true); }, 800);
     }
 })();

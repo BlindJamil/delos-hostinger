@@ -9,9 +9,9 @@
 <section data-motion-hero class="bg-delos-cream overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div class="pt-28 lg:pt-36 pb-0">
-            <div class="grid lg:grid-cols-12 gap-5 lg:gap-7 lg:items-stretch">
+            <div class="grid md:grid-cols-12 gap-5 md:gap-6 lg:gap-7 md:items-stretch">
 
-                <div class="lg:col-span-5 flex flex-col order-2 lg:order-none lg:h-full">
+                <div class="md:col-span-5 flex flex-col order-2 md:order-none md:h-full">
                     <div data-motion-group="hero" class="pt-10 lg:pt-6 lg:pr-4">
                         <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6">
                             <span class="w-8 h-px bg-delos-gold"></span>
@@ -29,25 +29,25 @@
                         </p>
                     </div>
 
-                    <div data-motion="fade-up" class="about-showroom hidden lg:block relative overflow-hidden mt-auto">
+                    <div data-motion="fade-up" class="about-showroom relative overflow-hidden mt-auto aspect-[4/3] md:aspect-auto">
                         <x-admin-edit-pill page="about" label="Edit About showroom image" />
                         <x-responsive-image :src="pcontent('about.hero.showroom_image', 'delos-erbil-showroom-6.jpg')"
                             :mobile-src="pcontent_optional('about.hero.showroom_image_mobile')"
                             :focal="pcontent_optional('about.hero.showroom_image_focal')"
                             alt="Delos Erbil Showroom"
-                            sizes="(min-width: 1024px) 42vw, 100vw"
+                            sizes="(min-width: 768px) 42vw, 100vw"
                             class="w-full h-full object-cover" />
                     </div>
                 </div>
 
-                <div class="lg:col-span-7 order-1 lg:order-none">
-                    <div data-motion="fade" class="about-hero-img relative overflow-hidden">
+                <div class="md:col-span-7 order-1 md:order-none">
+                    <div data-motion="fade" class="about-hero-img relative overflow-hidden aspect-[4/5] md:aspect-auto md:h-full">
                         <x-admin-edit-pill page="about" label="Edit About hero image" />
                         <x-responsive-image :src="pcontent('about.hero.image', 'about-hero.jpg')"
                             :mobile-src="pcontent_optional('about.hero.image_mobile')"
                             :focal="pcontent_optional('about.hero.image_focal')"
                             alt="Delos International Showroom"
-                            sizes="(min-width: 1024px) 58vw, 100vw"
+                            sizes="(min-width: 768px) 58vw, 100vw"
                             loading="eager"
                             fetchpriority="high"
                             data-hero-parallax
