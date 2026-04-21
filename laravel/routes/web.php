@@ -425,3 +425,23 @@ foreach (['about', 'services', 'projects', 'brands', 'branches', 'contact'] as $
         return redirect("/{$locale}/{$legacyPage}");
     })->middleware(PreventAdminCaching::class);
 }
+
+/*
+|--------------------------------------------------------------------------
+| /flush — one-shot cache purge
+|--------------------------------------------------------------------------
+| Emits the Clear-Site-Data response header, which tells the browser to
+| drop cached HTML, CSS, JS, images, and storage for this origin, then
+| redirects home. Built because Safari's disk cache stubbornly ignored
+| our standard no-cache headers for users who visited the site before
+| those headers were deployed. Visiting /flush once evicts the stale
+| copy at the protocol level — no user-facing menu diving required.
+*/
+Route::get('/flush', function () {
+    $locale = app(LocaleResolver::class)->resolve(request());
+    return redirect("/{$locale}")
+        ->header('Clear-Site-Data', '"cache", "storage"')
+        ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+        ->header('Pragma', 'no-cache')
+        ->header('Expires', '0');
+});
