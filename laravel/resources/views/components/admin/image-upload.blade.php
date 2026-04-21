@@ -164,11 +164,27 @@
                         return this.mobilePreviewUrl || this.mobileInitialUrl || null;
                     },
 
-                    onDesktopFile(event) {
+                    async onDesktopFile(event) {
                         const file = event.target.files[0];
                         if (!file) return;
                         if (file.size > this.maxBytes) {
                             this.desktopError = `File too large — max ${(this.maxBytes / 1024 / 1024).toFixed(0)}MB.`;
+                            event.target.value = '';
+                            return;
+                        }
+                        // Source-resolution guard. Without this, users routinely
+                        // upload 1200–1600px stock photos into full-width hero/
+                        // brand rows that paint at 2880 physical px on retina —
+                        // the page ships sharp HTML but the image is already
+                        // blurred by the time the browser resamples it. Variant
+                        // generation can only shrink, not invent detail, so the
+                        // ceiling has to be enforced at upload.
+                        const minWidth = 2000;
+                        const width = await this._imageWidth(file);
+                        if (width && width < minWidth) {
+                            this.desktopError =
+                                `This image is only ${width}px wide. Full-width / hero images need at least ${minWidth}px ` +
+                                `(2560×1440+ recommended for retina sharpness). Please upload a higher-resolution original.`;
                             event.target.value = '';
                             return;
                         }
@@ -186,11 +202,24 @@
                         this.clearDesktopFlag = true;
                     },
 
-                    onMobileFile(event) {
+                    async onMobileFile(event) {
                         const file = event.target.files[0];
                         if (!file) return;
                         if (file.size > this.maxBytes) {
                             this.mobileError = `File too large — max ${(this.maxBytes / 1024 / 1024).toFixed(0)}MB.`;
+                            event.target.value = '';
+                            return;
+                        }
+                        // Mobile variant — lower threshold, phone viewports top
+                        // out around 430 CSS px (~1290 physical px on DPR-3
+                        // iPhone Pro Max). 1200px is the smallest width that
+                        // still renders sharp on those displays.
+                        const minWidth = 1200;
+                        const width = await this._imageWidth(file);
+                        if (width && width < minWidth) {
+                            this.mobileError =
+                                `This mobile image is only ${width}px wide. Phone screens need at least ${minWidth}px ` +
+                                `for retina sharpness. Please upload a higher-resolution original.`;
                             event.target.value = '';
                             return;
                         }
@@ -212,6 +241,22 @@
                         this.mobileInitialUrl = null;
                         this.clearMobileFlag = true;
                         if (this.$refs.mobileInput) this.$refs.mobileInput.value = '';
+                    },
+
+                    // Decode just enough of the picked file to read its
+                    // natural pixel dimensions — no canvas, no re-encode —
+                    // so the dimension guard can run before anything else.
+                    // Returns 0 on decode failure (non-image, corrupt) so the
+                    // caller treats those as "can't verify, let through".
+                    _imageWidth(file) {
+                        if (!file || !file.type || !file.type.startsWith('image/')) return Promise.resolve(0);
+                        const url = URL.createObjectURL(file);
+                        return new Promise((resolve) => {
+                            const img = new Image();
+                            img.onload = () => { URL.revokeObjectURL(url); resolve(img.naturalWidth || 0); };
+                            img.onerror = () => { URL.revokeObjectURL(url); resolve(0); };
+                            img.src = url;
+                        });
                     },
 
                     // Convert a click on the preview into an object-position
