@@ -3,6 +3,14 @@
 <html lang="{{ $locale }}" dir="{{ $dir }}" class="locale-{{ $locale }}">
 <head>
     <meta charset="UTF-8">
+    {{-- Client-side cache busters. The PreventAdminCaching middleware
+         already sends Cache-Control + Pragma + Expires response headers,
+         but Safari in particular has historically ignored `no-store`
+         on some versions. Repeating the directive as meta http-equiv
+         gives the renderer a second signal it can honor. --}}
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', pcontent('seo.default.title'))</title>
     <meta name="description" content="@yield('description', pcontent('seo.default.description'))">
