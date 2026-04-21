@@ -109,9 +109,10 @@
                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     @endif
 
-                    {{-- Category label only. No title, city, year, or brand. --}}
-                    <div class="absolute bottom-5 left-6">
-                        <p class="text-delos-cream text-[10px] tracking-[0.4em] uppercase [text-shadow:0_2px_10px_rgba(0,0,0,0.6)]" style="font-family: 'Inter', sans-serif;">
+                    {{-- Category label only — positioned and styled to match
+                         the old city/year overline slot. --}}
+                    <div class="absolute bottom-0 left-0 right-0 p-6 lg:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                        <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]" style="font-family: 'Inter', sans-serif;">
                             {{ $project->localized('type_label') ?: ucfirst($project->type ?? '') }}
                         </p>
                     </div>
