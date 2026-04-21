@@ -106,12 +106,15 @@
                             :focal="$project->focal_point"
                             :alt="$projTitle"
                             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                            class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700" />
+                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     @endif
-                    <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/20 to-transparent"></div>
 
-                    {{-- Cards are image-only. Category lives on the wrapper
-                         as data-type for the filter; no text overlay. --}}
+                    {{-- Category label only. No title, city, year, or brand. --}}
+                    <div class="absolute bottom-5 left-6">
+                        <p class="text-delos-cream text-[10px] tracking-[0.4em] uppercase [text-shadow:0_2px_10px_rgba(0,0,0,0.6)]" style="font-family: 'Inter', sans-serif;">
+                            {{ $project->localized('type_label') ?: ucfirst($project->type ?? '') }}
+                        </p>
+                    </div>
                 </div>
             @endforeach
         </div>
