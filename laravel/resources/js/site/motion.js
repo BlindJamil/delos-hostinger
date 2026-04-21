@@ -369,11 +369,15 @@ function initProjectSlideshow(context) {
         const from = slides[current];
         const to = slides[index];
 
+        // Paired with `.hero-slide.opacity-0 { visibility: hidden }` —
+        // keeps the 5 stacked <img>s from leaking their alt text.
+        to.classList.remove('opacity-0');
         gsap.to(from, {
             opacity: 0,
             scale: 1.04,
             duration: PROJECT_CROSSFADE_S,
             ease: 'power2.inOut',
+            onComplete: () => from.classList.add('opacity-0'),
         });
 
         gsap.fromTo(to, {
