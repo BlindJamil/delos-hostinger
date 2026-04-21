@@ -109,21 +109,20 @@
                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     @endif
 
-                    {{-- Bottom-only scrim — covers just the lower ~45% of each
-                         card and ramps from solid dark at the baseline to
-                         fully transparent. The label sits inside the opaque
-                         zone so it reads cleanly on both bright kitchens
-                         and dark bedroom photography. Top half stays
-                         untouched. --}}
-                    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-delos-dark/90 via-delos-dark/55 to-transparent"></div>
+                    {{-- Bottom scrim — elegant four-stop ramp so the fade
+                         never reads as a hard band. 92% opaque at the
+                         baseline to give the gold label crisp contrast,
+                         then softens through 55% and 20% before clearing
+                         completely halfway up the card. Uses the brand's
+                         own delos-dark (#3d2e2a) so the tint feels native
+                         to the rest of the site rather than a pure-black
+                         veil. --}}
+                    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(61,46,42,0.92)_0%,rgba(61,46,42,0.55)_35%,rgba(61,46,42,0.2)_70%,transparent_100%)]"></div>
 
-                    {{-- Category label only — positioned bottom-left. Uses
-                         a slightly brighter warm gold than the muted brand
-                         gold (#c49a7a) so it actually reads as "gold" on
-                         top of the dark scrim instead of washing out to
-                         cream. 12.5px + semibold for presence. --}}
+                    {{-- Category label — original brand styling: muted
+                         gold, 10px, wide tracking, uppercase, Inter. --}}
                     <div class="absolute bottom-0 left-0 right-0 p-6 lg:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <p class="text-[#e0b878] text-[12.5px] tracking-[0.4em] uppercase font-semibold [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]" style="font-family: 'Inter', sans-serif;">
+                        <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase" style="font-family: 'Inter', sans-serif;">
                             {{ $project->localized('type_label') ?: ucfirst($project->type ?? '') }}
                         </p>
                     </div>
