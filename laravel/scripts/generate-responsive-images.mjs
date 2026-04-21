@@ -8,8 +8,9 @@ const sourceDir = path.join(projectRoot, 'public', 'images');
 const outputDir = path.join(sourceDir, 'responsive');
 
 const WIDTHS = [480, 768, 1200, 1600, 2000, 2560, 3200];
-const WEBP_QUALITY = 85;
-const JPEG_QUALITY = 88;
+const WEBP_QUALITY = 92;
+const JPEG_QUALITY = 92;
+const FORCE = process.argv.includes('--force');
 const SUPPORTED_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp']);
 
 mkdirSync(outputDir, { recursive: true });
@@ -41,9 +42,13 @@ async function processImage(sourcePath) {
     const metadata = await image.metadata();
     const sourceWidth = metadata.width ?? 0;
 
-    // Only generate widths that are <= source width (don't upscale)
+    // Only generate widths that are <= source width (don't upscale).
     const targetWidths = WIDTHS.filter((w) => w <= sourceWidth);
     if (targetWidths.length === 0) {
+        targetWidths.push(sourceWidth);
+    } else if (targetWidths[targetWidths.length - 1] < sourceWidth) {
+        // Also emit a variant at the source's native width so srcset can
+        // offer the highest-fidelity option without upscaling.
         targetWidths.push(sourceWidth);
     }
 
@@ -53,7 +58,7 @@ async function processImage(sourcePath) {
         variantPaths.push(path.join(outputDir, `${basename}-${width}.jpg`));
     }
 
-    if (!needsRegeneration(sourcePath, variantPaths)) {
+    if (!FORCE && !needsRegeneration(sourcePath, variantPaths)) {
         return { processed: false, width: sourceWidth };
     }
 

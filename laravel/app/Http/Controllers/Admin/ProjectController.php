@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\GeneratesResponsiveVariants;
 use App\Http\Controllers\Admin\Concerns\HandlesHybridImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProjectRequest;
@@ -14,7 +13,6 @@ use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
-    use GeneratesResponsiveVariants;
     use HandlesHybridImages;
 
     public function index(Request $request): View
@@ -57,16 +55,19 @@ class ProjectController extends Controller
             'featured' => false,
             'sort_order' => Project::max('sort_order') + 10,
         ]);
-        return view('admin.projects.create', compact('project'));
+        return view('admin.projects.create', [
+            'project' => $project,
+            'projectTypeOptions' => $this->projectTypeOptions(),
+        ]);
     }
 
     public function store(ProjectRequest $request): RedirectResponse
     {
         $data = $request->validated();
+        $data['type'] = $this->normalizeType($data['type'] ?? null);
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('uploads/projects', 'public');
-            $this->generateResponsiveVariants($data['image']);
         } else {
             unset($data['image']);
         }
@@ -81,21 +82,23 @@ class ProjectController extends Controller
 
     public function edit(Project $project): View
     {
-        return view('admin.projects.edit', compact('project'));
+        return view('admin.projects.edit', [
+            'project' => $project,
+            'projectTypeOptions' => $this->projectTypeOptions(),
+        ]);
     }
 
     public function update(ProjectRequest $request, Project $project): RedirectResponse
     {
         $data = $request->validated();
+        $data['type'] = $this->normalizeType($data['type'] ?? null);
 
         if ($request->hasFile('image')) {
             if ($project->image && str_starts_with($project->image, 'uploads/')
                 && Storage::disk('public')->exists($project->image)) {
                 Storage::disk('public')->delete($project->image);
-                $this->deleteResponsiveVariants($project->image);
             }
             $data['image'] = $request->file('image')->store('uploads/projects', 'public');
-            $this->generateResponsiveVariants($data['image']);
         } else {
             unset($data['image']);
         }
@@ -104,7 +107,6 @@ class ProjectController extends Controller
             if (str_starts_with($project->image, 'uploads/')
                 && Storage::disk('public')->exists($project->image)) {
                 Storage::disk('public')->delete($project->image);
-                $this->deleteResponsiveVariants($project->image);
             }
             $data['image'] = null;
         }
@@ -122,7 +124,6 @@ class ProjectController extends Controller
         if ($project->image && str_starts_with($project->image, 'uploads/')
             && Storage::disk('public')->exists($project->image)) {
             Storage::disk('public')->delete($project->image);
-            $this->deleteResponsiveVariants($project->image);
         }
         $this->deleteHybridImageFiles($project);
 
@@ -145,5 +146,29 @@ class ProjectController extends Controller
         $project->update(['featured' => !$project->featured]);
 
         return back()->with('success', $project->featured ? 'Marked as featured.' : 'Removed from featured.');
+    }
+
+    private function normalizeType(?string $type): ?string
+    {
+        if ($type === null) {
+            return null;
+        }
+        $normalized = mb_strtolower(trim((string) preg_replace('/\s+/u', ' ', $type)));
+        return $normalized === '' ? null : $normalized;
+    }
+
+    private function projectTypeOptions(): array
+    {
+        $defaults = ['kitchens', 'living room', 'bedroom', 'wardrobes', 'dining room', 'turnkey'];
+        $existing = Project::query()
+            ->whereNotNull('type')
+            ->distinct()
+            ->pluck('type')
+            ->map(fn ($t) => $this->normalizeType($t))
+            ->filter()
+            ->values()
+            ->all();
+
+        return collect(array_merge($defaults, $existing))->unique()->values()->all();
     }
 }

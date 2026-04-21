@@ -36,28 +36,19 @@
         $isAdminUpload = str_starts_with($srcStr, 'uploads/');
         $isLegacy      = !$isAbsoluteUrl && !$isAdminUpload;
 
-        // Probe layout differs by source kind. Legacy assets sit under
-        // public/images/responsive/, CMS uploads sit next to the original
-        // in storage/uploads/.../responsive/ — generated at upload time by
-        // PageContentMediaController::generateResponsiveVariants().
-        $responsiveDiskDir = null;
-        $responsiveUrlDir  = null;
-        if ($isLegacy) {
-            $responsiveDiskDir = $publicDir . '/images/responsive';
-            $responsiveUrlDir  = 'images/responsive';
-        } elseif ($isAdminUpload) {
-            $adminDir = dirname($srcStr); // e.g. uploads/page-content
-            $responsiveDiskDir = $publicDir . '/storage/' . $adminDir . '/responsive';
-            $responsiveUrlDir  = 'storage/' . $adminDir . '/responsive';
-        }
-
         $availableWidths = [];
-        if ($responsiveDiskDir) {
-            foreach ($widths as $w) {
-                if (file_exists("{$responsiveDiskDir}/{$basename}-{$w}.webp")) {
-                    $availableWidths[] = $w;
+        if ($isLegacy) {
+            // Scan disk for any generated variant widths (lets the pipeline
+            // expose native-resolution sources like 1878, 1920, 1765 without
+            // requiring them to be listed in the $widths prop).
+            $pattern = $publicDir . "/images/responsive/{$basename}-*.webp";
+            foreach (glob($pattern) ?: [] as $match) {
+                if (preg_match('/-(\d+)\.webp$/', basename($match), $m)) {
+                    $availableWidths[] = (int) $m[1];
                 }
             }
+            sort($availableWidths);
+            $availableWidths = array_values(array_unique($availableWidths));
         }
 
         $hasResponsive = count($availableWidths) > 0;
@@ -65,15 +56,15 @@
         if ($hasResponsive) {
             $webpParts = $jpegParts = [];
             foreach ($availableWidths as $w) {
-                $webpParts[] = asset("{$responsiveUrlDir}/{$basename}-{$w}.webp") . " {$w}w";
-                $jpegParts[] = asset("{$responsiveUrlDir}/{$basename}-{$w}.jpg") . " {$w}w";
+                $webpParts[] = asset("images/responsive/{$basename}-{$w}.webp") . " {$w}w";
+                $jpegParts[] = asset("images/responsive/{$basename}-{$w}.jpg") . " {$w}w";
             }
             $webpSrcset = implode(', ', $webpParts);
             $jpegSrcset = implode(', ', $jpegParts);
         }
 
         if ($hasResponsive) {
-            $fallbackSrc = asset("{$responsiveUrlDir}/{$basename}-" . min($availableWidths) . '.jpg');
+            $fallbackSrc = asset("images/responsive/{$basename}-" . min($availableWidths) . '.jpg');
         } elseif ($isAbsoluteUrl) {
             $fallbackSrc = $srcStr;
         } elseif ($isAdminUpload) {
