@@ -28,16 +28,6 @@
                             {{ pcontent('about.hero.sub') }}
                         </p>
                     </div>
-
-                    <div data-motion="fade-up" class="about-showroom relative overflow-hidden mt-auto aspect-[4/3] md:aspect-auto">
-                        <x-admin-edit-pill page="about" label="Edit About showroom image" />
-                        <x-responsive-image :src="pcontent('about.hero.showroom_image', 'delos-erbil-showroom-6.jpg')"
-                            :mobile-src="pcontent_optional('about.hero.showroom_image_mobile')"
-                            :focal="pcontent_optional('about.hero.showroom_image_focal')"
-                            alt="Delos Erbil Showroom"
-                            sizes="(min-width: 768px) 42vw, 100vw"
-                            class="w-full h-full object-cover" />
-                    </div>
                 </div>
 
                 <div class="md:col-span-7 order-1 md:order-none">
