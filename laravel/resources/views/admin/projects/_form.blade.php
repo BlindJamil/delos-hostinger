@@ -2,104 +2,38 @@
     $isEdit = $project->exists;
 @endphp
 
+{{--
+    Projects admin form — deliberately minimal.
+
+    Cards on /en/projects are image-only; the only per-project text we
+    still surface on the public site is the `type` category, which the
+    filter chips at the top of the page use to show/hide items. So the
+    admin form only needs:
+
+      - Type (drives the filter)
+      - Photo + mobile variant + focal point
+      - Featured / Active toggles, display order
+
+    Title / city / year / brand / type_label columns are still in the DB
+    (nullable) so old data is preserved and this change is reversible,
+    but the inputs for them are removed here.
+--}}
+
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
     {{-- Main content --}}
     <div class="lg:col-span-2 space-y-6">
 
-        {{-- Multilingual title + type label --}}
-        <div class="bg-white rounded-xl border border-delos-dark/5 shadow-card" x-data="{ tab: 'en' }">
-
-            <div class="px-5 py-3 border-b border-delos-dark/5 flex items-center gap-1">
-                <h3 class="font-serif text-base text-delos-dark-2 font-medium flex-1">Content</h3>
-                <div class="flex items-center gap-1 p-1 bg-delos-ivory/50 rounded-lg">
-                    <button type="button" @click="tab = 'en'" :class="tab === 'en' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'" class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">EN</button>
-                    <button type="button" @click="tab = 'ar'" :class="tab === 'ar' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'" class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">AR</button>
-                    <button type="button" @click="tab = 'it'" :class="tab === 'it' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'" class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">IT</button>
-                </div>
-            </div>
-
-            {{-- English --}}
-            <div x-show="tab === 'en'" class="p-5 space-y-4">
-                <div>
-                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">Title <span class="text-red-500">*</span></label>
-                    <input type="text" name="title_en" value="{{ old('title_en', $project->title_en) }}" required
-                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
-                    @error('title_en')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">Type label</label>
-                    <input type="text" name="type_label_en" value="{{ old('type_label_en', $project->type_label_en) }}" placeholder="e.g. Kitchens"
-                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
-                    @error('type_label_en')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
-            </div>
-
-            {{-- Arabic --}}
-            <div x-show="tab === 'ar'" x-cloak class="p-5 space-y-4">
-                <div>
-                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">العنوان (Title)</label>
-                    <input type="text" name="title_ar" dir="rtl" value="{{ old('title_ar', $project->title_ar) }}"
-                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all"
-                           style="font-family: 'Cairo', sans-serif;">
-                    @error('title_ar')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">تسمية النوع (Type label)</label>
-                    <input type="text" name="type_label_ar" dir="rtl" value="{{ old('type_label_ar', $project->type_label_ar) }}"
-                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all"
-                           style="font-family: 'Cairo', sans-serif;">
-                    @error('type_label_ar')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
-            </div>
-
-            {{-- Italian --}}
-            <div x-show="tab === 'it'" x-cloak class="p-5 space-y-4">
-                <div>
-                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">Titolo (Title)</label>
-                    <input type="text" name="title_it" value="{{ old('title_it', $project->title_it) }}"
-                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
-                    @error('title_it')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">Etichetta tipo (Type label)</label>
-                    <input type="text" name="type_label_it" value="{{ old('type_label_it', $project->type_label_it) }}"
-                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
-                    @error('type_label_it')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
-            </div>
-        </div>
-
-        {{-- Common metadata --}}
+        {{-- Category / filter key --}}
         <div class="bg-white rounded-xl border border-delos-dark/5 shadow-card p-5 space-y-4">
-            <h3 class="font-serif text-base text-delos-dark-2 font-medium">Details</h3>
+            <h3 class="font-serif text-base text-delos-dark-2 font-medium">Category</h3>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">City</label>
-                    <input type="text" name="city" value="{{ old('city', $project->city) }}" placeholder="Erbil, Baghdad, ..."
-                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
-                    @error('city')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">Year</label>
-                    <input type="number" name="year" value="{{ old('year', $project->year) }}" min="1980" max="2100" placeholder="2024"
-                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
-                    @error('year')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">Type key</label>
-                    <input type="text" name="type" value="{{ old('type', $project->type) }}" placeholder="kitchens, bedroom, turnkey, ..."
-                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
-                    <p class="text-xs text-delos-muted mt-1">Used by the public filter. Keep consistent across projects.</p>
-                    @error('type')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">Brand</label>
-                    <input type="text" name="brand" value="{{ old('brand', $project->brand) }}" placeholder="LUBE, CANTORI, ..."
-                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
-                    @error('brand')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
-                </div>
+            <div>
+                <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">Type key <span class="text-red-500">*</span></label>
+                <input type="text" name="type" value="{{ old('type', $project->type) }}" placeholder="kitchens, living, bedroom, turnkey, ..." required
+                       class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
+                <p class="text-xs text-delos-muted mt-1">Drives the filter on the public /projects page. Keep values consistent across projects (e.g. every kitchen project uses <code>kitchens</code>).</p>
+                @error('type')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
             </div>
         </div>
 
@@ -177,5 +111,3 @@
         </div>
     </div>
 </div>
-
-<style>[x-cloak] { display: none !important; }</style>
