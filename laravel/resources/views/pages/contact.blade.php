@@ -60,18 +60,20 @@
                 $branchesJson = ($contactBranches ?? collect())->map(fn ($b) => [
                     'id'       => $b->id,
                     'city'     => $b->localized('name'),
+                    'phone'    => $b->phone,
                     'whatsapp' => wa_digits($b->whatsapp ?: $b->phone),
                     'email'    => $b->email,
                 ])->values();
                 $formCopy = [
                     'noWhatsapp' => pcontent('contact.form.branch_no_whatsapp'),
                     'noEmail'    => pcontent('contact.form.branch_no_email'),
+                    'submitError' => pcontent('contact.form.submit_error'),
+                    'submitErrorCall' => pcontent('contact.form.submit_error_call'),
                 ];
             @endphp
 
             <form data-motion="fade-up" x-data="contactForm()" @submit.prevent="send"
                   class="space-y-5 font-sans" novalidate>
-                @csrf
 
                 {{-- Method toggle — WhatsApp vs Email --}}
                 <fieldset class="border-0 p-0 m-0">
@@ -166,6 +168,20 @@
                         class="btn-ripple w-full py-4 bg-delos-dark text-delos-cream text-[12px] tracking-[0.3em] uppercase font-medium hover:bg-delos-gold hover:text-delos-dark disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300">
                     <span x-text="method==='whatsapp' ? submitLabels.whatsapp : submitLabels.email"></span>
                 </button>
+
+                {{-- Visible fallback shown when the WhatsApp / email handoff
+                     fails (pop-up blocker, no app installed, invalid number,
+                     or any runtime error inside send()). Gives the visitor
+                     a tel: escape hatch so they're never stuck. --}}
+                <div x-show="errorMessage" x-cloak role="alert"
+                     class="mt-4 border border-red-500/40 bg-red-50/60 p-4 text-sm text-red-700 space-y-2"
+                     style="font-family: 'Inter', sans-serif;">
+                    <p x-text="errorMessage"></p>
+                    <template x-if="errorCallHref">
+                        <a :href="errorCallHref" x-text="errorCallLabel"
+                           class="inline-block underline font-medium text-red-800 hover:text-red-900"></a>
+                    </template>
+                </div>
             </form>
 
             {{-- Alpine state for the form above.
@@ -193,6 +209,9 @@
                             name: '', phone: '', email: '',
                             branchId: '', service: '', message: '',
                             submitLabels,
+                            errorMessage: '',
+                            errorCallHref: '',
+                            errorCallLabel: '',
 
                             get selectedBranch() {
                                 if (!this.branchId) return null;
@@ -213,46 +232,89 @@
                                 return !this.branchMissingChannel;
                             },
 
-                            send() {
-                                if (!this.canSubmit) return;
+                            // Surface a human-readable error + tel: fallback to the selected
+                            // branch's phone so the visitor is never stuck staring at a
+                            // silent failure. `detail` is optional context appended in
+                            // parentheses — useful when a catch() exposes the real error.
+                            reportError(detail) {
+                                const base = copy.submitError || 'Submission failed.';
+                                this.errorMessage = detail ? base + ' (' + detail + ')' : base;
                                 const b = this.selectedBranch;
-                                const service = this.service || '—';
+                                if (b && b.phone) {
+                                    this.errorCallHref = 'tel:' + String(b.phone).replace(/[^\d+]/g, '');
+                                    this.errorCallLabel = (copy.submitErrorCall || 'Call {city}')
+                                        .replace('{city}', b.city || '');
+                                } else {
+                                    this.errorCallHref = '';
+                                    this.errorCallLabel = '';
+                                }
+                            },
 
-                                if (this.method === 'whatsapp') {
+                            send() {
+                                this.errorMessage = '';
+                                this.errorCallHref = '';
+                                this.errorCallLabel = '';
+                                if (!this.canSubmit) return;
+
+                                try {
+                                    const b = this.selectedBranch;
+                                    if (!b) { this.reportError('no branch selected'); return; }
+
+                                    const name = this.name.trim();
+                                    const message = this.message.trim();
+                                    const service = this.service || '—';
+                                    if (!name || !message) { this.reportError('missing name or message'); return; }
+
+                                    if (this.method === 'whatsapp') {
+                                        const phone = this.phone.trim();
+                                        if (!phone) { this.reportError('missing phone'); return; }
+                                        if (!b.whatsapp) { this.reportError('branch has no WhatsApp'); return; }
+
+                                        const body = [
+                                            '*Delos International — New consultation request*',
+                                            '',
+                                            '*Name:* ' + name,
+                                            '*Phone:* ' + phone,
+                                            '*Showroom:* ' + b.city,
+                                            '*Area of interest:* ' + service,
+                                            '',
+                                            '*Message:*',
+                                            message,
+                                            '',
+                                            '— Sent from delos-international.com',
+                                        ].join('\n');
+                                        // Using location.href (not window.open with _blank):
+                                        // iOS Safari 17+ silently blocks the _blank variant
+                                        // even inside the submit gesture, so the handoff to
+                                        // the WhatsApp app (via the wa.me URL scheme) never
+                                        // fires. Straight navigation works on every platform.
+                                        window.location.href = 'https://wa.me/' + b.whatsapp
+                                            + '?text=' + encodeURIComponent(body);
+                                        return;
+                                    }
+
+                                    const email = this.email.trim();
+                                    if (!email) { this.reportError('missing email'); return; }
+                                    if (!b.email) { this.reportError('branch has no email'); return; }
+
+                                    const subject = 'New consultation request — ' + b.city + ' showroom';
                                     const body = [
-                                        '*Delos International — New consultation request*',
+                                        'Name: ' + name,
+                                        'Email: ' + email,
+                                        'Showroom: ' + b.city,
+                                        'Area of interest: ' + service,
                                         '',
-                                        '*Name:* ' + this.name.trim(),
-                                        '*Phone:* ' + this.phone.trim(),
-                                        '*Showroom:* ' + b.city,
-                                        '*Area of interest:* ' + service,
-                                        '',
-                                        '*Message:*',
-                                        this.message.trim(),
+                                        'Message:',
+                                        message,
                                         '',
                                         '— Sent from delos-international.com',
                                     ].join('\n');
-                                    const url = 'https://wa.me/' + b.whatsapp + '?text=' + encodeURIComponent(body);
-                                    window.open(url, '_blank', 'noopener');
-                                    return;
+                                    window.location.href = 'mailto:' + b.email
+                                        + '?subject=' + encodeURIComponent(subject)
+                                        + '&body=' + encodeURIComponent(body);
+                                } catch (e) {
+                                    this.reportError(e && e.message ? e.message : 'unknown error');
                                 }
-
-                                const subject = 'New consultation request — ' + b.city + ' showroom';
-                                const body = [
-                                    'Name: ' + this.name.trim(),
-                                    'Email: ' + this.email.trim(),
-                                    'Showroom: ' + b.city,
-                                    'Area of interest: ' + service,
-                                    '',
-                                    'Message:',
-                                    this.message.trim(),
-                                    '',
-                                    '— Sent from delos-international.com',
-                                ].join('\n');
-                                const url = 'mailto:' + b.email
-                                    + '?subject=' + encodeURIComponent(subject)
-                                    + '&body=' + encodeURIComponent(body);
-                                window.location.href = url;
                             },
                         }));
                     }
