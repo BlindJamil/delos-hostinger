@@ -75,10 +75,6 @@
                     alt="Delos International Showroom"
                     sizes="(min-width: 1024px) 50vw, 100vw"
                     class="w-full h-full object-cover opacity-80" />
-                <div class="absolute bottom-8 right-8 bg-delos-dark/90 backdrop-blur-sm px-6 py-4 border border-delos-gold/20">
-                    <p class="font-serif text-delos-gold text-4xl font-light leading-none mb-1">{{ pcontent('about.story.year_badge') }}</p>
-                    <p class="text-delos-cream/60 text-[10px] tracking-[0.3em] uppercase" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.story.year_label') }}</p>
-                </div>
             </div>
 
             <div data-motion-group="story">
