@@ -109,15 +109,14 @@
                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     @endif
 
-                    {{-- Bottom scrim — elegant four-stop ramp so the fade
-                         never reads as a hard band. 92% opaque at the
-                         baseline to give the gold label crisp contrast,
-                         then softens through 55% and 20% before clearing
-                         completely halfway up the card. Uses the brand's
-                         own delos-dark (#3d2e2a) so the tint feels native
-                         to the rest of the site rather than a pure-black
-                         veil. --}}
-                    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(61,46,42,0.92)_0%,rgba(61,46,42,0.55)_35%,rgba(61,46,42,0.2)_70%,transparent_100%)]"></div>
+                    {{-- Bottom scrim — inline styles (not Tailwind arbitrary
+                         values) so it works without a Vite rebuild. Four-stop
+                         ramp in the brand's delos-dark (#3d2e2a): 92% opaque
+                         at the baseline for crisp label contrast, softens
+                         through 55% and 20% before clearing completely
+                         halfway up the card. --}}
+                    <div class="pointer-events-none absolute inset-x-0 bottom-0"
+                         style="height: 50%; background: linear-gradient(to top, rgba(61,46,42,0.92) 0%, rgba(61,46,42,0.55) 35%, rgba(61,46,42,0.2) 70%, transparent 100%);"></div>
 
                     {{-- Category label — original brand styling: muted
                          gold, 10px, wide tracking, uppercase, Inter. --}}
