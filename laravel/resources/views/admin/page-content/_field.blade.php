@@ -720,7 +720,7 @@
                         // Step quality down only as needed. Early-exit the
                         // first time the blob fits under the budget.
                         let bestBlob = null;
-                        for (const q of [0.92, 0.88, 0.85, 0.80, 0.75, 0.70, 0.65, 0.60]) {
+                        for (const q of [0.92, 0.90, 0.88, 0.85, 0.82]) {
                             const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', q));
                             if (!blob) continue;
                             bestBlob = blob;
