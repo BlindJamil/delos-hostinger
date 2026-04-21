@@ -1151,42 +1151,5 @@ body.has-custom-cursor .admin-bar label.admin-bar__toggle * {
     }
 }
 
-/* ============================================================
-   SAFARI DEFENSIVE FIXES
-
-   Safari/WebKit has two rendering quirks that leak text into
-   what should be purely visual spaces:
-
-   1. When an <img> fails to load and has `alt`, Safari renders
-      the alt text as an inline layout box — and `opacity: 0`
-      applied to the <img> may NOT hide that rendered text on
-      all Safari versions. The hero slideshow stacks five
-      absolute-positioned <img>s on top of each other; if all
-      slides reveal their alt text, the viewer sees 5 lines of
-      text overlapping in the same spot. `visibility: hidden`
-      is the bulletproof hide; it applies regardless of whether
-      the image loaded or fell back to alt rendering.
-
-   2. Collection cards rely on CSS grid + aspect-ratio to layout.
-      If aspect-ratio doesn't compute in time on Safari, the
-      card's absolute-positioned text overlay can flash at the
-      wrong place. Enforcing `contain: layout` keeps each card's
-      children bounded to its own box.
-============================================================ */
-
-/* Hero slideshow: hide inactive slides completely, not just
-   transparent. GSAP toggles opacity during crossfades, and the
-   slideshow script also adds/removes `opacity-0`. Both are
-   handled — we only hide when .opacity-0 is actively applied. */
-.hero-slide.opacity-0 {
-    visibility: hidden;
-}
-
-/* Collection grid: pin each card as its own containment context
-   so absolute children never leak onto sibling cards if the grid
-   hasn't fully laid out yet. */
-.collection-card {
-    contain: layout paint;
-}
 
 
