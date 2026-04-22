@@ -76,7 +76,7 @@
                                 alt="{{ $name }} showroom"
                                 loading="lazy"
                                 decoding="async"
-                                class="absolute inset-0 w-full h-full object-cover"
+                                class="block w-full h-auto"
                             >
                         @else
                             {{-- Letter watermark — luxury catalog look while photos are pending --}}

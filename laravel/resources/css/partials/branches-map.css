@@ -391,7 +391,13 @@ body.has-custom-cursor .iraq-map__pin-group {
     border-color: rgba(196, 154, 122, 0.25);
 }
 
-.branch-card__visual {
+/* Photo branches render at their native aspect ratio (the <img> is in
+   the normal flow, not absolutely positioned) so nothing gets cropped
+   regardless of whether the source is 3:2, 4:3, square, or portrait.
+   The :has() guard below keeps the aspect-ratio fallback alive only
+   for the letter-watermark branches that need a sized frame. */
+
+.branch-card__visual:has(.branch-card__watermark) {
     aspect-ratio: 3 / 2;
     min-height: 260px;
 }
@@ -399,6 +405,8 @@ body.has-custom-cursor .iraq-map__pin-group {
 @media (min-width: 1024px) {
     .branch-card__visual {
         align-self: start;
+    }
+    .branch-card__visual:has(.branch-card__watermark) {
         min-height: 0;
     }
 }
