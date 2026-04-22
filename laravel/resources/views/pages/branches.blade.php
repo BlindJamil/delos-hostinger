@@ -163,7 +163,6 @@
                             >
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2 12a3 3 0 013-3h14a3 3 0 013 3v4a3 3 0 01-3 3h-4l-3-3-3 3H5a3 3 0 01-3-3v-4z"/><circle cx="8" cy="14" r="1.3" fill="currentColor"/><circle cx="16" cy="14" r="1.3" fill="currentColor"/></svg>
                                 {{ pcontent('branches.vr_cta') }}
-                                <span class="text-[9px] opacity-70 ms-1">· {{ pcontent('branches.vr_coming_soon') }}</span>
                             </button>
                         </div>
                     </div>
