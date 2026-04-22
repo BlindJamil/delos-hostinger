@@ -44,6 +44,10 @@ const mappings = [
     ['public/build', 'build'],
     ['public/images', 'images'],
     ['public/videos', 'videos'],
+    // Self-hosted third-party browser runtimes (FFmpeg.wasm etc.) — served
+    // same-origin so Worker/WASM scripts aren't blocked by cross-origin
+    // Worker security.
+    ['public/vendor', 'vendor'],
     // Raised PHP upload limits so admins can replace the homepage
     // brand video (~42MB) from the page-content editor.
     ['public/.user.ini', '.user.ini'],

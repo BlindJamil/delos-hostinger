@@ -722,12 +722,16 @@
                         this.statusType = '';
 
                         if (!window._ffmpegInstance) {
-                            // Load the UMD bundle — exposes window.FFmpegWASM.FFmpeg.
+                            // Self-hosted under /vendor/ffmpeg/ — cross-origin
+                            // CDN loads fail when ffmpeg.js tries to spawn its
+                            // Worker chunk (browsers block Worker scripts from
+                            // a different origin).
+                            const base = '{{ asset('vendor/ffmpeg') }}';
                             await new Promise((resolve, reject) => {
                                 const s = document.createElement('script');
-                                s.src = 'https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js';
+                                s.src = `${base}/ffmpeg.js`;
                                 s.onload = resolve;
-                                s.onerror = () => reject(new Error('failed to load compressor (network blocked?)'));
+                                s.onerror = () => reject(new Error('failed to load compressor runtime'));
                                 document.head.appendChild(s);
                             });
                             if (!window.FFmpegWASM || !window.FFmpegWASM.FFmpeg) {
@@ -735,8 +739,8 @@
                             }
                             const instance = new window.FFmpegWASM.FFmpeg();
                             await instance.load({
-                                coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
-                                wasmURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm',
+                                coreURL: `${base}/ffmpeg-core.js`,
+                                wasmURL: `${base}/ffmpeg-core.wasm`,
                             });
                             window._ffmpegInstance = instance;
                         }
