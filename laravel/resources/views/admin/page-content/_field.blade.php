@@ -225,7 +225,7 @@
                 </svg>
                 <p class="text-sm text-delos-dark-2 font-medium mb-0.5" x-text="isCustom ? 'Replace with new upload' : ('Upload new ' + ('{{ $type }}' === 'video' ? 'video' : 'image'))"></p>
                 <p class="text-xs text-delos-muted">
-                    @if($type === 'video') MP4, WebM, MOV · max 50MB @else JPG, PNG, WebP · any size (auto-compressed) @endif
+                    @if($type === 'video') MP4, WebM, MOV · any size (auto-compressed) @else JPG, PNG, WebP · any size (auto-compressed) @endif
                 </p>
                 <input type="file"
                        @change="onFile($event)"
@@ -416,13 +416,20 @@
                         const picked = event.target.files[0];
                         if (!picked) return;
                         let file = picked;
-                        // Video: hard-reject over 50MB (browser can't re-encode video).
+                        // Video: transcode in the browser via FFmpeg.wasm if
+                        // the source is larger than the server limit. Keeps
+                        // the upload under 50MB without any server-side work.
                         if (config.type === 'video') {
-                            if (file.size > 50 * 1024 * 1024) {
-                                this.status = `Video too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Max 50MB.`;
-                                this.statusType = 'error';
-                                event.target.value = '';
-                                return;
+                            const LIMIT = 50 * 1024 * 1024;
+                            if (file.size > LIMIT) {
+                                try {
+                                    file = await this._compressVideo(picked, LIMIT);
+                                } catch (e) {
+                                    this.status = `Could not compress video: ${e.message}`;
+                                    this.statusType = 'error';
+                                    event.target.value = '';
+                                    return;
+                                }
                             }
                         } else {
                             // Images: auto-compress in the browser to ≤5MB before
@@ -431,10 +438,9 @@
                             // dimensions preserved — only JPEG quality steps
                             // down (0.92 → 0.60) until the blob fits the budget.
                             try {
-                                await this._assertHeroMinWidth(picked, 2000);
                                 file = await this._compressImage(picked, 5 * 1024 * 1024);
                             } catch (e) {
-                                this.status = e.message || 'Could not read image.';
+                                this.status = 'Could not read image: ' + e.message;
                                 this.statusType = 'error';
                                 event.target.value = '';
                                 return;
@@ -564,12 +570,9 @@
                         if (!picked) return;
                         let file;
                         try {
-                            // Mobile variant — same hero-field minimum, just at a
-                            // lower threshold because phone viewports are smaller.
-                            await this._assertHeroMinWidth(picked, 1200);
                             file = await this._compressImage(picked, 5 * 1024 * 1024);
                         } catch (e) {
-                            this.status = e.message || 'Could not read mobile image.';
+                            this.status = 'Could not read mobile image: ' + e.message;
                             this.statusType = 'error';
                             event.target.value = '';
                             return;
@@ -662,36 +665,6 @@
                     // normal screen. The loop only drops lower if a photo
                     // is genuinely huge (20MP+) and won't fit at q=0.92.
                     // ----------------------------------------------------
-                    // Hero slides fill the screen at retina resolution. A 1600px
-                    // source stretched to a 2880px-wide MacBook hero is visibly
-                    // soft; by the time we noticed the live site, all four
-                    // admin-uploaded heroes were 1600x1067 and obviously blurry.
-                    // For any field whose key lives under `.hero.`, refuse the
-                    // upload below a minimum width so the CMS can't silently
-                    // regress image quality again.
-                    async _assertHeroMinWidth(file, minWidth) {
-                        if (!file.type || !file.type.startsWith('image/')) return;
-                        if (!this.key || !this.key.includes('.hero.')) return;
-
-                        const url = URL.createObjectURL(file);
-                        try {
-                            const img = await new Promise((resolve, reject) => {
-                                const i = new Image();
-                                i.onload = () => resolve(i);
-                                i.onerror = () => reject(new Error('Could not decode image for size check.'));
-                                i.src = url;
-                            });
-                            if (img.naturalWidth < minWidth) {
-                                throw new Error(
-                                    `Hero image must be at least ${minWidth}px wide — this one is ${img.naturalWidth}px. ` +
-                                    `Please upload a higher-resolution original (2560×1440+ recommended for retina sharpness).`
-                                );
-                            }
-                        } finally {
-                            URL.revokeObjectURL(url);
-                        }
-                    },
-
                     async _compressImage(file, maxBytes) {
                         if (!file.type || !file.type.startsWith('image/')) return file;
                         if (file.size <= maxBytes) return file;
@@ -720,7 +693,7 @@
                         // Step quality down only as needed. Early-exit the
                         // first time the blob fits under the budget.
                         let bestBlob = null;
-                        for (const q of [0.92, 0.90, 0.88, 0.85, 0.82]) {
+                        for (const q of [0.92, 0.88, 0.85, 0.80, 0.75, 0.70, 0.65, 0.60]) {
                             const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', q));
                             if (!blob) continue;
                             bestBlob = blob;
@@ -733,6 +706,104 @@
                         const newMB = (newFile.size / (1024 * 1024)).toFixed(1);
                         this.status = `Compressed ${origMB}MB → ${newMB}MB. Uploading…`;
                         return newFile;
+                    },
+
+                    // ----------------------------------------------------
+                    // Client-side video compression via FFmpeg.wasm.
+                    // Target: H.264 + AAC MP4 at 1080p-capped, CRF 26, fast
+                    // preset — reliably lands large source videos under the
+                    // 50MB server cap without shipping them over the wire
+                    // uncompressed. First call lazy-loads the ~30MB WASM
+                    // runtime from jsDelivr; subsequent calls reuse it.
+                    // ----------------------------------------------------
+                    async _compressVideo(file, maxBytes) {
+                        const origMB = (file.size / (1024 * 1024)).toFixed(1);
+                        this.status = `Loading video compressor (first time only)…`;
+                        this.statusType = '';
+
+                        if (!window._ffmpegInstance) {
+                            // Load the UMD bundle — exposes window.FFmpegWASM.FFmpeg.
+                            await new Promise((resolve, reject) => {
+                                const s = document.createElement('script');
+                                s.src = 'https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js';
+                                s.onload = resolve;
+                                s.onerror = () => reject(new Error('failed to load compressor (network blocked?)'));
+                                document.head.appendChild(s);
+                            });
+                            if (!window.FFmpegWASM || !window.FFmpegWASM.FFmpeg) {
+                                throw new Error('compressor runtime not available');
+                            }
+                            const instance = new window.FFmpegWASM.FFmpeg();
+                            await instance.load({
+                                coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+                                wasmURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm',
+                            });
+                            window._ffmpegInstance = instance;
+                        }
+                        const ffmpeg = window._ffmpegInstance;
+
+                        // Progress callback — FFmpeg.wasm emits { progress, time }.
+                        const onProgress = ({ progress }) => {
+                            const pct = Math.max(0, Math.min(1, progress || 0));
+                            this.status = `Compressing video… ${Math.round(pct * 100)}%`;
+                        };
+                        ffmpeg.on('progress', onProgress);
+
+                        try {
+                            const ext = (file.name.match(/\.(\w+)$/)?.[1] || 'mp4').toLowerCase();
+                            const inName = `input.${ext}`;
+                            const outName = 'output.mp4';
+
+                            this.status = `Reading ${origMB}MB video…`;
+                            const buf = new Uint8Array(await file.arrayBuffer());
+                            await ffmpeg.writeFile(inName, buf);
+
+                            // Two-pass strategy: start with CRF 26 @ 1080p.
+                            // If the result is still over budget, fall back
+                            // to CRF 30 @ 1280-wide (smaller frame, more
+                            // aggressive compression).
+                            const attempts = [
+                                ['-vf', `scale='min(1920,iw)':-2`, '-crf', '26'],
+                                ['-vf', `scale='min(1280,iw)':-2`, '-crf', '30'],
+                            ];
+                            let outData = null;
+                            for (const extra of attempts) {
+                                await ffmpeg.exec([
+                                    '-y',
+                                    '-i', inName,
+                                    ...extra,
+                                    '-c:v', 'libx264',
+                                    '-preset', 'veryfast',
+                                    '-pix_fmt', 'yuv420p',
+                                    '-c:a', 'aac',
+                                    '-b:a', '128k',
+                                    '-ac', '2',
+                                    '-movflags', '+faststart',
+                                    outName,
+                                ]);
+                                outData = await ffmpeg.readFile(outName);
+                                if (outData.length <= maxBytes) break;
+                            }
+                            if (!outData) throw new Error('encoder produced no output');
+
+                            // Always clean up the virtual FS so a second run
+                            // doesn't trip on stale input/output files.
+                            try { await ffmpeg.deleteFile(inName); } catch (_) {}
+                            try { await ffmpeg.deleteFile(outName); } catch (_) {}
+
+                            const blob = new Blob([outData.buffer], { type: 'video/mp4' });
+                            const newName = (file.name || 'video').replace(/\.\w+$/, '') + '.mp4';
+                            const newFile = new File([blob], newName, { type: 'video/mp4' });
+                            const newMB = (newFile.size / (1024 * 1024)).toFixed(1);
+                            this.status = `Compressed ${origMB}MB → ${newMB}MB. Uploading…`;
+
+                            if (newFile.size > maxBytes) {
+                                throw new Error(`still ${newMB}MB after compression — shorten or lower the source resolution`);
+                            }
+                            return newFile;
+                        } finally {
+                            ffmpeg.off('progress', onProgress);
+                        }
                     },
                     async _persistFocal() {
                         this.focalSaving = true;
