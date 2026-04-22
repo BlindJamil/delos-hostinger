@@ -392,13 +392,13 @@ body.has-custom-cursor .iraq-map__pin-group {
 }
 
 .branch-card__visual {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 2;
     min-height: 260px;
 }
 
 @media (min-width: 1024px) {
     .branch-card__visual {
-        aspect-ratio: auto;
+        align-self: start;
         min-height: 0;
     }
 }

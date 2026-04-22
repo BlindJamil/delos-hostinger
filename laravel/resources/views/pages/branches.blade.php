@@ -76,9 +76,8 @@
                                 alt="{{ $name }} showroom"
                                 loading="lazy"
                                 decoding="async"
-                                class="absolute inset-0 w-full h-full object-cover opacity-90"
+                                class="absolute inset-0 w-full h-full object-cover"
                             >
-                            <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/60 to-transparent"></div>
                         @else
                             {{-- Letter watermark — luxury catalog look while photos are pending --}}
                             <div class="branch-card__watermark" aria-hidden="true">
