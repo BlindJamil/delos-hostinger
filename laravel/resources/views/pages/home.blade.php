@@ -166,7 +166,6 @@
             @php
                 $empName = $emp->localized('name');
                 $empRole = $emp->localized('role');
-                $empBranch = $emp->branch;
                 // Card teaser: first sentence of the bio, trimmed to its first
                 // clause if long. Keeps the card tight (~1 line) while the full
                 // bio lives on the /team/{id} detail page.
@@ -194,9 +193,6 @@
                         class="absolute inset-0 w-full h-full object-cover" />
                 @endif
                 <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3] pointer-events-none">
-                    @if($empBranch)
-                        <p class="text-overline-sm text-delos-gold mb-3">{{ $empBranch }}</p>
-                    @endif
                     <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $empName }}</h3>
                     <p class="text-overline-sm text-delos-cream/50 mb-4">{{ $empRole }}</p>
                     @if($empAchievement)
@@ -210,7 +206,6 @@
                 <div data-motion="fade-up" class="employee-slide employee-card card-tilt group relative w-[350px] lg:w-[420px] aspect-[3/4] overflow-hidden bg-delos-dark-2 flex-shrink-0">
                     <x-responsive-image :src="$emp['img']" :alt="$emp['name'] . ' — ' . $emp['role']" sizes="(min-width: 1024px) 420px, 350px" class="absolute inset-0 w-full h-full object-cover" />
                     <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3]">
-                        <p class="text-overline-sm text-delos-gold mb-3">{{ $emp['branch'] }}</p>
                         <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $emp['name'] }}</h3>
                         <p class="text-overline-sm text-delos-cream/50 mb-4">{{ $emp['role'] }}</p>
                         <p class="text-body-sm text-delos-cream/40 leading-relaxed group-hover:text-delos-cream/60 transition-colors duration-500">&ldquo;{{ $emp['achievement'] }}&rdquo;</p>

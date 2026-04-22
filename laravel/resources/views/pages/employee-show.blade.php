@@ -3,7 +3,6 @@
 @php
     $empName = $employee->localized('name');
     $empRole = $employee->localized('role');
-    $empBranch = $employee->branch;
     $empAchievement = $employee->localized('achievement');
     $metaDescription = \Illuminate\Support\Str::limit(trim(strip_tags((string) $empAchievement)), 160);
 @endphp
@@ -57,13 +56,6 @@
                 {{-- Text column --}}
                 <div class="lg:col-span-7 order-2 lg:pt-4">
 
-                    @if($empBranch)
-                        <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6 lg:mb-7">
-                            <span class="w-8 h-px bg-delos-gold"></span>
-                            <span class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium" style="font-family: 'Inter', sans-serif;">{{ $empBranch }}</span>
-                        </div>
-                    @endif
-
                     <h1 data-motion="fade-up" class="employee-show__name font-serif text-delos-dark font-light leading-[1.08] mb-5">
                         {{ $empName }}
                     </h1>
@@ -77,7 +69,7 @@
                     <div data-motion-line class="w-12 h-px bg-delos-gold/60 mb-8 lg:mb-10"></div>
 
                     @if($empAchievement)
-                        <div data-motion="fade-up" class="employee-show__bio text-delos-muted text-base lg:text-lg leading-relaxed max-w-xl" style="font-family: 'Inter', sans-serif;">
+                        <div data-motion="fade-up" class="employee-show__bio text-delos-muted text-sm lg:text-base leading-relaxed max-w-xl" style="font-family: 'Inter', sans-serif;">
                             {!! $empAchievement !!}
                         </div>
                     @endif
