@@ -191,7 +191,7 @@
                         :mobile-src="$emp->image_mobile"
                         :focal="$emp->focal_point"
                         :alt="$empName . ' — ' . $empRole" sizes="(min-width: 1024px) 420px, 350px"
-                        class="absolute inset-0 w-full h-full object-cover opacity-60" />
+                        class="absolute inset-0 w-full h-full object-cover" />
                 @endif
                 <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3] pointer-events-none">
                     @if($empBranch)
@@ -208,7 +208,7 @@
             {{-- Fallback to legacy lang-file entries if DB is empty (safety net) --}}
             @foreach(pcontent('home.employees.items') as $slug => $emp)
                 <div data-motion="fade-up" class="employee-slide employee-card card-tilt group relative w-[350px] lg:w-[420px] aspect-[3/4] overflow-hidden bg-delos-dark-2 flex-shrink-0">
-                    <x-responsive-image :src="$emp['img']" :alt="$emp['name'] . ' — ' . $emp['role']" sizes="(min-width: 1024px) 420px, 350px" class="absolute inset-0 w-full h-full object-cover opacity-60" />
+                    <x-responsive-image :src="$emp['img']" :alt="$emp['name'] . ' — ' . $emp['role']" sizes="(min-width: 1024px) 420px, 350px" class="absolute inset-0 w-full h-full object-cover" />
                     <div class="employee-overlay absolute inset-0 flex flex-col justify-end p-6 lg:p-8 z-[3]">
                         <p class="text-overline-sm text-delos-gold mb-3">{{ $emp['branch'] }}</p>
                         <h3 class="font-serif text-delos-cream text-2xl font-light mb-1">{{ $emp['name'] }}</h3>
