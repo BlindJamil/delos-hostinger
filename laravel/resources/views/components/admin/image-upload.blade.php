@@ -21,8 +21,12 @@
     'focal' => null,
 
     // File-size and accept constraints surfaced to the user.
+    // Kept in sync with the FormRequest rules (max:20480 KB) so the JS gate
+    // doesn't silently reject files the server would actually accept — a
+    // typical DSLR/phone portrait is 5-15MB. Server PHP limits (.user.ini)
+    // allow 60MB, which leaves headroom for video fields that override this.
     'accept' => 'image/jpeg,image/png,image/webp',
-    'maxMb' => 5,
+    'maxMb' => 20,
 
     // Optional helper text under the desktop dropzone.
     'hint' => null,
@@ -96,7 +100,10 @@
         @if($hint)
             <p class="mt-2 text-xs text-delos-muted/80">{{ $hint }}</p>
         @endif
-        <p x-show="desktopError" x-cloak class="mt-2 text-xs text-red-600" x-text="desktopError"></p>
+        <div x-show="desktopError" x-cloak class="mt-3 flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <svg class="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
+            <p class="text-sm text-red-700 font-medium" x-text="desktopError"></p>
+        </div>
     </div>
 
     {{-- ─── Mobile variant (optional) ──────────────────────────── --}}
@@ -126,7 +133,10 @@
                    x-ref="mobileInput"
                    class="sr-only">
         </label>
-        <p x-show="mobileError" x-cloak class="mt-2 text-xs text-red-600" x-text="mobileError"></p>
+        <div x-show="mobileError" x-cloak class="mt-3 flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <svg class="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
+            <p class="text-sm text-red-700 font-medium" x-text="mobileError"></p>
+        </div>
     </div>
 
     {{-- Hidden state inputs submitted with the parent form. --}}
@@ -164,47 +174,14 @@
                         return this.mobilePreviewUrl || this.mobileInitialUrl || null;
                     },
 
-                    async onDesktopFile(event) {
-                        let file = event.target.files[0];
+                    onDesktopFile(event) {
+                        const file = event.target.files[0];
                         if (!file) return;
-
-                        // Source-resolution guard. Runs first — no point
-                        // auto-compressing a 1200px image we're going to reject
-                        // for the full-width / hero row.
-                        const minWidth = 2000;
-                        const width = await this._imageWidth(file);
-                        if (width && width < minWidth) {
-                            this.desktopError =
-                                `This image is only ${width}px wide. Full-width / hero images need at least ${minWidth}px ` +
-                                `(2560×1440+ recommended for retina sharpness). Please upload a higher-resolution original.`;
+                        if (file.size > this.maxBytes) {
+                            this.desktopError = `File too large — max ${(this.maxBytes / 1024 / 1024).toFixed(0)}MB.`;
                             event.target.value = '';
                             return;
                         }
-
-                        // Auto-compress if the upload busts the server's 5MB
-                        // ceiling. High-res originals from manufacturers are
-                        // routinely 10–30MB; without this, the admin would
-                        // have to re-export JPEGs by hand. Full pixel
-                        // dimensions preserved — only quality steps down.
-                        if (file.size > this.maxBytes) {
-                            try {
-                                const compressed = await this._compressImage(file, this.maxBytes);
-                                if (compressed.size > this.maxBytes) {
-                                    this.desktopError =
-                                        `Can't get this image under ${(this.maxBytes/1024/1024).toFixed(0)}MB even at q=0.82. ` +
-                                        `The source is probably 8K+ — please downscale to ~3200px before uploading.`;
-                                    event.target.value = '';
-                                    return;
-                                }
-                                file = compressed;
-                                this._swapInputFile(event.target, file);
-                            } catch (e) {
-                                this.desktopError = 'Could not compress image: ' + (e.message || e);
-                                event.target.value = '';
-                                return;
-                            }
-                        }
-
                         this.desktopError = '';
                         // Picking a new file cancels any pending clear.
                         this.clearDesktopFlag = false;
@@ -219,44 +196,14 @@
                         this.clearDesktopFlag = true;
                     },
 
-                    async onMobileFile(event) {
-                        let file = event.target.files[0];
+                    onMobileFile(event) {
+                        const file = event.target.files[0];
                         if (!file) return;
-
-                        // Mobile variant — lower threshold, phone viewports top
-                        // out around 430 CSS px (~1290 physical px on DPR-3
-                        // iPhone Pro Max). 1200px is the smallest width that
-                        // still renders sharp on those displays.
-                        const minWidth = 1200;
-                        const width = await this._imageWidth(file);
-                        if (width && width < minWidth) {
-                            this.mobileError =
-                                `This mobile image is only ${width}px wide. Phone screens need at least ${minWidth}px ` +
-                                `for retina sharpness. Please upload a higher-resolution original.`;
+                        if (file.size > this.maxBytes) {
+                            this.mobileError = `File too large — max ${(this.maxBytes / 1024 / 1024).toFixed(0)}MB.`;
                             event.target.value = '';
                             return;
                         }
-
-                        // Same auto-compression path as desktop.
-                        if (file.size > this.maxBytes) {
-                            try {
-                                const compressed = await this._compressImage(file, this.maxBytes);
-                                if (compressed.size > this.maxBytes) {
-                                    this.mobileError =
-                                        `Can't get this mobile image under ${(this.maxBytes/1024/1024).toFixed(0)}MB at q=0.82. ` +
-                                        `Please downscale the source before uploading.`;
-                                    event.target.value = '';
-                                    return;
-                                }
-                                file = compressed;
-                                this._swapInputFile(event.target, file);
-                            } catch (e) {
-                                this.mobileError = 'Could not compress mobile image: ' + (e.message || e);
-                                event.target.value = '';
-                                return;
-                            }
-                        }
-
                         this.mobileError = '';
                         // Picking a new file cancels any pending "clear" action
                         // so the user doesn't accidentally wipe it on submit.
@@ -275,76 +222,6 @@
                         this.mobileInitialUrl = null;
                         this.clearMobileFlag = true;
                         if (this.$refs.mobileInput) this.$refs.mobileInput.value = '';
-                    },
-
-                    // Decode just enough of the picked file to read its
-                    // natural pixel dimensions — no canvas, no re-encode —
-                    // so the dimension guard can run before anything else.
-                    // Returns 0 on decode failure (non-image, corrupt) so the
-                    // caller treats those as "can't verify, let through".
-                    _imageWidth(file) {
-                        if (!file || !file.type || !file.type.startsWith('image/')) return Promise.resolve(0);
-                        const url = URL.createObjectURL(file);
-                        return new Promise((resolve) => {
-                            const img = new Image();
-                            img.onload = () => { URL.revokeObjectURL(url); resolve(img.naturalWidth || 0); };
-                            img.onerror = () => { URL.revokeObjectURL(url); resolve(0); };
-                            img.src = url;
-                        });
-                    },
-
-                    // Browser-side re-encode to hit the server's 5MB ceiling
-                    // without bouncing the upload back to the admin. Full
-                    // pixel dimensions are preserved — only JPEG quality is
-                    // stepped down. Ladder floors at q=0.82 because below
-                    // that photographic content bands visibly. Same contract
-                    // as page-content/_field.blade.php::_compressImage so the
-                    // two forms behave identically.
-                    async _compressImage(file, maxBytes) {
-                        if (!file.type || !file.type.startsWith('image/')) return file;
-                        if (file.size <= maxBytes) return file;
-
-                        const url = URL.createObjectURL(file);
-                        const img = await new Promise((resolve, reject) => {
-                            const i = new Image();
-                            i.onload = () => resolve(i);
-                            i.onerror = () => reject(new Error('could not decode image'));
-                            i.src = url;
-                        });
-
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.naturalWidth;
-                        canvas.height = img.naturalHeight;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0);
-                        URL.revokeObjectURL(url);
-
-                        // Walk quality down. Early-exit the first time the
-                        // blob fits; otherwise return the last (smallest)
-                        // attempt so the caller can decide whether it's good
-                        // enough or whether to show an error.
-                        let bestBlob = null;
-                        for (const q of [0.92, 0.90, 0.88, 0.85, 0.82]) {
-                            const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', q));
-                            if (!blob) continue;
-                            bestBlob = blob;
-                            if (blob.size <= maxBytes) break;
-                        }
-                        if (!bestBlob) throw new Error('encoder returned no blob');
-
-                        const newName = (file.name || 'image').replace(/\.\w+$/, '') + '.jpg';
-                        return new File([bestBlob], newName, { type: 'image/jpeg' });
-                    },
-
-                    // Replace the File object on a native <input type=file>
-                    // so a regular form submit POSTs the compressed blob.
-                    // DataTransfer is the only cross-browser path for this;
-                    // Safari/WebKit doesn't support the older input.files
-                    // assignment otherwise.
-                    _swapInputFile(inputEl, file) {
-                        const dt = new DataTransfer();
-                        dt.items.add(file);
-                        inputEl.files = dt.files;
                     },
 
                     // Convert a click on the preview into an object-position
