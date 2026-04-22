@@ -12,6 +12,8 @@ return [
     'directions_cta' => 'Get Directions',
     'call_cta' => 'Call',
     'whatsapp_cta' => 'WhatsApp',
+    'vr_cta' => 'VR Tour',
+    'vr_coming_soon' => 'Coming soon',
     'photo_pending' => 'Showroom photography forthcoming',
     'flagship_label' => 'Flagship',
 

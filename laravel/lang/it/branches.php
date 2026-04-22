@@ -10,6 +10,8 @@ return [
     'map_caption' => 'Mappa dell\'Iraq con :count showroom Delos.',
     'cartouche_showroom' => '{1} showroom|[2,*] showroom',
     'directions_cta' => 'Indicazioni',
+    'vr_cta' => 'Tour VR',
+    'vr_coming_soon' => 'In arrivo',
     'call_cta' => 'Chiama',
     'whatsapp_cta' => 'WhatsApp',
     'photo_pending' => 'Fotografia dello showroom in arrivo',

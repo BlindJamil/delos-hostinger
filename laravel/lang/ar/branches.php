@@ -12,6 +12,8 @@ return [
     'directions_cta' => 'احصل على الاتجاهات',
     'call_cta' => 'اتصل',
     'whatsapp_cta' => 'واتساب',
+    'vr_cta' => 'جولة افتراضية',
+    'vr_coming_soon' => 'قريباً',
     'photo_pending' => 'صور المعرض قادمة',
     'flagship_label' => 'المعرض الرئيسي',
 
