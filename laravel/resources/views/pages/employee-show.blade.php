@@ -82,16 +82,7 @@
                         </div>
                     @endif
 
-                    <div data-motion="fade-up" class="mt-12 lg:mt-16 flex flex-col sm:flex-row gap-6 sm:gap-8 items-start sm:items-center">
-                        <a href="{{ lroute('contact') }}"
-                           class="inline-flex items-center gap-3 px-7 py-3 bg-delos-gold text-delos-dark text-[11px] tracking-[0.25em] uppercase font-medium hover:bg-delos-gold-light transition-all duration-300 group"
-                           style="font-family: 'Inter', sans-serif;">
-                            {{ pcontent('common.ctas.work_with_team', 'Work with our team') }}
-                            <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                            </svg>
-                        </a>
-
+                    <div data-motion="fade-up" class="mt-12 lg:mt-16">
                         <a href="{{ lroute('about') }}"
                            class="inline-flex items-center gap-2 text-delos-dark/70 hover:text-delos-gold text-[11px] tracking-[0.25em] uppercase font-medium transition-colors duration-300 border-b border-delos-dark/20 hover:border-delos-gold pb-1"
                            style="font-family: 'Inter', sans-serif;">
