@@ -74,8 +74,11 @@
                   class="space-y-5 font-sans" novalidate>
                 @csrf
 
-                {{-- Method toggle — WhatsApp vs Email --}}
-                <fieldset class="border-0 p-0 m-0">
+                {{-- Method toggle — WhatsApp vs Email.
+                     pb-3 gives the toggle buttons more visual breathing room
+                     before the next field group (space-y-5 alone sits too
+                     tight against this visually-heavier row). --}}
+                <fieldset class="border-0 p-0 m-0 pb-3">
                     <legend class="block text-[11px] tracking-[0.2em] uppercase text-delos-muted mb-3">
                         {{ pcontent('contact.form.method_legend') }}
                     </legend>
