@@ -184,4 +184,14 @@ export function initLanguageGlobe() {
     btn.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!isOpen); });
     document.addEventListener('click', function (e) { if (isOpen && !wrap.contains(e.target)) setOpen(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) setOpen(false); });
+
+    // Auto-expand on the homepage only. `pathWithoutLocale === ''`
+    // matches `/`, `/en`, `/ar`, `/it` — any other route (about,
+    // brands, contact, …) leaves the globe closed so the visitor
+    // isn't nagged while browsing. Small delay lets the entrance
+    // animation actually play (panel styles paint first, then
+    // transition runs on the style change).
+    if (pathWithoutLocale === '') {
+        setTimeout(function () { setOpen(true); }, 800);
+    }
 }
