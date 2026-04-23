@@ -179,9 +179,12 @@
                 <p x-show="selectedBranch && ((method==='email' && selectedBranch.email) || (method==='whatsapp' && selectedBranch.whatsapp))"
                    x-cloak
                    class="text-[11px] text-delos-muted text-center leading-relaxed pt-2">
-                    <span x-text="fallbackHint"></span>&nbsp;<span x-show="method==='email'" x-cloak><a :href="selectedBranch ? 'mailto:' + selectedBranch.email : '#'"
+                    {{-- On narrow mobile each part is on its own line (cleaner
+                         than break-all cutting the email mid-TLD). On sm+ they
+                         flow inline as one sentence. --}}
+                    <span x-text="fallbackHint" class="block sm:inline"></span><span x-show="method==='email'" x-cloak class="block sm:inline sm:ms-1"><a :href="selectedBranch ? 'mailto:' + selectedBranch.email : '#'"
                            x-text="selectedBranch?.email"
-                           class="text-delos-dark hover:text-delos-gold underline underline-offset-2 break-all transition-colors duration-300"></a></span><span x-show="method==='whatsapp'" x-cloak><a :href="selectedBranch ? 'https://wa.me/' + selectedBranch.whatsapp : '#'"
+                           class="text-delos-dark hover:text-delos-gold underline underline-offset-2 break-words transition-colors duration-300"></a></span><span x-show="method==='whatsapp'" x-cloak class="block sm:inline sm:ms-1"><a :href="selectedBranch ? 'https://wa.me/' + selectedBranch.whatsapp : '#'"
                            target="_blank" rel="noopener"
                            x-text="selectedBranch ? '+' + selectedBranch.whatsapp : ''"
                            class="text-delos-dark hover:text-delos-gold underline underline-offset-2 transition-colors duration-300"
