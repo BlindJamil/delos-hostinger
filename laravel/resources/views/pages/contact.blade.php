@@ -167,6 +167,23 @@
                         class="btn-ripple w-full py-4 bg-delos-dark text-delos-cream text-[12px] tracking-[0.3em] uppercase font-medium hover:bg-delos-gold hover:text-delos-dark disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300">
                     <span x-text="method==='whatsapp' ? submitLabels.whatsapp : submitLabels.email"></span>
                 </button>
+
+                {{-- Always-visible fallback line. Branch handoff happens in the
+                     visitor's own mail/WhatsApp app; if that app isn't set up
+                     (no default mail client, popup blocker, etc.) the Send
+                     button looks dead. This line gives them the direct address
+                     so the deal never dies on a silent failure. --}}
+                <p x-show="selectedBranch && ((method==='email' && selectedBranch.email) || (method==='whatsapp' && selectedBranch.whatsapp))"
+                   x-cloak
+                   class="text-[11px] text-delos-muted text-center leading-relaxed pt-2">
+                    <span x-text="fallbackHint"></span>&nbsp;<span x-show="method==='email'" x-cloak><a :href="selectedBranch ? 'mailto:' + selectedBranch.email : '#'"
+                           x-text="selectedBranch?.email"
+                           class="text-delos-dark hover:text-delos-gold underline underline-offset-2 break-all transition-colors duration-300"></a></span><span x-show="method==='whatsapp'" x-cloak><a :href="selectedBranch ? 'https://wa.me/' + selectedBranch.whatsapp : '#'"
+                           target="_blank" rel="noopener"
+                           x-text="selectedBranch ? '+' + selectedBranch.whatsapp : ''"
+                           class="text-delos-dark hover:text-delos-gold underline underline-offset-2 transition-colors duration-300"
+                           dir="ltr"></a></span>
+                </p>
             </form>
 
             {{-- Alpine state for the form above.
@@ -181,6 +198,7 @@
                         whatsapp: @json(pcontent('contact.form.submit_whatsapp')),
                         email:    @json(pcontent('contact.form.submit_email')),
                     };
+                    const fallbackHint = @json(pcontent('contact.form.fallback_hint'));
 
                     function initContactForm() {
                         if (typeof Alpine === 'undefined' || Alpine.$data === undefined) {
@@ -194,6 +212,7 @@
                             name: '', phone: '', email: '',
                             branchId: '', service: '', message: '',
                             submitLabels,
+                            fallbackHint,
 
                             get selectedBranch() {
                                 if (!this.branchId) return null;
