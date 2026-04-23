@@ -73,13 +73,13 @@ $app = require_once __DIR__.'/laravel/bootstrap/app.php';
 
 $app->usePublicPath(__DIR__);
 
-// Inject dropdown-fix.js into every HTML response via output buffering.
-// This bypasses Blade template cache — the JS file is static and always fresh.
-ob_start(function($buffer) {
-    if (stripos($buffer, '</body>') !== false) {
-        $buffer = str_replace('</body>', '<script src="/dropdown-fix.js?v=' . time() . '"></script></body>', $buffer);
-    }
-    return $buffer;
-});
+// NOTE: dropdown-fix.js used to be injected here via output buffering as a
+// legacy language-globe implementation. It has been superseded by the
+// Vite-bundled initLanguageGlobe() in resources/js/site/language-globe.js
+// (loaded via @vite in the main layout). Keeping both caused a race: the
+// legacy script ran first, mounted #delos-globe-wrap, and the Vite version
+// bailed out on its "already mounted" guard — which meant the Vite-added
+// homepage auto-open never fired. The injection is now removed; dropdown-fix.js
+// is left on disk as a historical reference but no longer loaded.
 
 $app->handleRequest(Request::capture());
