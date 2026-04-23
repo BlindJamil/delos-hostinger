@@ -21,12 +21,14 @@
     'focal' => null,
 
     // File-size and accept constraints surfaced to the user.
-    // Kept in sync with the FormRequest rules (max:20480 KB) so the JS gate
-    // doesn't silently reject files the server would actually accept — a
-    // typical DSLR/phone portrait is 5-15MB. Server PHP limits (.user.ini)
-    // allow 60MB, which leaves headroom for video fields that override this.
+    // Backend FormRequest actually allows max:20480 KB (20MB) and php.ini
+    // allows 60M, but the live Hostinger proxy/WAF drops large uploads
+    // around 5-6MB in practice, so we surface 5MB as the honest cap the
+    // admin can rely on. The component also auto-compresses raster images
+    // on pick (resize to 2560px long edge + JPEG 0.82) so a typical DSLR
+    // photo gets down to ~1-2MB long before it hits this gate.
     'accept' => 'image/jpeg,image/png,image/webp',
-    'maxMb' => 20,
+    'maxMb' => 5,
 
     // Optional helper text under the desktop dropzone.
     'hint' => null,
@@ -174,15 +176,21 @@
                         return this.mobilePreviewUrl || this.mobileInitialUrl || null;
                     },
 
-                    onDesktopFile(event) {
-                        const file = event.target.files[0];
-                        if (!file) return;
+                    async onDesktopFile(event) {
+                        const input = event.target;
+                        const original = input.files[0];
+                        if (!original) return;
+                        this.desktopError = '';
+                        let file = original;
+                        try {
+                            file = await this.compressImage(original);
+                            if (file !== original) this.replaceInputFile(input, file);
+                        } catch (_) { /* fall through with original file */ }
                         if (file.size > this.maxBytes) {
-                            this.desktopError = `File too large — max ${(this.maxBytes / 1024 / 1024).toFixed(0)}MB.`;
-                            event.target.value = '';
+                            this.desktopError = `File too large — max ${(this.maxBytes / 1024 / 1024).toFixed(0)}MB. Try a smaller image.`;
+                            input.value = '';
                             return;
                         }
-                        this.desktopError = '';
                         // Picking a new file cancels any pending clear.
                         this.clearDesktopFlag = false;
                         const reader = new FileReader();
@@ -196,15 +204,21 @@
                         this.clearDesktopFlag = true;
                     },
 
-                    onMobileFile(event) {
-                        const file = event.target.files[0];
-                        if (!file) return;
+                    async onMobileFile(event) {
+                        const input = event.target;
+                        const original = input.files[0];
+                        if (!original) return;
+                        this.mobileError = '';
+                        let file = original;
+                        try {
+                            file = await this.compressImage(original);
+                            if (file !== original) this.replaceInputFile(input, file);
+                        } catch (_) { /* fall through with original file */ }
                         if (file.size > this.maxBytes) {
-                            this.mobileError = `File too large — max ${(this.maxBytes / 1024 / 1024).toFixed(0)}MB.`;
-                            event.target.value = '';
+                            this.mobileError = `File too large — max ${(this.maxBytes / 1024 / 1024).toFixed(0)}MB. Try a smaller image.`;
+                            input.value = '';
                             return;
                         }
-                        this.mobileError = '';
                         // Picking a new file cancels any pending "clear" action
                         // so the user doesn't accidentally wipe it on submit.
                         this.clearMobileFlag = false;
@@ -240,6 +254,68 @@
                     resetFocal() {
                         this.focalX = 50;
                         this.focalY = 50;
+                    },
+
+                    // Resize + re-encode raster uploads on the client so we
+                    // never send a 10MB DSLR shot through Hostinger's proxy
+                    // (it silently drops anything over ~5MB on this plan).
+                    // Strategy: scale the longer edge to 2560px, draw on a
+                    // white canvas (so PNG alpha → JPEG doesn't come out
+                    // black), and re-encode as JPEG 0.82 — which is visually
+                    // indistinguishable from the original for photography.
+                    // Non-raster types (SVG/GIF/HEIC) and anything where the
+                    // re-encode didn't help size-wise pass through untouched.
+                    async compressImage(file) {
+                        if (!/^image\/(jpeg|png|webp)$/i.test(file.type)) return file;
+                        const dataUrl = await new Promise((resolve, reject) => {
+                            const r = new FileReader();
+                            r.onload = () => resolve(r.result);
+                            r.onerror = reject;
+                            r.readAsDataURL(file);
+                        });
+                        const img = await new Promise((resolve, reject) => {
+                            const i = new Image();
+                            i.onload = () => resolve(i);
+                            i.onerror = reject;
+                            i.src = dataUrl;
+                        });
+                        const MAX_DIM = 2560;
+                        let w = img.naturalWidth || img.width;
+                        let h = img.naturalHeight || img.height;
+                        if (!w || !h) return file;
+                        const longest = Math.max(w, h);
+                        if (longest > MAX_DIM) {
+                            const scale = MAX_DIM / longest;
+                            w = Math.round(w * scale);
+                            h = Math.round(h * scale);
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, w, h);
+                        ctx.drawImage(img, 0, 0, w, h);
+                        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.82));
+                        if (!blob || blob.size >= file.size) return file;
+                        const base = file.name.replace(/\.[^.]+$/, '');
+                        return new File([blob], base + '.jpg', { type: 'image/jpeg', lastModified: Date.now() });
+                    },
+
+                    // After compressImage returns a new File we need to put
+                    // it back into the <input type=file> so the browser
+                    // submits *that* file, not the one the admin originally
+                    // picked. DataTransfer is supported everywhere we care
+                    // about (Safari 14.1+, Chrome, Firefox); if a browser
+                    // doesn't support it we bail and the original upload
+                    // goes through unchanged.
+                    replaceInputFile(input, file) {
+                        if (typeof DataTransfer === 'undefined') return;
+                        try {
+                            const dt = new DataTransfer();
+                            dt.items.add(file);
+                            input.files = dt.files;
+                        } catch (_) { /* keep original file */ }
                     },
                 }));
             });
