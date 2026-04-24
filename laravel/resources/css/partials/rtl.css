@@ -109,9 +109,25 @@
  * is right-to-left, so we reverse the LTR left-scrolling animation.
  * ------------------------------------------------------------------ */
 
-[dir="rtl"] .marquee-track,
+/* .marquee-track (top strip) is now wrapped in dir="ltr" on the Blade
+ * side (layouts/app.blade.php) so it animates LTR identically across
+ * all locales and no longer needs this rule. .brand-marquee (Italian
+ * brand-logos strip on home.blade.php) keeps reversed-scroll on RTL
+ * because its children are Latin brand names that don't visually
+ * re-order — reversing the animation direction makes the scroll feel
+ * natural under right-to-left reading flow. */
 [dir="rtl"] .brand-marquee {
     animation-direction: reverse;
+}
+
+/* The Italian flag is an inline-flex container whose three stripe
+ * children would otherwise visually mirror under dir="rtl", rendering
+ * red-white-green instead of the correct green-white-red. Forcing its
+ * own subtree to LTR keeps the stripe order canonical regardless of
+ * the surrounding page direction. Safe because .italian-flag contains
+ * no text — only three colored block children. */
+[dir="rtl"] .italian-flag {
+    direction: ltr;
 }
 
 /* ------------------------------------------------------------------

@@ -98,8 +98,18 @@
     ============================================================ --}}
     <header id="site-header" class="fixed top-0 left-0 right-0 z-50">
 
-        {{-- Marquee Banner --}}
-        <div id="marquee-bar" class="bg-delos-dark-2 overflow-hidden py-2.5 border-b border-white/5 transition-all duration-500">
+        {{-- Marquee Banner.
+             dir="ltr" isolates the strip from the page's RTL context on the
+             Arabic locale. Without it the flex track reverses visual item
+             order, the `[dir="rtl"] .marquee-track` rule flips the animation,
+             and the .italian-flag child stripes render red-white-green
+             instead of green-white-red. Keeping the marquee LTR makes it
+             behave identically across all three locales. Arabic text inside
+             the phrase spans still reads right-to-left at the character
+             level via Unicode's bidi algorithm — no <bdi> wrappers needed as
+             long as lang/ar/common.php's `common.marquee.*` keys stay
+             pure Arabic (no Latin digits or brand names). --}}
+        <div id="marquee-bar" dir="ltr" class="bg-delos-dark-2 overflow-hidden py-2.5 border-b border-white/5 transition-all duration-500">
             {{--
                 Marquee loop math: the CSS animation translates -50% of track
                 width, so the number of content copies MUST be an even
