@@ -70,6 +70,17 @@
     font-size: 0.72rem !important;
 }
 
+/* Top-nav links: opt out of the global text-[11px] → 1.15em bump.
+ * The bump targets every text-[11px] descendant of a [lang="ar"]
+ * page, which catches the navbar items and balloons them from 11px
+ * → ~19.9px (cascading through the body's 1.08em bump). At that
+ * size the nav row dominates the header. 12px is the right balance
+ * for Cairo at this prominence — readable but visually anchored to
+ * the same hierarchy weight as the English/Italian 11px nav. */
+[lang="ar"] #navbar .nav-link {
+    font-size: 12px !important;
+}
+
 /* Arabic doesn't have small-caps / uppercase distinction like Latin. */
 [lang="ar"] .uppercase,
 [lang="ar"] [class*="uppercase"] {
@@ -109,16 +120,17 @@
  * is right-to-left, so we reverse the LTR left-scrolling animation.
  * ------------------------------------------------------------------ */
 
-/* .marquee-track (top strip) is now wrapped in dir="ltr" on the Blade
- * side (layouts/app.blade.php) so it animates LTR identically across
- * all locales and no longer needs this rule. .brand-marquee (Italian
- * brand-logos strip on home.blade.php) keeps reversed-scroll on RTL
- * because its children are Latin brand names that don't visually
- * re-order — reversing the animation direction makes the scroll feel
- * natural under right-to-left reading flow. */
-[dir="rtl"] .brand-marquee {
-    animation-direction: reverse;
-}
+/* Both .marquee-track (top strip) and .brand-marquee (Italian
+ * brand-logos strip on home.blade.php) are now wrapped in dir="ltr"
+ * at the Blade level — see layouts/app.blade.php and
+ * pages/home.blade.php. The seamless-loop math (n copies ×
+ * translateX(-100%/n) shift) only works when flex item order is
+ * predictable, so isolating both strips from RTL keeps the animation
+ * identical across locales. The previous `[dir="rtl"] … animation-
+ * direction: reverse` override was dropped because it caused the
+ * brand strip to crawl visibly slowly under RTL flex reordering.
+ * No reverse rule needed any more — the Blade dir="ltr" attribute
+ * means these selectors would never match anyway. */
 
 /* The Italian flag is an inline-flex container whose three stripe
  * children would otherwise visually mirror under dir="rtl", rendering

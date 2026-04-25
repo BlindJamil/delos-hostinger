@@ -251,7 +251,13 @@
             <h2 data-motion="fade-up" class="text-heading-2 text-delos-cream">{{ pcontent('home.brands.heading') }}</h2>
             <p data-motion="fade-up" class="text-body text-delos-cream/40 mt-5 max-w-2xl mx-auto">{{ pcontent('home.brands.sub') }}</p>
         </div>
-        <div data-motion="fade-up" class="brand-marquee-wrapper overflow-hidden mb-12 border-t border-b border-delos-cream/5 py-8">
+        {{-- Brand strip: dir="ltr" isolates the strip from the page's RTL
+             context for the same reasons as the top marquee — flex item
+             order, animation math, and the seamless-loop math (4 copies ×
+             translateX(-25%) = exactly one copy width) all rely on LTR
+             layout. The brand names are Latin (LUBE, Frigerio, …) so they
+             render the same regardless of direction. --}}
+        <div data-motion="fade-up" dir="ltr" class="brand-marquee-wrapper overflow-hidden mb-12 border-t border-b border-delos-cream/5 py-8">
             <div class="brand-marquee flex whitespace-nowrap">
                 @for($i = 0; $i < 4; $i++)
                     <div class="brand-marquee-inner flex items-center gap-10 lg:gap-16 px-5 lg:px-8">
