@@ -78,7 +78,7 @@
  * for Cairo at this prominence — readable but visually anchored to
  * the same hierarchy weight as the English/Italian 11px nav. */
 [lang="ar"] #navbar .nav-link {
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
 
 /* Arabic doesn't have small-caps / uppercase distinction like Latin. */
