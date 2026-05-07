@@ -1,0 +1,4 @@
+---
+deployment:
+  tasks:
+    - /bin/rsync -av --exclude='.git/' --exclude='.gitignore' --exclude='.cpanel.yml' --exclude='laravel/.env' --exclude='laravel/storage/' --exclude='laravel/node_modules/' --exclude='laravel/tests/' /home/delos/repositories/delos-hostinger/ /home/delos/public_html/
