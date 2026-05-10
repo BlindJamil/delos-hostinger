@@ -2,3 +2,9 @@
 deployment:
   tasks:
     - /bin/rsync -av --exclude='.git/' --exclude='.gitignore' --exclude='.cpanel.yml' --exclude='laravel/.env' --exclude='laravel/storage/' --exclude='laravel/node_modules/' --exclude='laravel/tests/' /home/delos/repositories/delos-hostinger/ /home/delos/public_html/
+    - /bin/mkdir -p /home/delos/public_html/laravel/storage/app/public /home/delos/public_html/laravel/storage/app/private /home/delos/public_html/laravel/storage/framework/cache/data /home/delos/public_html/laravel/storage/framework/sessions /home/delos/public_html/laravel/storage/framework/views /home/delos/public_html/laravel/storage/framework/testing /home/delos/public_html/laravel/storage/logs
+    - /bin/touch /home/delos/public_html/laravel/storage/logs/laravel.log
+    - /bin/chmod -R 0775 /home/delos/public_html/laravel/storage /home/delos/public_html/laravel/bootstrap/cache /home/delos/public_html/laravel/database
+    - /bin/rm -f /home/delos/public_html/laravel/bootstrap/cache/packages.php /home/delos/public_html/laravel/bootstrap/cache/services.php
+    - /bin/ln -sfn /home/delos/public_html/laravel/storage/app/public /home/delos/public_html/storage
+    - /bin/chmod 0664 /home/delos/public_html/laravel/database/database.sqlite
