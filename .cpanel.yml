@@ -8,3 +8,4 @@ deployment:
     - /bin/rm -f /home/delos/public_html/laravel/bootstrap/cache/packages.php /home/delos/public_html/laravel/bootstrap/cache/services.php
     - /bin/ln -sfn /home/delos/public_html/laravel/storage/app/public /home/delos/public_html/storage
     - /bin/chmod 0664 /home/delos/public_html/laravel/database/database.sqlite
+    - /bin/chmod 0755 /home/delos/public_html /home/delos/public_html/laravel
