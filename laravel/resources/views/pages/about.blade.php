@@ -9,9 +9,9 @@
 <section data-motion-hero class="bg-delos-cream overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div class="pt-28 lg:pt-36 pb-0">
-            <div class="grid md:grid-cols-12 gap-5 md:gap-6 lg:gap-7 md:items-stretch">
+            <div class="grid lg:grid-cols-12 gap-5 lg:gap-7 lg:items-stretch">
 
-                <div class="md:col-span-5 flex flex-col order-2 md:order-none md:h-full">
+                <div class="lg:col-span-5 flex flex-col order-2 lg:order-none lg:h-full">
                     <div data-motion-group="hero" class="pt-10 lg:pt-6 lg:pr-4">
                         <div data-motion="fade-up" class="inline-flex items-center gap-3 mb-6">
                             <span class="w-8 h-px bg-delos-gold"></span>
@@ -30,14 +30,14 @@
                     </div>
                 </div>
 
-                <div class="md:col-span-7 order-1 md:order-none">
-                    <div data-motion="fade" class="about-hero-img relative overflow-hidden aspect-[4/5] md:aspect-auto md:h-full">
+                <div class="lg:col-span-7 order-1 lg:order-none">
+                    <div data-motion="fade" class="about-hero-img relative overflow-hidden">
                         <x-admin-edit-pill page="about" label="Edit About hero image" />
                         <x-responsive-image :src="pcontent('about.hero.image', 'about-hero.jpg')"
                             :mobile-src="pcontent_optional('about.hero.image_mobile')"
                             :focal="pcontent_optional('about.hero.image_focal')"
                             alt="Delos International Showroom"
-                            sizes="(min-width: 768px) 58vw, 100vw"
+                            sizes="(min-width: 1024px) 58vw, 100vw"
                             loading="eager"
                             fetchpriority="high"
                             data-hero-parallax
@@ -52,8 +52,9 @@
         <div data-motion="fade-up" class="border-t border-delos-gold/15 mt-12 lg:mt-16 py-10 lg:py-12">
             <div class="grid grid-cols-3 gap-4">
                 @foreach([0, 1, 2] as $i)
+                    @php $heroStatValue = ($i === 2) ? brand_count() : pcontent("about.hero.stats.{$i}.value"); @endphp
                     <div class="text-center{{ $i === 1 ? ' border-x border-delos-gold/15' : '' }}">
-                        <span class="block font-serif text-delos-dark text-3xl lg:text-4xl font-light">{{ pcontent("about.hero.stats.{$i}.value") }}</span>
+                        <span class="block font-serif text-delos-dark text-3xl lg:text-4xl font-light">{{ $heroStatValue }}</span>
                         <span class="text-delos-muted text-[9px] lg:text-[10px] tracking-[0.3em] uppercase mt-1.5 block" style="font-family: 'Inter', sans-serif;">{{ pcontent("about.hero.stats.{$i}.label") }}</span>
                     </div>
                 @endforeach
@@ -231,11 +232,12 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div data-motion-group="about-stats" class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             @foreach([0, 1, 2, 3] as $i)
+                @php $aboutStatValue = ($i === 2) ? brand_count() : pcontent("about.about_stats.items.{$i}.value"); @endphp
                 <div data-motion="fade-up">
                     <div class="flex items-baseline justify-center gap-1 mb-3">
                         <span class="font-serif text-delos-dark text-5xl lg:text-6xl font-light"
-                              data-motion-counter="{{ pcontent("about.about_stats.items.{$i}.value") }}">{{ pcontent("about.about_stats.items.{$i}.value") }}</span>
-                        @if(pcontent("about.about_stats.items.{$i}.suffix"))
+                              data-motion-counter="{{ $aboutStatValue }}">{{ $aboutStatValue }}</span>
+                        @if($i !== 2 && pcontent("about.about_stats.items.{$i}.suffix"))
                             <span class="stat-suffix font-serif text-delos-gold text-3xl font-light">{{ pcontent("about.about_stats.items.{$i}.suffix") }}</span>
                         @endif
                     </div>

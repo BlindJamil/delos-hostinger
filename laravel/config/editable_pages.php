@@ -109,9 +109,9 @@ return [
                     ['key' => 'home.stats.items.0.value', 'label' => 'Stat 1 · number', 'type' => 'text'],
                     ['key' => 'home.stats.items.0.suffix', 'label' => 'Stat 1 · suffix', 'type' => 'text'],
                     ['key' => 'home.stats.items.0.label', 'label' => 'Stat 1 · label', 'type' => 'text'],
-                    ['key' => 'home.stats.items.1.value', 'label' => 'Stat 2 · number', 'type' => 'text'],
-                    ['key' => 'home.stats.items.1.suffix', 'label' => 'Stat 2 · suffix', 'type' => 'text'],
-                    ['key' => 'home.stats.items.1.label', 'label' => 'Stat 2 · label', 'type' => 'text'],
+                    // Stat 2 number is auto-calculated from active brand count (see brand_count() helper).
+                    // Edit brands at /verify-admin-panel-7k3m/dashboard/brands — the counter updates site-wide automatically.
+                    ['key' => 'home.stats.items.1.label', 'label' => 'Stat 2 · label (brands)', 'type' => 'text'],
                     ['key' => 'home.stats.items.2.value', 'label' => 'Stat 3 · number', 'type' => 'text'],
                     ['key' => 'home.stats.items.2.suffix', 'label' => 'Stat 3 · suffix', 'type' => 'text'],
                     ['key' => 'home.stats.items.2.label', 'label' => 'Stat 3 · label', 'type' => 'text'],
@@ -157,8 +157,8 @@ return [
                     ['key' => 'about.hero.stats.0.label', 'label' => 'Hero stat 1 · label', 'type' => 'text'],
                     ['key' => 'about.hero.stats.1.value', 'label' => 'Hero stat 2 · value', 'type' => 'text'],
                     ['key' => 'about.hero.stats.1.label', 'label' => 'Hero stat 2 · label', 'type' => 'text'],
-                    ['key' => 'about.hero.stats.2.value', 'label' => 'Hero stat 3 · value', 'type' => 'text'],
-                    ['key' => 'about.hero.stats.2.label', 'label' => 'Hero stat 3 · label', 'type' => 'text'],
+                    // Hero stat 3 value is auto-calculated from active brand count (see brand_count() helper).
+                    ['key' => 'about.hero.stats.2.label', 'label' => 'Hero stat 3 · label (brands)', 'type' => 'text'],
                     ['key' => 'about.hero.image', 'label' => 'Hero image (main)', 'type' => 'image'],
                     ['key' => 'about.hero.showroom_image', 'label' => 'Showroom image (under hero copy, desktop only)', 'type' => 'image'],
                 ],
@@ -259,9 +259,8 @@ return [
                     ['key' => 'about.about_stats.items.1.value', 'label' => 'Stat 2 · number', 'type' => 'text'],
                     ['key' => 'about.about_stats.items.1.suffix', 'label' => 'Stat 2 · suffix', 'type' => 'text'],
                     ['key' => 'about.about_stats.items.1.label', 'label' => 'Stat 2 · label', 'type' => 'text'],
-                    ['key' => 'about.about_stats.items.2.value', 'label' => 'Stat 3 · number', 'type' => 'text'],
-                    ['key' => 'about.about_stats.items.2.suffix', 'label' => 'Stat 3 · suffix', 'type' => 'text'],
-                    ['key' => 'about.about_stats.items.2.label', 'label' => 'Stat 3 · label', 'type' => 'text'],
+                    // Stat 3 number is auto-calculated from active brand count (see brand_count() helper).
+                    ['key' => 'about.about_stats.items.2.label', 'label' => 'Stat 3 · label (brands)', 'type' => 'text'],
                     ['key' => 'about.about_stats.items.3.value', 'label' => 'Stat 4 · number', 'type' => 'text'],
                     ['key' => 'about.about_stats.items.3.suffix', 'label' => 'Stat 4 · suffix', 'type' => 'text'],
                     ['key' => 'about.about_stats.items.3.label', 'label' => 'Stat 4 · label', 'type' => 'text'],

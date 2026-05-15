@@ -39,6 +39,26 @@ if (!function_exists('locale_url')) {
     }
 }
 
+if (!function_exists('brand_count')) {
+    /**
+     * Live count of active brands, used to derive the "brands" stat counter
+     * on the homepage and about page. Single source of truth is the Brands
+     * admin CRUD — adding/removing or toggling `active` updates every
+     * counter site-wide automatically.
+     *
+     * Defensive: returns 0 if the brands table doesn't exist yet (fresh
+     * install, console commands pre-migration).
+     */
+    function brand_count(): int
+    {
+        try {
+            return \App\Models\Brand::active()->count();
+        } catch (\Throwable) {
+            return 0;
+        }
+    }
+}
+
 if (!function_exists('pcontent')) {
     /**
      * Resolve an admin-editable page content override for the given lang key,

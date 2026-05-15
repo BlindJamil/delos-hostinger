@@ -228,9 +228,10 @@
         </div>
         <div data-motion-group="stats-grid" class="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-16">
             @foreach([0,1,2,3] as $i)
+                @php $statValue = ($i === 1) ? brand_count() : pcontent("home.stats.items.{$i}.value"); @endphp
                 <div data-motion="fade-up" class="text-center">
-                    <span class="stat-number" data-motion-counter="{{ pcontent("home.stats.items.{$i}.value") }}">{{ pcontent("home.stats.items.{$i}.value") }}</span>
-                    @if(pcontent("home.stats.items.{$i}.suffix"))
+                    <span class="stat-number" data-motion-counter="{{ $statValue }}">{{ $statValue }}</span>
+                    @if($i !== 1 && pcontent("home.stats.items.{$i}.suffix"))
                         <span class="stat-suffix font-serif text-2xl text-delos-gold font-light">{{ pcontent("home.stats.items.{$i}.suffix") }}</span>
                     @endif
                     <p class="text-overline text-delos-muted mt-3">{{ pcontent("home.stats.items.{$i}.label") }}</p>
