@@ -62,15 +62,17 @@ echo runArtisan($kernel, 'migrate', ['--force' => true]) . "\n\n";
 // --- 5. Seeders + direct backfill ----------------------------------------
 echo "[3/6] SEEDERS\n";
 echo str_repeat('-', 60) . "\n";
+// SAFE deployer seeder list. The 5 lang-based content seeders
+// (Employees / Projects / Brands / Services / Branches) are
+// INTENTIONALLY EXCLUDED here — firstOrCreate is update-safe but
+// not delete-safe, so re-running them on every deploy resurrects
+// admin-deleted records (Ahmed K., Villa Moderna Kitchen, etc.).
+// If a fresh install ever needs to seed those, run them once from
+// SSH: php artisan db:seed --class=EmployeesFromLangSeeder
 $seeders = [
-    'Database\\Seeders\\SiteSettingsSeeder',
-    'Database\\Seeders\\AdminUserSeeder',
-    'Database\\Seeders\\EmployeesFromLangSeeder',
-    'Database\\Seeders\\ProjectsFromLangSeeder',
-    'Database\\Seeders\\BrandsFromLangSeeder',
-    'Database\\Seeders\\ServicesFromLangSeeder',
-    'Database\\Seeders\\BranchesFromLangSeeder',
-    'Database\\Seeders\\PageContentFromLangSeeder',
+    'Database\\Seeders\\SiteSettingsSeeder',      // system config (site-wide settings)
+    'Database\\Seeders\\AdminUserSeeder',         // admin auth seed
+    'Database\\Seeders\\PageContentFromLangSeeder', // safe: backfills empty fields only
 ];
 foreach ($seeders as $seederClass) {
     $name = substr($seederClass, strrpos($seederClass, '\\') + 1);
