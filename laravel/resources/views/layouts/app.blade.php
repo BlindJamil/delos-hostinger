@@ -211,7 +211,7 @@
                                          x-transition:leave="transition ease-in duration-200"
                                          x-transition:leave-start="opacity-100"
                                          x-transition:leave-end="opacity-0"
-                                         class="absolute top-full left-0 mt-4 min-w-[14rem] bg-delos-dark/95 backdrop-blur-sm border border-delos-gold/15 shadow-2xl shadow-delos-dark/30 z-50 before:absolute before:top-0 before:left-0 before:right-0 before:h-px before:bg-delos-gold before:content-['']">
+                                         class="absolute top-full left-0 mt-4 min-w-[14rem] bg-delos-dark border border-delos-gold/15 shadow-2xl shadow-delos-dark/30 z-50 before:absolute before:top-0 before:left-0 before:right-0 before:h-px before:bg-delos-gold before:content-['']">
                                         @foreach($link['children'] as $index => $child)
                                             @php $childActive = request()->routeIs('l.' . $child['route']); @endphp
                                             <a x-show="open" x-cloak
