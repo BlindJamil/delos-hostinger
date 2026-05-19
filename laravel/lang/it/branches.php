@@ -14,6 +14,8 @@ return [
     'vr_coming_soon' => 'In arrivo',
     'call_cta' => 'Chiama',
     'whatsapp_cta' => 'WhatsApp',
+    'facebook_label' => 'Facebook',
+    'instagram_label' => 'Instagram',
     'photo_pending' => 'Fotografia dello showroom in arrivo',
     'flagship_label' => 'Showroom principale',
 

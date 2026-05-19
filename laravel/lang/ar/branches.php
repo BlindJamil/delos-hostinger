@@ -14,6 +14,8 @@ return [
     'whatsapp_cta' => 'واتساب',
     'vr_cta' => 'جولة افتراضية',
     'vr_coming_soon' => 'قريباً',
+    'facebook_label' => 'فيسبوك',
+    'instagram_label' => 'إنستغرام',
     'photo_pending' => 'صور المعرض قادمة',
     'flagship_label' => 'المعرض الرئيسي',
 

@@ -164,6 +164,28 @@
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2 12a3 3 0 013-3h14a3 3 0 013 3v4a3 3 0 01-3 3h-4l-3-3-3 3H5a3 3 0 01-3-3v-4z"/><circle cx="8" cy="14" r="1.3" fill="currentColor"/><circle cx="16" cy="14" r="1.3" fill="currentColor"/></svg>
                                 {{ pcontent('branches.vr_cta') }}
                             </button>
+                            @if($branch->facebook_url)
+                                <a
+                                    href="{{ $branch->facebook_url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="{{ pcontent('branches.facebook_label') }} — {{ $name }}"
+                                    class="inline-flex items-center justify-center w-11 h-11 border border-delos-dark/15 hover:border-delos-gold text-delos-dark hover:text-delos-gold transition-all duration-300"
+                                >
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 9H16V6h-2.5C11.57 6 10 7.57 10 9.5V11H8v3h2v7h3v-7h2.5l.5-3H13V9.5c0-.28.22-.5.5-.5z"/></svg>
+                                </a>
+                            @endif
+                            @if($branch->instagram_url)
+                                <a
+                                    href="{{ $branch->instagram_url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="{{ pcontent('branches.instagram_label') }} — {{ $name }}"
+                                    class="inline-flex items-center justify-center w-11 h-11 border border-delos-dark/15 hover:border-delos-gold text-delos-dark hover:text-delos-gold transition-all duration-300"
+                                >
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.21 8.8 2.2 12 2.2zm0 1.8c-3.15 0-3.51.01-4.74.07-1.07.05-1.65.23-2.04.38-.51.2-.88.44-1.27.83-.39.39-.63.76-.83 1.27-.15.39-.33.97-.38 2.04C2.61 9.49 2.6 9.85 2.6 13s.01 3.51.07 4.74c.05 1.07.23 1.65.38 2.04.2.51.44.88.83 1.27.39.39.76.63 1.27.83.39.15.97.33 2.04.38 1.23.06 1.59.07 4.74.07s3.51-.01 4.74-.07c1.07-.05 1.65-.23 2.04-.38.51-.2.88-.44 1.27-.83.39-.39.63-.76.83-1.27.15-.39.33-.97.38-2.04.06-1.23.07-1.59.07-4.74s-.01-3.51-.07-4.74c-.05-1.07-.23-1.65-.38-2.04a3.42 3.42 0 00-.83-1.27 3.42 3.42 0 00-1.27-.83c-.39-.15-.97-.33-2.04-.38C15.51 4.01 15.15 4 12 4zm0 3.06A4.94 4.94 0 1112 17a4.94 4.94 0 010-9.88zm0 1.8a3.14 3.14 0 100 6.28 3.14 3.14 0 000-6.28zm5.13-2.1a1.15 1.15 0 110 2.3 1.15 1.15 0 010-2.3z"/></svg>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </article>

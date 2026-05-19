@@ -20,6 +20,8 @@ class Branch extends Model
         'phone', 'whatsapp', 'email',
         'latitude', 'longitude',
         'directions_url',
+        'facebook_url',
+        'instagram_url',
         'image',
         'image_mobile',
         'focal_point',

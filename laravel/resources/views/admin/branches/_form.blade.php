@@ -129,6 +129,24 @@
                 @error('directions_url')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-delos-dark/8">
+                <div>
+                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">Facebook URL (optional)</label>
+                    <input type="url" name="facebook_url" value="{{ old('facebook_url', $branch->facebook_url) }}" placeholder="https://facebook.com/yourpage"
+                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm font-mono focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
+                    <p class="text-xs text-delos-muted mt-1">Public Facebook page for this branch. Shows a Facebook icon button on the branch card if set.</p>
+                    @error('facebook_url')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">Instagram URL (optional)</label>
+                    <input type="url" name="instagram_url" value="{{ old('instagram_url', $branch->instagram_url) }}" placeholder="https://instagram.com/yourhandle"
+                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm font-mono focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
+                    <p class="text-xs text-delos-muted mt-1">Public Instagram profile for this branch. Shows an Instagram icon button on the branch card if set.</p>
+                    @error('instagram_url')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
+                </div>
+            </div>
+
             @if($branch->latitude && $branch->longitude)
                 <div class="pt-3 border-t border-delos-dark/8">
                     <p class="text-xs text-delos-muted mb-2">Preview on OpenStreetMap:</p>
