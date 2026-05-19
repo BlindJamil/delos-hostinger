@@ -211,7 +211,7 @@
                                          x-transition:leave="transition ease-in duration-200"
                                          x-transition:leave-start="opacity-100"
                                          x-transition:leave-end="opacity-0"
-                                         class="absolute top-full left-0 mt-4 min-w-[14rem] bg-delos-dark border border-delos-gold/15 shadow-2xl shadow-delos-dark/30 z-50 before:absolute before:top-0 before:left-0 before:right-0 before:h-px before:bg-delos-gold before:content-['']">
+                                         class="absolute top-full left-0 mt-4 min-w-[14rem] bg-delos-ivory border border-delos-gold/20 shadow-lg shadow-delos-dark/10 z-50 before:absolute before:top-0 before:left-0 before:right-0 before:h-px before:bg-delos-gold before:content-['']">
                                         @foreach($link['children'] as $index => $child)
                                             @php $childActive = request()->routeIs('l.' . $child['route']); @endphp
                                             <a x-show="open" x-cloak
@@ -222,9 +222,12 @@
                                                x-transition:leave-start="opacity-100 translate-y-0"
                                                x-transition:leave-end="opacity-0 translate-y-1"
                                                href="{{ lroute($child['route']) }}"
-                                               class="block relative group font-sans text-[11px] tracking-[0.25em] uppercase font-medium whitespace-nowrap py-4 transition-all duration-300 hover:translate-x-1 {{ $childActive ? 'text-delos-gold border-l-2 border-delos-gold pl-7 pr-6' : 'text-delos-cream hover:text-delos-gold px-6' }}">
+                                               class="block relative group font-sans text-[11px] tracking-[0.25em] uppercase font-medium whitespace-nowrap py-4 px-6 transition-all duration-300 hover:translate-x-1 {{ $childActive ? 'text-delos-gold' : 'text-delos-dark hover:text-delos-gold' }}">
+                                                @if($childActive)
+                                                    <span class="absolute left-0 top-0 bottom-0 w-0.5 bg-delos-gold" aria-hidden="true"></span>
+                                                @endif
                                                 {{ $child['label'] }}
-                                                <span class="absolute bottom-2.5 left-6 right-6 h-px bg-delos-gold scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"></span>
+                                                <span class="absolute bottom-2.5 left-6 right-6 h-px bg-delos-gold scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" aria-hidden="true"></span>
                                             </a>
                                         @endforeach
                                     </div>
