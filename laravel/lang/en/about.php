@@ -26,6 +26,15 @@ return [
         'paragraph_3' => 'Today, with 4 showrooms in Erbil, Kirkuk, Sulaymaniyah, and Baghdad, and exclusive partnerships with Italy\'s most prestigious brands, Delos International stands as Iraq\'s destination for Italian luxury living.',
     ],
 
+    'history' => [
+        'overline' => 'Our Heritage',
+        'heading_1' => 'Three Italian generations.',
+        'heading_2' => 'One Iraqi address.',
+        'paragraph_1' => 'Behind every Delos installation stands a lineage of Italian making that long precedes our 2020 founding. CANTORI\'s workshops opened in Forlì in 1948. Frigerio rose in Brianza in 1955. LUBE began in Treia in 1967. Every piece on our showroom floors carries those decades of refinement.',
+        'paragraph_2' => 'Our role is custodial: to identify the houses worthy of Iraqi homes, to import them without compromise, and to deliver them with the same care they were made with.',
+        'closing_line' => 'Italian heritage, made local.',
+    ],
+
     'direction' => [
         'overline' => 'Our Direction',
         'heading_1' => 'Vision, Mission',

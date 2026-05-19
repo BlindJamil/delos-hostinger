@@ -178,6 +178,18 @@ return [
                     ['key' => 'about.story.image', 'label' => 'Story image', 'type' => 'image'],
                 ],
             ],
+            'history' => [
+                'label' => 'Heritage section',
+                'description' => 'Typography-led editorial block sitting between Story and Vision. Anchors Delos in the Italian houses\' founding heritage (CANTORI 1948, Frigerio 1955, LUBE 1967).',
+                'fields' => [
+                    ['key' => 'about.history.overline', 'label' => 'Overline', 'type' => 'text'],
+                    ['key' => 'about.history.heading_1', 'label' => 'Heading line 1', 'type' => 'text'],
+                    ['key' => 'about.history.heading_2', 'label' => 'Heading line 2 (gold accent)', 'type' => 'text'],
+                    ['key' => 'about.history.paragraph_1', 'label' => 'Paragraph 1', 'type' => 'textarea'],
+                    ['key' => 'about.history.paragraph_2', 'label' => 'Paragraph 2', 'type' => 'textarea'],
+                    ['key' => 'about.history.closing_line', 'label' => 'Closing line (italic gold)', 'type' => 'text'],
+                ],
+            ],
             'direction' => [
                 'label' => 'Vision / Mission / Goal cards',
                 'fields' => [

@@ -96,6 +96,33 @@
     </div>
 </section>
 
+{{-- OUR HERITAGE --}}
+<section class="py-24 lg:py-32 bg-delos-cream relative">
+    <x-admin-edit-pill page="about" label="Edit Heritage" />
+    <div class="max-w-3xl mx-auto px-6 lg:px-12 text-center">
+        <div data-motion-group="heritage">
+            <p data-motion="fade-up" class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.history.overline') }}</p>
+
+            <h2 data-motion="fade-up" class="font-serif text-4xl lg:text-5xl font-light text-delos-dark leading-tight mb-8">
+                {{ pcontent('about.history.heading_1') }}<br>
+                <em class="text-delos-gold not-italic">{{ pcontent('about.history.heading_2') }}</em>
+            </h2>
+
+            <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mb-10"></div>
+
+            <div class="space-y-6 text-left lg:text-center">
+                <p data-motion="fade-up" class="text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.history.paragraph_1') }}</p>
+                <p data-motion="fade-up" class="text-delos-muted text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.history.paragraph_2') }}</p>
+            </div>
+
+            @if(pcontent_optional('about.history.closing_line'))
+                <div data-motion-line class="w-16 h-px bg-delos-gold mx-auto mt-10 mb-6"></div>
+                <p data-motion="fade-up" class="font-serif italic text-delos-gold text-lg lg:text-xl font-light">{{ pcontent('about.history.closing_line') }}</p>
+            @endif
+        </div>
+    </div>
+</section>
+
 {{-- VISION, MISSION & GOAL --}}
 <section class="py-24 lg:py-32 bg-delos-ivory">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
