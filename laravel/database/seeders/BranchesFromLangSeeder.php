@@ -21,6 +21,15 @@ class BranchesFromLangSeeder extends Seeder
 {
     public function run(): void
     {
+        // Production guard: once an admin has populated this table — even
+        // with a single row — never re-inject seed rows. firstOrCreate is
+        // only safe against updates, not against deletes; an admin-deleted
+        // record would resurrect on every deploy without this guard. The
+        // lang file rows() are kept as the baseline for fresh installs.
+        if (Branch::query()->exists()) {
+            return;
+        }
+
         foreach (static::rows() as $index => $row) {
             $row['sort_order'] = ($index + 1) * 10;
             $row['active'] = true;
