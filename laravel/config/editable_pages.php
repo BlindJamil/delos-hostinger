@@ -179,8 +179,8 @@ return [
                 ],
             ],
             'history' => [
-                'label' => 'Heritage section',
-                'description' => 'Typography-led editorial block sitting between Story and Vision. Anchors Delos in the Italian houses\' founding heritage (CANTORI 1948, Frigerio 1955, LUBE 1967).',
+                'label' => 'History section',
+                'description' => 'Typography-led editorial block sitting between Story and Vision. Anchors Delos in the Italian houses\' history (CANTORI 1948, Frigerio 1955, LUBE 1967).',
                 'fields' => [
                     ['key' => 'about.history.overline', 'label' => 'Overline', 'type' => 'text'],
                     ['key' => 'about.history.heading_1', 'label' => 'Heading line 1', 'type' => 'text'],

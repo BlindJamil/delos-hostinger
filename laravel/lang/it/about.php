@@ -27,9 +27,9 @@ return [
     ],
 
     'history' => [
-        'overline' => 'Il nostro patrimonio',
-        'heading_1' => 'Tre generazioni italiane.',
-        'heading_2' => 'Un unico indirizzo iracheno.',
+        'overline' => 'Le nostre origini',
+        'heading_1' => 'Una storia di artigianato italiano.',
+        'heading_2' => 'Portata a casa in Iraq.',
         'paragraph_1' => 'Dietro ogni installazione Delos vi è una linea italiana di artigianato che precede la nostra fondazione del 2020. Le botteghe CANTORI aprono a Forlì nel 1948. Frigerio nasce in Brianza nel 1955. LUBE inizia a Treia nel 1967. Ogni pezzo nei nostri showroom porta con sé quei decenni di raffinatezza.',
         'paragraph_2' => 'Il nostro ruolo è di custodia: identificare le case italiane degne delle dimore irachene, importarle senza compromessi, e consegnarle con la stessa cura con cui sono state create.',
         'closing_line' => 'Patrimonio italiano, vissuto in Iraq.',

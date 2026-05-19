@@ -96,9 +96,9 @@
     </div>
 </section>
 
-{{-- OUR HERITAGE --}}
+{{-- OUR HISTORY --}}
 <section class="py-24 lg:py-32 bg-delos-cream relative">
-    <x-admin-edit-pill page="about" label="Edit Heritage" />
+    <x-admin-edit-pill page="about" label="Edit History" />
     <div class="max-w-3xl mx-auto px-6 lg:px-12 text-center">
         <div data-motion-group="heritage">
             <p data-motion="fade-up" class="text-delos-gold text-[11px] tracking-[0.4em] uppercase font-medium mb-6" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.history.overline') }}</p>
