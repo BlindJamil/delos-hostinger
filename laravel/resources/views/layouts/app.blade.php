@@ -15,6 +15,12 @@
     <title>@yield('title', pcontent('seo.default.title'))</title>
     <meta name="description" content="@yield('description', pcontent('seo.default.description'))">
 
+    {{-- Favicon. Single high-res source; the browser downscales for the
+         tab (16/32 px) and iOS uses it for the home-screen icon (180 px). --}}
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/delos-logo.jpg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/delos-logo.jpg') }}">
+    <meta name="theme-color" content="#3d2f25">
+
     {{-- hreflang + canonical --}}
     <link rel="canonical" href="{{ url()->current() }}">
     @foreach ($supportedLocales as $alt)
