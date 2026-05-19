@@ -205,16 +205,16 @@
                                         @endif
                                     </a>
                                     <div x-show="open" x-cloak
-                                         x-transition:enter="transition ease-out duration-200"
-                                         x-transition:enter-start="opacity-0 -translate-y-1"
-                                         x-transition:enter-end="opacity-100 translate-y-0"
-                                         x-transition:leave="transition ease-in duration-150"
-                                         x-transition:leave-start="opacity-100 translate-y-0"
-                                         x-transition:leave-end="opacity-0 -translate-y-1"
-                                         class="absolute top-full left-0 mt-3 w-52 bg-delos-dark border border-delos-gold/20 shadow-xl z-50 py-1">
+                                         x-transition:enter="transition ease-out duration-300"
+                                         x-transition:enter-start="opacity-0 -translate-y-2 scale-95"
+                                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave="transition ease-in duration-200"
+                                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                         x-transition:leave-end="opacity-0 -translate-y-2 scale-95"
+                                         class="absolute top-full left-0 mt-4 min-w-[14rem] bg-delos-dark border border-delos-gold/25 shadow-2xl shadow-delos-dark/30 z-50 origin-top-left">
                                         @foreach($link['children'] as $child)
                                             <a href="{{ lroute($child['route']) }}"
-                                               class="block px-4 py-3 font-sans text-[11px] tracking-[0.18em] uppercase font-medium hover:bg-white/5 transition-colors duration-200 {{ request()->routeIs('l.' . $child['route']) ? 'text-delos-gold' : 'text-delos-cream hover:text-delos-gold' }}">
+                                               class="block px-6 py-4 font-sans text-[11px] tracking-[0.25em] uppercase font-medium whitespace-nowrap hover:bg-delos-gold/10 transition-colors duration-300 border-b border-delos-gold/10 last:border-b-0 {{ request()->routeIs('l.' . $child['route']) ? 'text-delos-gold bg-delos-gold/5' : 'text-delos-cream hover:text-delos-gold' }}">
                                                 {{ $child['label'] }}
                                             </a>
                                         @endforeach
