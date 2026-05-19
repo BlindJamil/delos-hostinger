@@ -25,7 +25,7 @@
 </section>
 
 {{-- FORM --}}
-<section class="py-24 lg:py-32 bg-delos-cream">
+<section class="py-24 lg:py-32 bg-delos-ivory">
     <div class="max-w-2xl mx-auto px-6 lg:px-12">
 
         <div data-motion-group="dealer-form-header" class="text-center mb-12 lg:mb-14">
