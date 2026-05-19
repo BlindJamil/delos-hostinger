@@ -8,15 +8,6 @@ return [
         'sub' => 'Delos International partners with select dealers across the region to extend authentic Italian design to new audiences. If your business shares our standard, we\'d like to meet.',
     ],
 
-    'benefits' => [
-        'heading' => 'Why partner with Delos',
-        'items' => [
-            ['title' => 'Exclusive Italian brands', 'desc' => 'Direct access to LUBE, Frigerio, CANTORI, SKEMA, and the rest of our partner houses — backed by Delos certification.'],
-            ['title' => 'Full dealer support', 'desc' => 'Marketing collateral, training for your team, and shared expertise on every project from consultation to installation.'],
-            ['title' => 'An established name', 'desc' => 'Built since 2020 across four Iraqi cities, with 500+ projects delivered. Our reputation grows with yours.'],
-        ],
-    ],
-
     'form' => [
         'heading' => 'Tell us about your business.',
         'sub' => 'Send a brief inquiry — we\'ll respond within two business days.',

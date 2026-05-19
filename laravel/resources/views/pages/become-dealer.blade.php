@@ -24,26 +24,6 @@
     </div>
 </section>
 
-{{-- BENEFITS --}}
-<section class="py-20 lg:py-24 bg-delos-ivory">
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div data-motion-group="dealer-benefits-header" class="text-center mb-14 lg:mb-16">
-            <div data-motion-line class="w-12 h-px bg-delos-gold mx-auto mb-5"></div>
-            <h2 data-motion="fade-up" class="font-serif text-3xl lg:text-4xl font-light text-delos-dark">{{ pcontent('become_dealer.benefits.heading') }}</h2>
-        </div>
-
-        <div data-motion-group="dealer-benefits" class="grid md:grid-cols-3 gap-10 lg:gap-12">
-            @foreach([0, 1, 2] as $i)
-                <div data-motion="fade-up" class="text-center md:text-left">
-                    <p class="font-serif text-delos-gold text-2xl lg:text-3xl font-light mb-3">0{{ $i + 1 }}</p>
-                    <h3 class="font-serif text-delos-dark text-xl lg:text-2xl font-light mb-3 leading-snug">{{ pcontent("become_dealer.benefits.items.{$i}.title") }}</h3>
-                    <p class="text-delos-muted text-sm lg:text-base leading-relaxed" style="font-family: 'Inter', sans-serif;">{{ pcontent("become_dealer.benefits.items.{$i}.desc") }}</p>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
 {{-- FORM --}}
 <section class="py-24 lg:py-32 bg-delos-cream">
     <div class="max-w-2xl mx-auto px-6 lg:px-12">

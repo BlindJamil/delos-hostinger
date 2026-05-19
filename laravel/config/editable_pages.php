@@ -539,18 +539,6 @@ return [
                     ['key' => 'become_dealer.hero.sub', 'label' => 'Subheading', 'type' => 'textarea'],
                 ],
             ],
-            'benefits' => [
-                'label' => 'Why partner with Delos',
-                'fields' => [
-                    ['key' => 'become_dealer.benefits.heading', 'label' => 'Section heading', 'type' => 'text'],
-                    ['key' => 'become_dealer.benefits.items.0.title', 'label' => 'Benefit 1 · title', 'type' => 'text'],
-                    ['key' => 'become_dealer.benefits.items.0.desc', 'label' => 'Benefit 1 · description', 'type' => 'textarea'],
-                    ['key' => 'become_dealer.benefits.items.1.title', 'label' => 'Benefit 2 · title', 'type' => 'text'],
-                    ['key' => 'become_dealer.benefits.items.1.desc', 'label' => 'Benefit 2 · description', 'type' => 'textarea'],
-                    ['key' => 'become_dealer.benefits.items.2.title', 'label' => 'Benefit 3 · title', 'type' => 'text'],
-                    ['key' => 'become_dealer.benefits.items.2.desc', 'label' => 'Benefit 3 · description', 'type' => 'textarea'],
-                ],
-            ],
             'form' => [
                 'label' => 'Inquiry form',
                 'fields' => [
