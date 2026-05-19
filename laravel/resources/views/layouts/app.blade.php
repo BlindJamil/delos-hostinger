@@ -167,20 +167,70 @@
                                 ['label' => pcontent('common.nav.projects'), 'route' => 'projects'],
                                 ['label' => pcontent('common.nav.about'),    'route' => 'about'],
                                 ['label' => pcontent('common.nav.branches'), 'route' => 'branches'],
-                                ['label' => pcontent('common.nav.become_dealer'), 'route' => 'become-dealer'],
-                                ['label' => pcontent('common.nav.contact'),  'route' => 'contact'],
+                                [
+                                    'label' => pcontent('common.nav.contact'),
+                                    'route' => 'contact',
+                                    'children' => [
+                                        ['label' => pcontent('common.nav.contact'),       'route' => 'contact'],
+                                        ['label' => pcontent('common.nav.become_dealer'), 'route' => 'become-dealer'],
+                                    ],
+                                ],
                             ];
                         @endphp
                         @foreach($links as $link)
-                            <a href="{{ lroute($link['route']) }}"
-                               class="nav-link font-sans text-[11px] tracking-[0.18em] uppercase font-medium transition-all duration-300 relative group {{ request()->routeIs('l.' . $link['route']) ? 'text-delos-gold' : '' }}">
-                                {{ $link['label'] }}
-                                @if(request()->routeIs('l.' . $link['route']))
-                                    <span class="nav-underline absolute -bottom-1 left-0 h-px bg-delos-gold" style="transform: scaleX(1); transform-origin: left;"></span>
-                                @else
-                                    <span class="nav-underline absolute -bottom-1 left-0 h-px bg-delos-gold"></span>
-                                @endif
-                            </a>
+                            @php
+                                $hasChildren = isset($link['children']);
+                                $isActive = $hasChildren
+                                    ? collect($link['children'])->contains(fn ($c) => request()->routeIs('l.' . $c['route']))
+                                    : request()->routeIs('l.' . $link['route']);
+                            @endphp
+                            @if($hasChildren)
+                                <div x-data="{ open: false }"
+                                     @mouseenter="open = true"
+                                     @mouseleave="open = false"
+                                     @focusin="open = true"
+                                     @focusout="open = false"
+                                     @keydown.escape.window="open = false"
+                                     class="relative">
+                                    <a href="{{ lroute($link['route']) }}"
+                                       class="nav-link font-sans text-[11px] tracking-[0.18em] uppercase font-medium transition-all duration-300 relative group inline-flex items-center gap-1.5 {{ $isActive ? 'text-delos-gold' : '' }}">
+                                        {{ $link['label'] }}
+                                        <svg class="w-2.5 h-2.5 transition-transform duration-300" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                        </svg>
+                                        @if($isActive)
+                                            <span class="nav-underline absolute -bottom-1 left-0 h-px bg-delos-gold" style="transform: scaleX(1); transform-origin: left;"></span>
+                                        @else
+                                            <span class="nav-underline absolute -bottom-1 left-0 h-px bg-delos-gold"></span>
+                                        @endif
+                                    </a>
+                                    <div x-show="open" x-cloak
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="opacity-0 -translate-y-1"
+                                         x-transition:enter-end="opacity-100 translate-y-0"
+                                         x-transition:leave="transition ease-in duration-150"
+                                         x-transition:leave-start="opacity-100 translate-y-0"
+                                         x-transition:leave-end="opacity-0 -translate-y-1"
+                                         class="absolute top-full left-0 mt-3 w-52 bg-delos-dark border border-delos-gold/20 shadow-xl z-50 py-1">
+                                        @foreach($link['children'] as $child)
+                                            <a href="{{ lroute($child['route']) }}"
+                                               class="block px-4 py-3 font-sans text-[11px] tracking-[0.18em] uppercase font-medium hover:bg-white/5 transition-colors duration-200 {{ request()->routeIs('l.' . $child['route']) ? 'text-delos-gold' : 'text-delos-cream hover:text-delos-gold' }}">
+                                                {{ $child['label'] }}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @else
+                                <a href="{{ lroute($link['route']) }}"
+                                   class="nav-link font-sans text-[11px] tracking-[0.18em] uppercase font-medium transition-all duration-300 relative group {{ $isActive ? 'text-delos-gold' : '' }}">
+                                    {{ $link['label'] }}
+                                    @if($isActive)
+                                        <span class="nav-underline absolute -bottom-1 left-0 h-px bg-delos-gold" style="transform: scaleX(1); transform-origin: left;"></span>
+                                    @else
+                                        <span class="nav-underline absolute -bottom-1 left-0 h-px bg-delos-gold"></span>
+                                    @endif
+                                </a>
+                            @endif
                         @endforeach
                     </div>
 
@@ -225,10 +275,19 @@
             <div id="mobile-menu" class="lg:hidden bg-delos-dark border-t border-white/10">
                 <div class="px-6 py-8 flex flex-col gap-6">
                     @foreach($links as $link)
-                        <a href="{{ lroute($link['route']) }}"
-                           class="font-sans text-delos-cream text-[13px] tracking-[0.2em] uppercase font-medium hover:text-delos-gold transition-colors duration-300">
-                            {{ $link['label'] }}
-                        </a>
+                        @if(isset($link['children']))
+                            @foreach($link['children'] as $child)
+                                <a href="{{ lroute($child['route']) }}"
+                                   class="font-sans text-delos-cream text-[13px] tracking-[0.2em] uppercase font-medium hover:text-delos-gold transition-colors duration-300">
+                                    {{ $child['label'] }}
+                                </a>
+                            @endforeach
+                        @else
+                            <a href="{{ lroute($link['route']) }}"
+                               class="font-sans text-delos-cream text-[13px] tracking-[0.2em] uppercase font-medium hover:text-delos-gold transition-colors duration-300">
+                                {{ $link['label'] }}
+                            </a>
+                        @endif
                     @endforeach
 
                     <div class="flex items-center gap-3 mt-4 pt-4 border-t border-white/10">
