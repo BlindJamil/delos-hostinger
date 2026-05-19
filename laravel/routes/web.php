@@ -402,6 +402,7 @@ Route::prefix('{locale}')
         Route::get('/brands', [PageController::class, 'brands'])->name('brands');
         Route::get('/branches', [PageController::class, 'branches'])->name('branches');
         Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+        // Become a Dealer — public B2B inquiry page for prospective regional dealers.
         Route::get('/become-a-dealer', [PageController::class, 'becomeDealer'])->name('become-dealer');
         Route::get('/team/{employee}', [PageController::class, 'showEmployee'])->name('employee-show');
     });
