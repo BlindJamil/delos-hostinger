@@ -402,6 +402,7 @@ Route::prefix('{locale}')
         Route::get('/brands', [PageController::class, 'brands'])->name('brands');
         Route::get('/branches', [PageController::class, 'branches'])->name('branches');
         Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+        Route::get('/become-a-dealer', [PageController::class, 'becomeDealer'])->name('become-dealer');
         Route::get('/team/{employee}', [PageController::class, 'showEmployee'])->name('employee-show');
     });
 
@@ -419,7 +420,7 @@ Route::get('/', function () {
     return redirect('/' . $locale);
 })->middleware(PreventAdminCaching::class);
 
-foreach (['about', 'services', 'projects', 'brands', 'branches', 'contact'] as $legacyPage) {
+foreach (['about', 'services', 'projects', 'brands', 'branches', 'contact', 'become-a-dealer'] as $legacyPage) {
     Route::get("/{$legacyPage}", function () use ($legacyPage) {
         $locale = app(LocaleResolver::class)->resolve(request());
         return redirect("/{$locale}/{$legacyPage}");

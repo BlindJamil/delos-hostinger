@@ -33,4 +33,8 @@ return [
         'title' => 'Contatti — Delos International',
         'description' => 'Prenota una consulenza di design gratuita con Delos International. I nostri specialisti ti aiuteranno a creare il tuo interno di lusso italiano ideale.',
     ],
+    'become_dealer' => [
+        'title' => 'Diventa rivenditore — Delos International',
+        'description' => 'Collabora con Delos International per portare il design italiano di lusso autentico nella tua città. Marchi esclusivi, supporto completo al rivenditore e presenza consolidata in Iraq dal 2020.',
+    ],
 ];

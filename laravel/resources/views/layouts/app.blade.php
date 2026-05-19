@@ -167,6 +167,7 @@
                                 ['label' => pcontent('common.nav.projects'), 'route' => 'projects'],
                                 ['label' => pcontent('common.nav.about'),    'route' => 'about'],
                                 ['label' => pcontent('common.nav.branches'), 'route' => 'branches'],
+                                ['label' => pcontent('common.nav.become_dealer'), 'route' => 'become-dealer'],
                                 ['label' => pcontent('common.nav.contact'),  'route' => 'contact'],
                             ];
                         @endphp

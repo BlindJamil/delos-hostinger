@@ -15,6 +15,7 @@ return [
         'projects' => 'Projects',
         'about' => 'Company Profile',
         'branches' => 'Branches',
+        'become_dealer' => 'Become a Dealer',
         'contact' => 'Contact Us',
         'menu_toggle' => 'Toggle navigation menu',
     ],

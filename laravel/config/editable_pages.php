@@ -525,6 +525,50 @@ return [
         ],
     ],
 
+    // ─── BECOME A DEALER ───────────────────────────────────
+    'become_dealer' => [
+        'label' => 'Become a Dealer page',
+        'description' => 'Public landing page for prospective regional dealers. Hero pitch + 3 benefits + simple WhatsApp/Email inquiry form. Receiving WhatsApp number + email are set under "Contact destinations" — change them once, the form routes there site-wide.',
+        'sections' => [
+            'hero' => [
+                'label' => 'Hero',
+                'fields' => [
+                    ['key' => 'become_dealer.hero.overline', 'label' => 'Overline', 'type' => 'text'],
+                    ['key' => 'become_dealer.hero.heading_1', 'label' => 'Heading line 1', 'type' => 'text'],
+                    ['key' => 'become_dealer.hero.heading_accent', 'label' => 'Heading line 2 (gold accent)', 'type' => 'text'],
+                    ['key' => 'become_dealer.hero.sub', 'label' => 'Subheading', 'type' => 'textarea'],
+                ],
+            ],
+            'benefits' => [
+                'label' => 'Why partner with Delos',
+                'fields' => [
+                    ['key' => 'become_dealer.benefits.heading', 'label' => 'Section heading', 'type' => 'text'],
+                    ['key' => 'become_dealer.benefits.items.0.title', 'label' => 'Benefit 1 · title', 'type' => 'text'],
+                    ['key' => 'become_dealer.benefits.items.0.desc', 'label' => 'Benefit 1 · description', 'type' => 'textarea'],
+                    ['key' => 'become_dealer.benefits.items.1.title', 'label' => 'Benefit 2 · title', 'type' => 'text'],
+                    ['key' => 'become_dealer.benefits.items.1.desc', 'label' => 'Benefit 2 · description', 'type' => 'textarea'],
+                    ['key' => 'become_dealer.benefits.items.2.title', 'label' => 'Benefit 3 · title', 'type' => 'text'],
+                    ['key' => 'become_dealer.benefits.items.2.desc', 'label' => 'Benefit 3 · description', 'type' => 'textarea'],
+                ],
+            ],
+            'form' => [
+                'label' => 'Inquiry form',
+                'fields' => [
+                    ['key' => 'become_dealer.form.heading', 'label' => 'Form heading', 'type' => 'text'],
+                    ['key' => 'become_dealer.form.sub', 'label' => 'Form subheading', 'type' => 'textarea'],
+                ],
+            ],
+            'contact' => [
+                'label' => 'Contact destinations (where inquiries go)',
+                'description' => 'Set the WhatsApp number and email that should receive dealer inquiries.',
+                'fields' => [
+                    ['key' => 'become_dealer.contact.whatsapp', 'label' => 'WhatsApp number (digits only, with country code)', 'type' => 'text'],
+                    ['key' => 'become_dealer.contact.email', 'label' => 'Email address', 'type' => 'text'],
+                ],
+            ],
+        ],
+    ],
+
     // ─── SEO META ──────────────────────────────────────────
     'seo' => [
         'label' => 'SEO Titles & Descriptions',

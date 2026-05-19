@@ -15,6 +15,7 @@ return [
         'projects' => 'Progetti',
         'about' => 'Chi siamo',
         'branches' => 'Filiali',
+        'become_dealer' => 'Diventa rivenditore',
         'contact' => 'Contatti',
         'menu_toggle' => 'Apri menu di navigazione',
     ],

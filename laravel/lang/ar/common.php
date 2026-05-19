@@ -15,6 +15,7 @@ return [
         'projects' => 'المشاريع',
         'about' => 'عن ديلوس',
         'branches' => 'الفروع',
+        'become_dealer' => 'كن موزّعاً',
         'contact' => 'تواصل معنا',
         'menu_toggle' => 'فتح قائمة التنقّل',
     ],

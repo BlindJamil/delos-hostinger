@@ -33,4 +33,8 @@ return [
         'title' => 'Contact Us — Delos International',
         'description' => 'Book a complimentary design consultation with Delos International. Our specialists will help you create your perfect Italian luxury interior.',
     ],
+    'become_dealer' => [
+        'title' => 'Become a Dealer — Delos International',
+        'description' => 'Partner with Delos International to bring authentic Italian luxury interior design to your city. Exclusive brands, full dealer support, established Iraqi presence since 2020.',
+    ],
 ];
