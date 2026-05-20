@@ -36,7 +36,7 @@
     --font-sans-delos: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-serif-delos: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
 }
-:is([lang="ar"], [lang="ku"]) {
+[lang="ar"] {
     --font-sans-delos: 'Cairo', 'Inter', ui-sans-serif, system-ui, sans-serif;
     /* Arabic headings share the navigation typeface (Cairo) for clarity —
        Amiri rendered too decoratively for titles at display sizes. */
@@ -48,6 +48,17 @@
      * at 8-11px that the marquee labels looked empty on /ar pages. */
     --font-sans: 'Cairo', 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-serif: 'Cairo', 'Amiri', 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Kurdish (Sorani) needs Noto fonts — Cairo's Sorani coverage is
+ * incomplete and breaks letter-shaping on ڵ ێ ۆ ڕ ڤ. Noto Naskh
+ * Arabic (serif) and Noto Sans Arabic (sans) ship with the full
+ * extended Arabic alphabet including all Kurdish letterforms. */
+[lang="ku"] {
+    --font-sans-delos: 'Noto Sans Arabic', 'Cairo', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-serif-delos: 'Noto Naskh Arabic', 'Noto Sans Arabic', 'Cairo', 'Amiri', 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Noto Sans Arabic', 'Cairo', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'Noto Naskh Arabic', 'Noto Sans Arabic', 'Cairo', 'Amiri', 'Cormorant Garamond', Georgia, serif;
 }
 :is([lang="ar"], [lang="ku"]) body,
 :is([lang="ar"], [lang="ku"]) .font-sans,
