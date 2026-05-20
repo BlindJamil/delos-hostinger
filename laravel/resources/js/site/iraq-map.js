@@ -42,17 +42,23 @@ export function initIraqMap(context) {
         });
 
         // Pin <a> already navigates to #branch-key via href; we just want
-        // smooth-scroll instead of the browser's instant jump.
+        // smooth-scroll instead of the browser's instant jump, plus a
+        // brief visual flash on the card so the user sees what got
+        // clicked (otherwise the scroll alone can feel like "did
+        // anything happen?").
         const link = qs('.iraq-map__pin-link', pin);
         if (link) {
             link.addEventListener('click', (event) => {
-                if (context.prefersReducedMotion) return; // honour user preference
                 event.preventDefault();
-                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const behavior = context.prefersReducedMotion ? 'auto' : 'smooth';
+                card.scrollIntoView({ behavior, block: 'start' });
                 // Match URL hash without triggering jump
                 if (history.replaceState) {
                     history.replaceState(null, '', `#branch-${key}`);
                 }
+                // Flash the card briefly so the user sees confirmation.
+                card.classList.add('is-active');
+                window.setTimeout(() => card.classList.remove('is-active'), 1500);
             });
         }
 

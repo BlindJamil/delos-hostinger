@@ -381,10 +381,18 @@ body.has-custom-cursor .iraq-map__pin-group {
     scroll-margin-top: 100px; /* leave space for fixed header when scrolled-to */
 }
 
-.branch-card:hover {
-    border-color: rgba(196, 154, 122, 0.4);
+.branch-card:hover,
+.branch-card.is-active {
+    border-color: rgba(196, 154, 122, 0.6);
     transform: translateY(-2px);
     box-shadow: 0 12px 40px -16px rgba(60, 46, 42, 0.25);
+}
+
+/* JS adds .is-active to the matching card when a map pin is clicked
+   (and removes it ~1.5s later). The longer transition vs hover gives
+   the accent a deliberate "selected" feel rather than a quick swap. */
+.branch-card.is-active {
+    transition: border-color 0.8s ease, transform 0.8s ease, box-shadow 0.8s ease;
 }
 
 .branch-card--flagship {
