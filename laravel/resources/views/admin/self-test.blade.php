@@ -52,6 +52,7 @@
                         <option value="en" @if(($report['filter_locale'] ?? null) === 'en') selected @endif>English</option>
                         <option value="ar" @if(($report['filter_locale'] ?? null) === 'ar') selected @endif>العربية</option>
                         <option value="it" @if(($report['filter_locale'] ?? null) === 'it') selected @endif>Italiano</option>
+                        <option value="ku" @if(($report['filter_locale'] ?? null) === 'ku') selected @endif>کوردی</option>
                     </select>
                 </div>
                 <div class="flex items-end text-xs text-delos-muted">

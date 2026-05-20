@@ -22,16 +22,17 @@ export function initLanguageGlobe() {
 
     const path = window.location.pathname;
     let currentLocale = 'en';
-    const match = path.match(/^\/(en|ar|it)(\/|$)/);
+    const match = path.match(/^\/(en|ar|it|ku)(\/|$)/);
     if (match) currentLocale = match[1];
 
-    let pathWithoutLocale = path.replace(/^\/(en|ar|it)(\/|$)/, '/');
+    let pathWithoutLocale = path.replace(/^\/(en|ar|it|ku)(\/|$)/, '/');
     if (pathWithoutLocale === '/') pathWithoutLocale = '';
 
     const locales = [
         { code: 'en', label: 'EN', native: 'English' },
         { code: 'ar', label: 'AR', native: 'العربية' },
         { code: 'it', label: 'IT', native: 'Italiano' },
+        { code: 'ku', label: 'KU', native: 'کوردی' },
     ];
 
     // ── Wrapper: fixed bottom-right ──
@@ -109,7 +110,7 @@ export function initLanguageGlobe() {
         // Native name
         const nativeEl = document.createElement('span');
         nativeEl.style.cssText = 'display:inline;position:static;font-size:12px;color:' + (isCurrent ? 'rgba(196,154,122,0.7)' : 'rgba(248,244,239,0.45)') + ';';
-        if (loc.code === 'ar') nativeEl.style.fontFamily = "'Cairo',sans-serif";
+        if (loc.code === 'ar' || loc.code === 'ku') nativeEl.style.fontFamily = "'Cairo',sans-serif";
         nativeEl.textContent = loc.native;
 
         item.appendChild(codeEl);

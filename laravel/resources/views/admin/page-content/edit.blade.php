@@ -79,7 +79,7 @@
         {{-- Locale tabs — sticky so they stay visible while scrolling --}}
         <div class="sticky top-4 z-20 bg-delos-ivory/95 backdrop-blur border border-delos-dark/8 rounded-xl shadow-sm p-3 flex items-center justify-between gap-3">
             <div class="flex items-center gap-1">
-                @foreach(['en' => 'English', 'ar' => 'العربية', 'it' => 'Italiano'] as $code => $label)
+                @foreach(['en' => 'English', 'ar' => 'العربية', 'it' => 'Italiano', 'ku' => 'کوردی'] as $code => $label)
                     <button type="button"
                             @click="activeLocale = '{{ $code }}'"
                             :class="activeLocale === '{{ $code }}' ? 'bg-delos-dark-2 text-delos-cream shadow-sm' : 'text-delos-muted hover:text-delos-dark-2 hover:bg-delos-ivory'"

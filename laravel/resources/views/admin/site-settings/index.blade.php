@@ -67,7 +67,7 @@
                                 <div class="flex-1 space-y-2">
                                     @if($isLocalized)
                                         {{-- EN / AR / IT triplet --}}
-                                        @foreach(['en' => ['EN', 'ltr', ''], 'ar' => ['AR', 'rtl', "font-family: 'Cairo', sans-serif;"], 'it' => ['IT', 'ltr', '']] as $lang => $meta)
+                                        @foreach(['en' => ['EN', 'ltr', ''], 'ar' => ['AR', 'rtl', "font-family: 'Cairo', sans-serif;"], 'it' => ['IT', 'ltr', ''], 'ku' => ['KU', 'rtl', "font-family: 'Cairo', sans-serif;"]] as $lang => $meta)
                                             @php
                                                 [$flag, $dir, $style] = $meta;
                                                 $val = $setting->{"value_{$lang}"};

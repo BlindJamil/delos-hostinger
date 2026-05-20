@@ -351,7 +351,7 @@
              Each locale gets a labelled input so the admin always sees
              and can edit every language without JS dependency. --}}
         <div class="space-y-2">
-            @foreach(['en' => 'EN', 'ar' => 'AR', 'it' => 'IT'] as $code => $localeLabel)
+            @foreach(['en' => 'EN', 'ar' => 'AR', 'it' => 'IT', 'ku' => 'KU'] as $code => $localeLabel)
                 @php
                     $dir = $code === 'ar' ? 'rtl' : 'ltr';
                     $style = $code === 'ar' ? "font-family: 'Cairo', sans-serif;" : '';
