@@ -11,10 +11,10 @@ class Employee extends Model
     protected $appends = ['image_url', 'mobile_image_url'];
 
     protected $fillable = [
-        'name_en', 'name_ar', 'name_it',
-        'role_en', 'role_ar', 'role_it',
+        'name_en', 'name_ar', 'name_it', 'name_ku',
+        'role_en', 'role_ar', 'role_it', 'role_ku',
         'branch',
-        'achievement_en', 'achievement_ar', 'achievement_it',
+        'achievement_en', 'achievement_ar', 'achievement_it', 'achievement_ku',
         'image',
         'image_mobile',
         'focal_point',

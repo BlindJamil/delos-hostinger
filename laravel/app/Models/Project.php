@@ -11,10 +11,10 @@ class Project extends Model
     protected $appends = ['image_url', 'mobile_image_url'];
 
     protected $fillable = [
-        'title_en', 'title_ar', 'title_it',
+        'title_en', 'title_ar', 'title_it', 'title_ku',
         'city',
         'type',
-        'type_label_en', 'type_label_ar', 'type_label_it',
+        'type_label_en', 'type_label_ar', 'type_label_it', 'type_label_ku',
         'brand',
         'year',
         'image',

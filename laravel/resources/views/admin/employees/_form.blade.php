@@ -22,6 +22,9 @@
                     <button type="button" @click="tab = 'it'"
                             :class="tab === 'it' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'"
                             class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">IT</button>
+                    <button type="button" @click="tab = 'ku'"
+                            :class="tab === 'ku' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'"
+                            class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">KU</button>
                 </div>
             </div>
 
@@ -102,6 +105,34 @@
                         'dir' => 'ltr',
                     ])
                     @error('achievement_it')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
+                </div>
+            </div>
+
+            {{-- Kurdish (Sorani — RTL) --}}
+            <div x-show="tab === 'ku'" x-cloak class="p-5 space-y-4">
+                <div>
+                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">ناو (Name)</label>
+                    <input type="text" name="name_ku" dir="rtl" value="{{ old('name_ku', $employee->name_ku) }}"
+                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all"
+                           style="font-family: 'Cairo', sans-serif;">
+                    @error('name_ku')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">پۆست (Role)</label>
+                    <input type="text" name="role_ku" dir="rtl" value="{{ old('role_ku', $employee->role_ku) }}"
+                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all"
+                           style="font-family: 'Cairo', sans-serif;">
+                    @error('role_ku')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">دەستکەوت (Achievement)</label>
+                    @include('admin.partials.rich-text-editor', [
+                        'name' => 'achievement_ku',
+                        'value' => old('achievement_ku', $employee->achievement_ku ?? ''),
+                        'id' => 'achievement_ku',
+                        'dir' => 'rtl',
+                    ])
+                    @error('achievement_ku')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
                 </div>
             </div>
         </div>

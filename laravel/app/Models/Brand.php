@@ -13,11 +13,11 @@ class Brand extends Model
     protected $fillable = [
         'name',
         'slug',
-        'category_en', 'category_ar', 'category_it',
-        'origin_en', 'origin_ar', 'origin_it',
+        'category_en', 'category_ar', 'category_it', 'category_ku',
+        'origin_en', 'origin_ar', 'origin_it', 'origin_ku',
         'since',
-        'description_en', 'description_ar', 'description_it',
-        'specialties_en', 'specialties_ar', 'specialties_it',
+        'description_en', 'description_ar', 'description_it', 'description_ku',
+        'specialties_en', 'specialties_ar', 'specialties_it', 'specialties_ku',
         'image',
         'image_mobile',
         'focal_point',
@@ -33,6 +33,7 @@ class Brand extends Model
             'specialties_en' => 'array',
             'specialties_ar' => 'array',
             'specialties_it' => 'array',
+            'specialties_ku' => 'array',
         ];
     }
 

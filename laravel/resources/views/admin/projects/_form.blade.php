@@ -16,6 +16,7 @@
                     <button type="button" @click="tab = 'en'" :class="tab === 'en' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'" class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">EN</button>
                     <button type="button" @click="tab = 'ar'" :class="tab === 'ar' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'" class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">AR</button>
                     <button type="button" @click="tab = 'it'" :class="tab === 'it' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'" class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">IT</button>
+                    <button type="button" @click="tab = 'ku'" :class="tab === 'ku' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'" class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">KU</button>
                 </div>
             </div>
 
@@ -66,6 +67,24 @@
                     <input type="text" name="type_label_it" value="{{ old('type_label_it', $project->type_label_it) }}"
                            class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
                     @error('type_label_it')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
+                </div>
+            </div>
+
+            {{-- Kurdish (Sorani — RTL) --}}
+            <div x-show="tab === 'ku'" x-cloak class="p-5 space-y-4">
+                <div>
+                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">ناونیشان (Title)</label>
+                    <input type="text" name="title_ku" dir="rtl" value="{{ old('title_ku', $project->title_ku) }}"
+                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all"
+                           style="font-family: 'Cairo', sans-serif;">
+                    @error('title_ku')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label class="block text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium mb-2">جۆر (Type label)</label>
+                    <input type="text" name="type_label_ku" dir="rtl" value="{{ old('type_label_ku', $project->type_label_ku) }}"
+                           class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all"
+                           style="font-family: 'Cairo', sans-serif;">
+                    @error('type_label_ku')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
                 </div>
             </div>
         </div>

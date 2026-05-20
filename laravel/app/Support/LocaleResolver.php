@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class LocaleResolver
 {
-    public const SUPPORTED = ['en', 'ar', 'it'];
+    public const SUPPORTED = ['en', 'ar', 'it', 'ku'];
     public const DEFAULT_LOCALE = 'en';
     public const COOKIE_NAME = 'delos_locale';
 
@@ -34,7 +34,7 @@ class LocaleResolver
 
     public function isRtl(string $locale): bool
     {
-        return $locale === 'ar';
+        return in_array($locale, ['ar', 'ku'], true);
     }
 
     public function dir(string $locale): string
@@ -48,7 +48,7 @@ class LocaleResolver
      */
     public function urlsForPath(string $currentPath): array
     {
-        $pathWithoutLocale = preg_replace('#^(en|ar|it)(/|$)#', '', $currentPath);
+        $pathWithoutLocale = preg_replace('#^(en|ar|it|ku)(/|$)#', '', $currentPath);
         $pathWithoutLocale = trim((string) $pathWithoutLocale, '/');
 
         $map = [];

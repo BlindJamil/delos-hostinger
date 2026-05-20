@@ -24,7 +24,7 @@ class PageContentFromLangSeeder extends Seeder
     public function run(): void
     {
         $registry = config('editable_pages', []);
-        $locales = ['en', 'ar', 'it'];
+        $locales = ['en', 'ar', 'it', 'ku'];
         $created = 0;
         $backfilled = 0;
         $current = 0;

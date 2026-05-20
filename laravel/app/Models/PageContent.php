@@ -26,7 +26,7 @@ class PageContent extends Model
 {
     protected $fillable = [
         'key', 'page', 'section', 'sort_order', 'type',
-        'value_en', 'value_ar', 'value_it',
+        'value_en', 'value_ar', 'value_it', 'value_ku',
     ];
 
     protected function casts(): array
@@ -53,11 +53,12 @@ class PageContent extends Model
         $rows = Cache::remember(
             self::CACHE_KEY,
             now()->addMinutes(self::CACHE_TTL_MINUTES),
-            fn () => static::query()->get(['key', 'value_en', 'value_ar', 'value_it'])
+            fn () => static::query()->get(['key', 'value_en', 'value_ar', 'value_it', 'value_ku'])
                 ->mapWithKeys(fn ($r) => [$r->key => [
                     'en' => $r->value_en,
                     'ar' => $r->value_ar,
                     'it' => $r->value_it,
+                    'ku' => $r->value_ku,
                 ]])->all()
         );
 

@@ -391,7 +391,7 @@ Route::prefix('verify-admin-panel-7k3m')->name('admin.')->group(function () {
 */
 
 Route::prefix('{locale}')
-    ->where(['locale' => 'en|ar|it'])
+    ->where(['locale' => 'en|ar|it|ku'])
     ->name('l.')
     ->middleware(PreventAdminCaching::class)
     ->group(function () {

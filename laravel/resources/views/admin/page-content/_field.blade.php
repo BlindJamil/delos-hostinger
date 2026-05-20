@@ -56,6 +56,7 @@
         ($row->value_en !== null && $row->value_en !== ($defaults['en'] ?? null))
         || ($row->value_ar !== null && $row->value_ar !== ($defaults['ar'] ?? null))
         || ($row->value_it !== null && $row->value_it !== ($defaults['it'] ?? null))
+        || ($row->value_ku !== null && $row->value_ku !== ($defaults['ku'] ?? null))
     );
 
     $isMedia = in_array($type, ['image', 'video'], true);

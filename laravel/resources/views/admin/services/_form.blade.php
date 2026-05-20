@@ -44,6 +44,7 @@
                     <button type="button" @click="tab = 'en'" :class="tab === 'en' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'" class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">EN</button>
                     <button type="button" @click="tab = 'ar'" :class="tab === 'ar' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'" class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">AR</button>
                     <button type="button" @click="tab = 'it'" :class="tab === 'it' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'" class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">IT</button>
+                    <button type="button" @click="tab = 'ku'" :class="tab === 'ku' ? 'bg-white shadow-sm text-delos-dark-2' : 'text-delos-muted hover:text-delos-dark-2'" class="px-3 py-1 rounded-md text-[11px] tracking-[0.15em] uppercase font-semibold transition-all">KU</button>
                 </div>
             </div>
 
@@ -51,6 +52,7 @@
                 'en' => ['Name', 'Description', 'Features (one per line)', 'ltr', '', true],
                 'ar' => ['الاسم', 'الوصف', 'الميزات (واحدة في كلّ سطر)', 'rtl', "font-family: 'Cairo', sans-serif;", false],
                 'it' => ['Nome', 'Descrizione', 'Caratteristiche (una per riga)', 'ltr', '', false],
+                'ku' => ['ناو', 'وەسف', 'تایبەتمەندییەکان (هەرکامێ لە دێڕێکدا)', 'rtl', "font-family: 'Cairo', sans-serif;", false],
             ] as $lang => $labels)
                 @php
                     [$nameLbl, $descLbl, $featLbl, $dir, $style, $required] = $labels;

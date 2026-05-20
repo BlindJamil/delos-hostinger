@@ -13,9 +13,9 @@ class Service extends Model
     protected $fillable = [
         'num',
         'slug',
-        'name_en', 'name_ar', 'name_it',
-        'description_en', 'description_ar', 'description_it',
-        'features_en', 'features_ar', 'features_it',
+        'name_en', 'name_ar', 'name_it', 'name_ku',
+        'description_en', 'description_ar', 'description_it', 'description_ku',
+        'features_en', 'features_ar', 'features_it', 'features_ku',
         'brand',
         'image',
         'image_mobile',
@@ -31,6 +31,7 @@ class Service extends Model
             'features_en' => 'array',
             'features_ar' => 'array',
             'features_it' => 'array',
+            'features_ku' => 'array',
         ];
     }
 

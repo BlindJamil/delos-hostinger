@@ -30,7 +30,7 @@
 
     {{-- Open Graph locale --}}
     @php
-        $ogLocales = ['en' => 'en_US', 'ar' => 'ar_IQ', 'it' => 'it_IT'];
+        $ogLocales = ['en' => 'en_US', 'ar' => 'ar_IQ', 'it' => 'it_IT', 'ku' => 'ku_IQ'];
     @endphp
     <meta property="og:locale" content="{{ $ogLocales[$locale] }}">
     @foreach (array_diff($supportedLocales, [$locale]) as $alt)
@@ -74,8 +74,10 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 
-    {{-- Arabic fonts (Amiri + Cairo) — only when locale is ar --}}
-    @if ($locale === 'ar')
+    {{-- Arabic-script fonts (Amiri + Cairo) — loaded for Arabic and Kurdish
+         (Sorani). Sorani uses the Arabic alphabet plus a few extra letters
+         (ێ ۆ ڕ ڵ پ چ ژ ڤ); Cairo + Amiri render the full set correctly. --}}
+    @if (in_array($locale, ['ar', 'ku'], true))
         <link rel="preload" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
     @endif

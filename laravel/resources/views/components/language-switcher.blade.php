@@ -6,6 +6,7 @@
         'en' => ['code' => 'EN', 'native' => 'English'],
         'ar' => ['code' => 'AR', 'native' => 'العربية'],
         'it' => ['code' => 'IT', 'native' => 'Italiano'],
+        'ku' => ['code' => 'KU', 'native' => 'کوردی'],
     ];
     $currentCode = $localeChoices[$locale]['code'] ?? 'EN';
     $switchAria = pcontent('common.language_switcher.aria_label');
