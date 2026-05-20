@@ -6,7 +6,10 @@
         'en' => ['code' => 'EN', 'native' => 'English'],
         'ar' => ['code' => 'AR', 'native' => 'العربية'],
         'it' => ['code' => 'IT', 'native' => 'Italiano'],
-        'ku' => ['code' => 'KU', 'native' => 'کوردی'],
+        // Kurdish (ku) is intentionally hidden from the public switcher
+        // while admin-side translations are still being filled in. The
+        // /ku/ route stays active so admins can preview at the URL
+        // directly. Re-add when the public Kurdish coverage is ready.
     ];
     $currentCode = $localeChoices[$locale]['code'] ?? 'EN';
     $switchAria = pcontent('common.language_switcher.aria_label');

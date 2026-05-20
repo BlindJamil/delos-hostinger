@@ -32,7 +32,12 @@ export function initLanguageGlobe() {
         { code: 'en', label: 'EN', native: 'English' },
         { code: 'ar', label: 'AR', native: 'العربية' },
         { code: 'it', label: 'IT', native: 'Italiano' },
-        { code: 'ku', label: 'KU', native: 'کوردی' },
+        // Kurdish (ku) is intentionally hidden from this public globe
+        // until admin-side translations are filled in. The /ku/ URL
+        // still works for direct preview by admins. The URL-prefix
+        // regex above still matches 'ku' so a current session on /ku
+        // doesn't crash the globe — it just won't appear as a switch
+        // target for public visitors.
     ];
 
     // ── Wrapper: fixed bottom-right ──

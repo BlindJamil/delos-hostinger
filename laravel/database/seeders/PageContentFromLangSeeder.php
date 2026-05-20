@@ -24,7 +24,11 @@ class PageContentFromLangSeeder extends Seeder
     public function run(): void
     {
         $registry = config('editable_pages', []);
-        $locales = ['en', 'ar', 'it', 'ku'];
+        // Kurdish is intentionally excluded: per product decision, /ku/ on
+        // production should start empty and only show Kurdish for sections
+        // an admin has explicitly translated via the Page Content Editor.
+        // Auto-backfilling from lang/ku/*.php would defeat that.
+        $locales = ['en', 'ar', 'it'];
         $created = 0;
         $backfilled = 0;
         $current = 0;
