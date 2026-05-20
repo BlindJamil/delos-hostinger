@@ -20,7 +20,12 @@ export function initIraqMap(context) {
 
     const outline = qs('.iraq-map__outline', map);
     const pinGroups = qsa('.iraq-map__pin-group', map);
-    const cards = qsa('[data-branch-key]', document).filter((el) => el !== map);
+    // Only the actual branch cards below the map — must NOT include the
+    // pin groups themselves (they also carry data-branch-key, and a naive
+    // [data-branch-key] selector would match them first since they appear
+    // earlier in the DOM, causing pin-click to "scroll" to the pin's own
+    // position rather than the matching card below).
+    const cards = qsa('.branch-card[data-branch-key]', document);
 
     // --- Card ↔ pin two-way hover linking ----------------------
     const pairings = new Map(); // branchKey -> { pin, card }
