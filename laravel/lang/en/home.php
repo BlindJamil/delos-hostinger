@@ -106,7 +106,7 @@ return [
             ['value' => 500, 'suffix' => '+', 'label' => 'Projects Completed'],
             ['value' => 5, 'suffix' => '', 'label' => 'Exclusive Italian Houses'],
             ['value' => 4, 'suffix' => '', 'label' => 'Showrooms in Iraq'],
-            ['value' => 6, 'suffix' => '', 'label' => 'Years of Excellence'],
+            ['value' => 80, 'suffix' => '', 'label' => 'Years of Excellence'],
         ],
     ],
 

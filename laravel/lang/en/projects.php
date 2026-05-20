@@ -130,7 +130,7 @@ return [
         ['value' => '500+', 'label' => 'Projects Completed'],
         ['value' => '4', 'label' => 'Cities in Iraq'],
         ['value' => '100%', 'label' => 'Italian Sourced'],
-        ['value' => '5', 'label' => 'Brand Partners'],
+        ['value' => '7', 'label' => 'Brand Partners'],
     ],
 
     'cta' => [

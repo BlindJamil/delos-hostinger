@@ -101,7 +101,7 @@ return [
             ['value' => 500, 'suffix' => '+', 'label' => 'Progetti completati'],
             ['value' => 5, 'suffix' => '', 'label' => 'Marchi italiani esclusivi'],
             ['value' => 4, 'suffix' => '', 'label' => 'Showroom in Iraq'],
-            ['value' => 6, 'suffix' => '', 'label' => 'Anni di eccellenza'],
+            ['value' => 80, 'suffix' => '', 'label' => 'Anni di eccellenza'],
         ],
     ],
 
