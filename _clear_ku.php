@@ -18,8 +18,12 @@
  * starts rendering in Kurdish — the rest stay English until edited.
  *
  * Idempotent. Re-running this is safe. DELETE the file from cPanel
- * once you've used it (it has a security warning in cPanel too).
+ * once you've used it.
  */
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Cache;
 
 // --- 1. Token gate -----------------------------------------------------
 $expectedToken = 'delos-clear-ku-2026';
@@ -41,10 +45,6 @@ $kernel->bootstrap();
 header('Content-Type: text/plain; charset=utf-8');
 echo "DELOS KURDISH WIPE\n";
 echo str_repeat('=', 60) . "\n\n";
-
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Cache;
 
 // --- 3. Run the clears -------------------------------------------------
 $clears = [
