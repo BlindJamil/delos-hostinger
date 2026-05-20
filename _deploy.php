@@ -179,6 +179,29 @@ if (function_exists('opcache_reset')) {
 }
 echo "\n";
 
+// --- 7.5. Kurdish file & locale diagnostic -----------------------------
+echo "[KU DIAG] Kurdish lang state\n";
+echo str_repeat('-', 60) . "\n";
+$kuDir = __DIR__ . '/laravel/lang/ku';
+echo "lang/ku dir exists: " . (is_dir($kuDir) ? 'YES' : 'NO') . "\n";
+foreach (['common', 'home', 'seo', 'about', 'services', 'brands', 'branches', 'contact', 'projects', 'become_dealer'] as $f) {
+    $p = "$kuDir/$f.php";
+    if (!file_exists($p)) { echo "  MISSING: $f.php\n"; continue; }
+    $arr = @include $p;
+    $size = filesize($p);
+    $mtime = date('Y-m-d H:i', filemtime($p));
+    $keys = is_array($arr) ? count($arr) : 'BAD';
+    echo "  $f.php  size=$size  keys=$keys  mtime=$mtime\n";
+}
+echo "\n";
+echo "Live __() test under locale=ku:\n";
+\Illuminate\Support\Facades\App::setLocale('ku');
+foreach (['common.nav.home', 'common.marquee.lion', 'seo.home.title', 'home.about.heading_1'] as $k) {
+    echo "  __('$k') => " . __($k) . "\n";
+}
+echo "Current locale: " . app()->getLocale() . " | fallback: " . config('app.fallback_locale') . "\n";
+echo "\n";
+
 // --- 8. Done -----------------------------------------------------------
 echo str_repeat('=', 60) . "\n";
 echo "DEPLOY COMPLETE.\n\n";
