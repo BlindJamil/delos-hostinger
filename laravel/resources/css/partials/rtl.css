@@ -1,6 +1,6 @@
 /*
  * RTL overrides for Arabic locale.
- * Every rule here is scoped to [dir="rtl"] or [lang="ar"] so it only
+ * Every rule here is scoped to [dir="rtl"] or :is([lang="ar"], [lang="ku"]) so it only
  * activates when SetLocale middleware sets dir="rtl" on <html>.
  *
  * Retrofit strategy: rather than migrate 1,500+ lines of blades from
@@ -14,10 +14,10 @@
  * ------------------------------------------------------------------ */
 
 /* Kill letter-spacing on Arabic text — connected letters break without it. */
-[lang="ar"] [class*="tracking-"],
-[lang="ar"] .text-overline,
-[lang="ar"] .text-overline-sm,
-[lang="ar"] .text-btn {
+:is([lang="ar"], [lang="ku"]) [class*="tracking-"],
+:is([lang="ar"], [lang="ku"]) .text-overline,
+:is([lang="ar"], [lang="ku"]) .text-overline-sm,
+:is([lang="ar"], [lang="ku"]) .text-btn {
     letter-spacing: 0 !important;
 }
 
@@ -29,31 +29,31 @@
  * text utilities an extra step so they're readable under Cairo.
  *
  * Font-family override for inline `style="font-family: 'Inter'"` is
- * already handled in theme.css:46-47 via `[lang="ar"] [style*="Inter"]`.
+ * already handled in theme.css:46-47 via `:is([lang="ar"], [lang="ku"]) [style*="Inter"]`.
  */
-[lang="ar"] body {
+:is([lang="ar"], [lang="ku"]) body {
     font-size: 1.08em;
 }
 
 /* Tiny Tailwind text utilities bump harder — Cairo needs the extra mass
  * to stay legible at 9-12px nominal sizes. text-[9px] → effectively 10.4px,
  * text-[11px] → 12.7px, text-xs (0.75rem) → ~0.84rem. */
-[lang="ar"] .text-xs,
-[lang="ar"] [class*="text-[9px]"],
-[lang="ar"] [class*="text-[10px]"],
-[lang="ar"] [class*="text-[11px]"],
-[lang="ar"] [class*="text-[12px]"] {
+:is([lang="ar"], [lang="ku"]) .text-xs,
+:is([lang="ar"], [lang="ku"]) [class*="text-[9px]"],
+:is([lang="ar"], [lang="ku"]) [class*="text-[10px]"],
+:is([lang="ar"], [lang="ku"]) [class*="text-[11px]"],
+:is([lang="ar"], [lang="ku"]) [class*="text-[12px]"] {
     font-size: 1.15em !important;
 }
 
 /* Cairo 300/400 render thinner than Inter 300/400 — nudge weight up for
  * small labels where stroke thinness makes letters visually fade. */
-[lang="ar"] [class*="text-[9px]"],
-[lang="ar"] [class*="text-[10px]"],
-[lang="ar"] [class*="text-[11px]"],
-[lang="ar"] .text-xs.font-light,
-[lang="ar"] .text-xs.font-normal,
-[lang="ar"] .text-xs.font-medium {
+:is([lang="ar"], [lang="ku"]) [class*="text-[9px]"],
+:is([lang="ar"], [lang="ku"]) [class*="text-[10px]"],
+:is([lang="ar"], [lang="ku"]) [class*="text-[11px]"],
+:is([lang="ar"], [lang="ku"]) .text-xs.font-light,
+:is([lang="ar"], [lang="ku"]) .text-xs.font-normal,
+:is([lang="ar"], [lang="ku"]) .text-xs.font-medium {
     font-weight: 500 !important;
 }
 
@@ -63,27 +63,27 @@
  * slots because users literally couldn't see the text. Bump to ~13.5px
  * on Arabic for legibility; small variant 8px → 11.5px. Weight already
  * 600 on the base class, which Cairo handles fine at this size. */
-[lang="ar"] .text-overline {
+:is([lang="ar"], [lang="ku"]) .text-overline {
     font-size: 0.85rem !important;
 }
-[lang="ar"] .text-overline-sm {
+:is([lang="ar"], [lang="ku"]) .text-overline-sm {
     font-size: 0.72rem !important;
 }
 
 /* Top-nav links: opt out of the global text-[11px] → 1.15em bump.
- * The bump targets every text-[11px] descendant of a [lang="ar"]
+ * The bump targets every text-[11px] descendant of a :is([lang="ar"], [lang="ku"])
  * page, which catches the navbar items and balloons them from 11px
  * → ~19.9px (cascading through the body's 1.08em bump). At that
  * size the nav row dominates the header. 12px is the right balance
  * for Cairo at this prominence — readable but visually anchored to
  * the same hierarchy weight as the English/Italian 11px nav. */
-[lang="ar"] #navbar .nav-link {
+:is([lang="ar"], [lang="ku"]) #navbar .nav-link {
     font-size: 14px !important;
 }
 
 /* Arabic doesn't have small-caps / uppercase distinction like Latin. */
-[lang="ar"] .uppercase,
-[lang="ar"] [class*="uppercase"] {
+:is([lang="ar"], [lang="ku"]) .uppercase,
+:is([lang="ar"], [lang="ku"]) [class*="uppercase"] {
     text-transform: none !important;
 }
 

@@ -521,7 +521,7 @@ body.has-custom-cursor .iraq-map__pin-group {
  *   • uppercase does nothing on Arabic
  *   • force-LTR reverses the Arabic word order
  * On Arabic pages we restore the sublabel to a normal RTL Cairo run. */
-[lang="ar"] .iraq-map__pin-sublabel {
+:is([lang="ar"], [lang="ku"]) .iraq-map__pin-sublabel {
     font-family: 'Cairo', 'Amiri', ui-sans-serif, system-ui, sans-serif;
     letter-spacing: 0;
     text-transform: none;

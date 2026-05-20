@@ -12,28 +12,28 @@ return [
                 'img' => 'collection-lube-classic.jpg',
             ],
             'penthouse_living_suite' => [
-                'title' => 'پێکهاتەی دانیشتنی پێنت‌هاوس',
+                'title' => 'هۆڵی دانیشتنی پێنت‌هاوس',
                 'city' => 'کەرکوک',
                 'year' => '2024',
                 'brand' => 'CANTORI',
                 'img' => 'cantori-1.jpg',
             ],
             'presidential_bedroom' => [
-                'title' => 'ژووری نوستنی سەرۆکایەتی',
+                'title' => 'ژووری نوستنی پێکهاتەی سەرۆکایەتی',
                 'city' => 'بەغداد',
                 'year' => '2023',
                 'brand' => 'Vittoria Frigerio',
                 'img' => 'collection-vittoria.jpg',
             ],
             'luxury_turnkey_residence' => [
-                'title' => 'نیشتەجێبوونی لوکس و تەواو',
+                'title' => 'نیشتەجێی لوکسی تەواو',
                 'city' => 'هەولێر',
                 'year' => '2024',
                 'brand' => 'Delos',
                 'img' => 'delos-erbil-showroom-6.jpg',
             ],
             'bespoke_open_kitchen' => [
-                'title' => 'مەتبەخی کراوەی بەپێی داواکاری',
+                'title' => 'مەتبەخی کراوەی تایبەت',
                 'city' => 'هەولێر',
                 'year' => '2023',
                 'brand' => 'LUBE',
@@ -48,7 +48,7 @@ return [
         'living_room' => 'ژووری دانیشتن',
         'bedroom' => 'ژووری نوستن',
         'wardrobes' => 'دۆڵابەکان',
-        'turnkey' => 'پڕۆژە تەواوەکان',
+        'turnkey' => 'پڕۆژەی تەواو',
     ],
 
     'grid' => [
@@ -61,7 +61,7 @@ return [
             'img' => 'collection-lube-classic.jpg',
         ],
         'penthouse_living_suite' => [
-            'title' => 'پێکهاتەی دانیشتنی پێنت‌هاوس',
+            'title' => 'هۆڵی دانیشتنی پێنت‌هاوس',
             'city' => 'کەرکوک',
             'type' => 'living room',
             'type_label' => 'ژووری دانیشتن',
@@ -69,7 +69,7 @@ return [
             'img' => 'frigerio-living.jpg',
         ],
         'presidential_bedroom' => [
-            'title' => 'ژووری نوستنی سەرۆکایەتی',
+            'title' => 'ژووری نوستنی پێکهاتەی سەرۆکایەتی',
             'city' => 'بەغداد',
             'type' => 'bedroom',
             'type_label' => 'ژووری نوستن',
@@ -77,7 +77,7 @@ return [
             'img' => 'collection-vittoria.jpg',
         ],
         'grand_walk_in_wardrobe' => [
-            'title' => 'دۆڵابی ووک-ئین گەورە',
+            'title' => 'دۆڵابی گەورەی چوونە ژوور',
             'city' => 'سلێمانی',
             'type' => 'wardrobes',
             'type_label' => 'دۆڵابەکان',
@@ -85,7 +85,7 @@ return [
             'img' => 'delos-showroom-card.jpg',
         ],
         'bespoke_open_kitchen' => [
-            'title' => 'مەتبەخی کراوەی بەپێی داواکاری',
+            'title' => 'مەتبەخی کراوەی تایبەت',
             'city' => 'هەولێر',
             'type' => 'kitchens',
             'type_label' => 'مەتبەخەکان',
@@ -93,10 +93,10 @@ return [
             'img' => 'lube-kitchen-2.jpg',
         ],
         'luxury_turnkey_residence' => [
-            'title' => 'نیشتەجێبوونی لوکس و تەواو',
+            'title' => 'نیشتەجێی لوکسی تەواو',
             'city' => 'هەولێر',
             'type' => 'turnkey',
-            'type_label' => 'پڕۆژە تەواوەکان',
+            'type_label' => 'پڕۆژەی تەواو',
             'year' => '2024',
             'img' => 'delos-erbil-showroom-6.jpg',
         ],
@@ -109,7 +109,7 @@ return [
             'img' => 'lube-kitchen-3.jpg',
         ],
         'master_suite_bedroom' => [
-            'title' => 'ژووری نوستنی ماستەر',
+            'title' => 'ژووری نوستنی سەرەکی',
             'city' => 'بەغداد',
             'type' => 'bedroom',
             'type_label' => 'ژووری نوستن',
@@ -117,7 +117,7 @@ return [
             'img' => 'about-philosophy.jpg',
         ],
         'italian_living_room_suite' => [
-            'title' => 'پێکهاتەی ژووری دانیشتنی ئیتاڵی',
+            'title' => 'هۆڵی دانیشتنی ئیتاڵی',
             'city' => 'سلێمانی',
             'type' => 'living room',
             'type_label' => 'ژووری دانیشتن',
@@ -134,7 +134,7 @@ return [
     ],
 
     'cta' => [
-        'heading_1' => 'پڕۆژەکەت دەکرێ ببێت',
-        'heading_accent' => 'بە شاکاری داهاتوومان.',
+        'heading_1' => 'پڕۆژەکەت',
+        'heading_accent' => 'شاکاری داهاتوومان دەبێت.',
     ],
 ];
