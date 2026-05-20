@@ -46,17 +46,31 @@ export function initIraqMap(context) {
             card.classList.remove('is-active');
         });
 
-        // Pin <a> already navigates to #branch-key via href; we just want
-        // smooth-scroll instead of the browser's instant jump, plus a
-        // brief visual flash on the card so the user sees what got
-        // clicked (otherwise the scroll alone can feel like "did
-        // anything happen?").
+        // Pin <a> click → scroll to the matching card below. We do the
+        // tween ourselves (instead of scrollIntoView({behavior:'smooth'}))
+        // because native smooth-scroll has no duration knob and finishes
+        // in ~300ms regardless of distance — too snappy for the feel of
+        // a luxury site. ~1.4s with an ease-out cubic gives a deliberate
+        // pace that lets the eye follow the page.
         const link = qs('.iraq-map__pin-link', pin);
         if (link) {
             link.addEventListener('click', (event) => {
                 event.preventDefault();
-                const behavior = context.prefersReducedMotion ? 'auto' : 'smooth';
-                card.scrollIntoView({ behavior, block: 'start' });
+
+                const rect = card.getBoundingClientRect();
+                // scroll-margin-top on .branch-card handles the fixed-nav
+                // offset visually, but for the actual scroll target we
+                // subtract a small offset so the heading sits a little
+                // below the nav rather than glued to it.
+                const headerOffset = 100;
+                const targetY = rect.top + window.scrollY - headerOffset;
+
+                if (context.prefersReducedMotion) {
+                    window.scrollTo(0, targetY);
+                } else {
+                    smoothScrollTo(targetY, 1400);
+                }
+
                 // Match URL hash without triggering jump
                 if (history.replaceState) {
                     history.replaceState(null, '', `#branch-${key}`);
@@ -134,4 +148,33 @@ export function initIraqMap(context) {
             }, '-=0.6');
         },
     });
+}
+
+/**
+ * Animate window scroll to a target Y over a given duration with
+ * an ease-out-cubic curve. Cancels any in-flight scroll if the user
+ * triggers a new one.
+ */
+let pendingScrollFrame = null;
+function smoothScrollTo(targetY, duration) {
+    if (pendingScrollFrame !== null) {
+        cancelAnimationFrame(pendingScrollFrame);
+    }
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const startTime = performance.now();
+
+    function step(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease-out cubic — starts fast, glides to a stop
+        const eased = 1 - Math.pow(1 - progress, 3);
+        window.scrollTo(0, startY + distance * eased);
+        if (progress < 1) {
+            pendingScrollFrame = requestAnimationFrame(step);
+        } else {
+            pendingScrollFrame = null;
+        }
+    }
+    pendingScrollFrame = requestAnimationFrame(step);
 }
