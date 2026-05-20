@@ -32,18 +32,7 @@ function initButtonRipples(context) {
     });
 }
 
-// Custom follower cursor disabled per client request — site uses the
-// default OS arrow + pointer-on-hover instead. Kept the function signature
-// so re-enabling later is a one-line change in site/index.js.
-function initCustomCursor(_context) {
-    // intentional no-op
-    return;
-
-    /* eslint-disable */
-    // Original implementation kept below (dead code) so a future
-    // designer pass can revive it by deleting the early return above.
-    // ----------------------------------------------------------------
-    const context = _context;
+function initCustomCursor(context) {
     context.body.classList.add('has-custom-cursor');
 
     const cursor = document.createElement('div');
@@ -97,7 +86,6 @@ function initCustomCursor(_context) {
 
     document.addEventListener('mousedown', () => cursor.classList.add('is-click'));
     document.addEventListener('mouseup', () => cursor.classList.remove('is-click'));
-    /* eslint-enable */
 }
 
 function initMagneticButtons() {

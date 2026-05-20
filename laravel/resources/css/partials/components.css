@@ -201,11 +201,11 @@ html.js #mobile-menu.menu-open a {
     transition: transform var(--motion-duration-base) var(--motion-ease-standard);
 }
 
-/* Custom cursor disabled — JS no-op in interactions.js stops the
-   `has-custom-cursor` class from ever being added to <body>, so the
-   `.custom-cursor` styles below + `cursor: none` override are dead.
-   Kept the .custom-cursor rules in place (further down) so a future
-   re-enable doesn't need a CSS rewrite. */
+body.has-custom-cursor,
+body.has-custom-cursor a,
+body.has-custom-cursor button {
+    cursor: none !important;
+}
 
 .custom-cursor {
     position: fixed;

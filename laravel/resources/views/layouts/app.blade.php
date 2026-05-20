@@ -21,14 +21,9 @@
     <link rel="apple-touch-icon" href="{{ asset('images/delos-logo.jpg') }}">
     <meta name="theme-color" content="#3d2f25">
 
-    {{-- hreflang + canonical. Kurdish (ku) is filtered out from public
-         meta while admin-side translations are still being filled in:
-         we don't want Google indexing /ku/ as "Kurdish" while it's
-         actually serving English fallback. The /ku/ route stays alive
-         so admins can preview at the URL directly. --}}
-    @php $publicLocales = array_values(array_diff($supportedLocales, ['ku'])); @endphp
+    {{-- hreflang + canonical --}}
     <link rel="canonical" href="{{ url()->current() }}">
-    @foreach ($publicLocales as $alt)
+    @foreach ($supportedLocales as $alt)
         <link rel="alternate" hreflang="{{ $alt === 'ar' ? 'ar-IQ' : $alt }}" href="{{ url($localeUrls[$alt]) }}">
     @endforeach
     <link rel="alternate" hreflang="x-default" href="{{ url($localeUrls['en']) }}">
@@ -38,7 +33,7 @@
         $ogLocales = ['en' => 'en_US', 'ar' => 'ar_IQ', 'it' => 'it_IT', 'ku' => 'ku_IQ'];
     @endphp
     <meta property="og:locale" content="{{ $ogLocales[$locale] }}">
-    @foreach (array_diff($publicLocales, [$locale]) as $alt)
+    @foreach (array_diff($supportedLocales, [$locale]) as $alt)
         <meta property="og:locale:alternate" content="{{ $ogLocales[$alt] }}">
     @endforeach
 
