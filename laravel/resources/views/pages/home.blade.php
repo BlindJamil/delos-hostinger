@@ -294,12 +294,18 @@
             <span class="italian-flag"><span class="flag-green"></span><span class="flag-white"></span><span class="flag-red"></span></span>
         </p>
         <h2 data-motion="fade-up" class="font-serif text-delos-cream text-[clamp(2rem,4.5vw,3.8rem)] font-light leading-tight mb-10 max-w-2xl mx-auto">{{ pcontent('home.cta.heading') }}</h2>
+        @php
+            $ctaPhoneDisplay = trim((string) ($settingPhone ?: '0750 200 1003'));
+            $ctaPhoneRaw = trim((string) pcontent('common.ctas.call_us', 'Call Us: 0750 200 1003'));
+            $ctaPhoneLabel = trim((string) preg_replace('/[:：].*$/u', '', $ctaPhoneRaw)) ?: $ctaPhoneRaw;
+        @endphp
         <div data-motion="fade-up" class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="{{ lroute('contact') }}" class="magnetic-btn btn-ripple inline-flex items-center gap-3 px-9 py-4 bg-delos-gold text-delos-dark text-btn hover:bg-delos-gold-light transition-colors duration-300 group">
                 {{ pcontent('common.ctas.book_consultation') }} <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
-            <a href="tel:{{ preg_replace('/\s+/', '', $settingPhone ?: '07501001701') }}" class="magnetic-btn btn-ripple inline-flex items-center gap-3 px-9 py-4 border border-delos-cream/20 text-delos-cream text-btn font-medium hover:border-delos-gold hover:text-delos-gold transition-colors duration-300">
-                {{ pcontent('common.ctas.call_us') }}
+            <a href="tel:{{ preg_replace('/\s+/', '', $ctaPhoneDisplay ?: '07502001003') }}" class="magnetic-btn btn-ripple inline-flex items-center gap-2 px-9 py-4 border border-delos-cream/20 text-delos-cream text-btn font-medium hover:border-delos-gold hover:text-delos-gold transition-colors duration-300">
+                <span>{{ $ctaPhoneLabel }}:</span>
+                <span dir="ltr" class="font-sans" style="unicode-bidi: isolate;">{{ $ctaPhoneDisplay }}</span>
             </a>
         </div>
     </div>

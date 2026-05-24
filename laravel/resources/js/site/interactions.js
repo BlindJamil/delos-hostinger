@@ -7,9 +7,7 @@ export function initInteractiveEffects(context) {
         return;
     }
 
-    if (window.innerWidth >= 1024) {
-        initCustomCursor(context);
-    }
+    // Keep the native system cursor.
 
     initMagneticButtons();
     initTiltCards();
