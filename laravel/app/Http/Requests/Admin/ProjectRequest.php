@@ -14,16 +14,11 @@ class ProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Per-project text fields (title, city, year, brand, type_label)
-            // are no longer collected by the admin form — the public cards
-            // are image-only and filter chips use `type` instead. Columns
-            // stay in the schema for back-compat; rules stay permissive so
-            // legacy data isn't rejected when an existing record is re-saved.
-            'title_en' => ['nullable', 'string', 'max:180'],
+            'title_en' => ['required', 'string', 'max:180'],
             'title_ar' => ['nullable', 'string', 'max:180'],
             'title_it' => ['nullable', 'string', 'max:180'],
             'city' => ['nullable', 'string', 'max:80'],
-            'type' => ['required', 'string', 'max:60'],
+            'type' => ['nullable', 'string', 'max:60'],
             'type_label_en' => ['nullable', 'string', 'max:80'],
             'type_label_ar' => ['nullable', 'string', 'max:80'],
             'type_label_it' => ['nullable', 'string', 'max:80'],

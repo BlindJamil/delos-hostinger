@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\GeneratesResponsiveVariants;
 use App\Http\Controllers\Admin\Concerns\HandlesHybridImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BranchRequest;
@@ -15,7 +14,6 @@ use Illuminate\View\View;
 
 class BranchController extends Controller
 {
-    use GeneratesResponsiveVariants;
     use HandlesHybridImages;
 
     public function index(Request $request): View
@@ -95,7 +93,6 @@ class BranchController extends Controller
         if ($branch->image && str_starts_with($branch->image, 'uploads/')
             && Storage::disk('public')->exists($branch->image)) {
             Storage::disk('public')->delete($branch->image);
-            $this->deleteResponsiveVariants($branch->image);
         }
         $this->deleteHybridImageFiles($branch);
 
@@ -126,10 +123,8 @@ class BranchController extends Controller
             if ($existing && $existing->image && str_starts_with($existing->image, 'uploads/')
                 && Storage::disk('public')->exists($existing->image)) {
                 Storage::disk('public')->delete($existing->image);
-                $this->deleteResponsiveVariants($existing->image);
             }
             $data['image'] = $request->file('image')->store('uploads/branches', 'public');
-            $this->generateResponsiveVariants($data['image']);
         } else {
             unset($data['image']);
         }
@@ -138,7 +133,6 @@ class BranchController extends Controller
             if (str_starts_with($existing->image, 'uploads/')
                 && Storage::disk('public')->exists($existing->image)) {
                 Storage::disk('public')->delete($existing->image);
-                $this->deleteResponsiveVariants($existing->image);
             }
             $data['image'] = null;
         }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\GeneratesResponsiveVariants;
 use App\Http\Controllers\Admin\Concerns\HandlesHybridImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BrandRequest;
@@ -14,7 +13,6 @@ use Illuminate\View\View;
 
 class BrandController extends Controller
 {
-    use GeneratesResponsiveVariants;
     use HandlesHybridImages;
 
     public function index(Request $request): View
@@ -53,7 +51,6 @@ class BrandController extends Controller
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('uploads/brands', 'public');
-            $this->generateResponsiveVariants($data['image']);
         } else {
             unset($data['image']);
         }
@@ -79,10 +76,8 @@ class BrandController extends Controller
             if ($brand->image && str_starts_with($brand->image, 'uploads/')
                 && Storage::disk('public')->exists($brand->image)) {
                 Storage::disk('public')->delete($brand->image);
-                $this->deleteResponsiveVariants($brand->image);
             }
             $data['image'] = $request->file('image')->store('uploads/brands', 'public');
-            $this->generateResponsiveVariants($data['image']);
         } else {
             unset($data['image']);
         }
@@ -91,7 +86,6 @@ class BrandController extends Controller
             if (str_starts_with($brand->image, 'uploads/')
                 && Storage::disk('public')->exists($brand->image)) {
                 Storage::disk('public')->delete($brand->image);
-                $this->deleteResponsiveVariants($brand->image);
             }
             $data['image'] = null;
         }
@@ -109,7 +103,6 @@ class BrandController extends Controller
         if ($brand->image && str_starts_with($brand->image, 'uploads/')
             && Storage::disk('public')->exists($brand->image)) {
             Storage::disk('public')->delete($brand->image);
-            $this->deleteResponsiveVariants($brand->image);
         }
         $this->deleteHybridImageFiles($brand);
 

@@ -221,7 +221,7 @@ Route::get('/verify-health-ping-9k2x/public-canary.json', function () {
     try { $row = \App\Models\PageContent::where('key', $key)->first(); } catch (\Throwable) {}
 
     $pcontent = [];
-    foreach (['en', 'ar', 'it'] as $loc) {
+    foreach (['en', 'ar', 'it', 'ku'] as $loc) {
         try { $pcontent[$loc] = \App\Models\PageContent::value($key, $loc); }
         catch (\Throwable $e) { $pcontent[$loc] = '(error: ' . $e->getMessage() . ')'; }
     }
@@ -232,6 +232,7 @@ Route::get('/verify-health-ping-9k2x/public-canary.json', function () {
             'value_en' => $row?->value_en,
             'value_ar' => $row?->value_ar,
             'value_it' => $row?->value_it,
+            'value_ku' => $row?->value_ku,
             'updated_at' => $row?->updated_at?->format('c'),
         ],
         'pcontent_via_cache' => $pcontent,

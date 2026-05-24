@@ -142,10 +142,11 @@
                                 :focal="$brand->focal_point"
                                 :alt="$brandName"
                                 sizes="(min-width: 1024px) 50vw, 100vw"
-                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                                class="w-full h-full object-cover opacity-65 hover:scale-105 transition-transform duration-700" />
                         @endif
+                        <div class="absolute inset-0 bg-gradient-to-t from-delos-dark/60 to-transparent"></div>
                         <div class="absolute bottom-6 left-6">
-                            <p class="font-serif text-delos-cream text-4xl font-semibold tracking-widest [text-shadow:0_2px_12px_rgba(0,0,0,0.55)]">{{ $brandName }}</p>
+                            <p class="font-serif text-delos-cream text-4xl font-semibold tracking-widest">{{ $brandName }}</p>
                         </div>
                     </div>
                     {{-- Content --}}

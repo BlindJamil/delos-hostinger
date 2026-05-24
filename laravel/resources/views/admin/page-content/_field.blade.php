@@ -6,6 +6,7 @@
         'en' => $langDefault['en'] ?? '',
         'ar' => $langDefault['ar'] ?? '',
         'it' => $langDefault['it'] ?? '',
+        'ku' => $langDefault['ku'] ?? '',
     ];
 
     // Return the admin-editable value for this locale ONLY — never fall
@@ -47,6 +48,7 @@
         'en' => $effective('en'),
         'ar' => $effective('ar'),
         'it' => $effective('it'),
+        'ku' => $effective('ku'),
     ];
 
     // A field is "overridden" (differs from its lang default) if the DB row
@@ -343,11 +345,12 @@
         <input type="url" name="values[{{ $key }}][en]" value="{{ $values['en'] }}"
                placeholder="{{ $defaults['en'] }}"
                class="w-full px-3 py-2 border border-delos-dark/15 rounded-lg text-sm font-mono focus:outline-none focus:border-delos-gold focus:ring-2 focus:ring-delos-gold/15 transition-all">
-        {{-- URLs aren't localized, but pass empty strings so update() sees them --}}
+        {{-- URLs aren't localized, but pass all locales so update() payload stays complete --}}
         <input type="hidden" name="values[{{ $key }}][ar]" value="{{ $values['ar'] }}">
         <input type="hidden" name="values[{{ $key }}][it]" value="{{ $values['it'] }}">
+        <input type="hidden" name="values[{{ $key }}][ku]" value="{{ $values['ku'] }}">
     @else
-        {{-- Text / textarea / rich — all 3 locales shown together.
+        {{-- Text / textarea / rich — all locales shown together.
              Each locale gets a labelled input so the admin always sees
              and can edit every language without JS dependency. --}}
         <div class="space-y-2">

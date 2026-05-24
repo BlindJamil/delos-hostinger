@@ -86,7 +86,7 @@ class SiteSettingsSeeder extends Seeder
                 'group' => 'social',
                 'type' => 'url',
                 'label' => 'Instagram URL',
-                'value_en' => 'https://www.instagram.com/delos.international/',
+                'value_en' => 'https://www.instagram.com/delos.iq/',
                 'sort_order' => 10,
             ],
             [
@@ -94,7 +94,7 @@ class SiteSettingsSeeder extends Seeder
                 'group' => 'social',
                 'type' => 'url',
                 'label' => 'Facebook URL',
-                'value_en' => 'https://www.facebook.com/delos.int.erbil/',
+                'value_en' => 'https://www.facebook.com/share/1CzNU2r7jD/?mibextid=wwXIfr',
                 'sort_order' => 20,
             ],
             [

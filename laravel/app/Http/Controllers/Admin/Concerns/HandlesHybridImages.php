@@ -18,11 +18,6 @@ use Illuminate\Support\Facades\Storage;
  * the existing upload logic stays untouched and we don't accidentally
  * rewire the old, working path.
  */
-/*
- * Consuming controllers MUST also `use GeneratesResponsiveVariants` —
- * this trait calls generate/deleteResponsiveVariants() on the mobile
- * image file so it gets the same WebP+JPEG ladder as the primary image.
- */
 trait HandlesHybridImages
 {
     /**
@@ -44,10 +39,8 @@ trait HandlesHybridImages
                 && str_starts_with($model->image_mobile, 'uploads/')
                 && Storage::disk('public')->exists($model->image_mobile)) {
                 Storage::disk('public')->delete($model->image_mobile);
-                $this->deleteResponsiveVariants($model->image_mobile);
             }
             $model->image_mobile = $request->file('image_mobile')->store($uploadDir, 'public');
-            $this->generateResponsiveVariants($model->image_mobile);
         }
         // Clear: the admin hit "Remove" on the mobile preview → explicit
         // flag. This takes priority over a new upload only if the file
@@ -58,7 +51,6 @@ trait HandlesHybridImages
                 && str_starts_with($model->image_mobile, 'uploads/')
                 && Storage::disk('public')->exists($model->image_mobile)) {
                 Storage::disk('public')->delete($model->image_mobile);
-                $this->deleteResponsiveVariants($model->image_mobile);
             }
             $model->image_mobile = null;
         }
@@ -103,7 +95,6 @@ trait HandlesHybridImages
             && str_starts_with($model->image_mobile, 'uploads/')
             && Storage::disk('public')->exists($model->image_mobile)) {
             Storage::disk('public')->delete($model->image_mobile);
-            $this->deleteResponsiveVariants($model->image_mobile);
         }
     }
 }

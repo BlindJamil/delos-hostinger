@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\GeneratesResponsiveVariants;
 use App\Http\Controllers\Controller;
 use App\Models\PageContent;
 use Illuminate\Http\JsonResponse;
@@ -23,8 +22,6 @@ use Illuminate\Support\Facades\Storage;
  */
 class PageContentMediaController extends Controller
 {
-    use GeneratesResponsiveVariants;
-
     public function store(Request $request, string $key): JsonResponse
     {
         // Admins upload either the default image or an optional mobile-only
@@ -69,7 +66,6 @@ class PageContentMediaController extends Controller
         $old = $row->value_en;
         if ($old && str_starts_with($old, 'uploads/') && Storage::disk('public')->exists($old)) {
             Storage::disk('public')->delete($old);
-            $this->deleteResponsiveVariants($old);
         }
 
         // Auto-compress oversized images in place (>5MB). Full pixel dimensions
@@ -84,17 +80,12 @@ class PageContentMediaController extends Controller
 
         $path = $upload->store('uploads/page-content', 'public');
 
-        // Generate responsive WebP + JPEG variants so <x-responsive-image>
-        // can serve retina-scale sources to retina displays and small ones
-        // to phones. Without this, every device downloads the full-res file
-        // and heroes on retina screens render soft (browser upscales on paint).
-        $this->generateResponsiveVariants($path);
-
-        // Same media asset across locales — store path on all three so the
+        // Same media asset across locales — store path on all locales so the
         // public site serves it regardless of current locale.
         $row->value_en = $path;
         $row->value_ar = $path;
         $row->value_it = $path;
+        $row->value_ku = $path;
         $row->save(); // fires saved() → busts cache
 
         // Use asset() so the URL honors APP_URL + any reverse-proxy host
@@ -119,7 +110,6 @@ class PageContentMediaController extends Controller
         if ($row->value_en && str_starts_with($row->value_en, 'uploads/')
             && Storage::disk('public')->exists($row->value_en)) {
             Storage::disk('public')->delete($row->value_en);
-            $this->deleteResponsiveVariants($row->value_en);
         }
 
         $row->delete();
@@ -154,6 +144,7 @@ class PageContentMediaController extends Controller
         $row->value_en = $focalValue;
         $row->value_ar = $focalValue;
         $row->value_it = $focalValue;
+        $row->value_ku = $focalValue;
         $row->save(); // busts PageContent cache
 
         return response()->json([
@@ -225,10 +216,7 @@ class PageContentMediaController extends Controller
         $encodeMime = $mime === 'image/png' ? 'image/jpeg' : $mime;
         $budget = 5 * 1024 * 1024;
 
-        // Tight ladder — photographic hero content bands visibly at q=85.
-        // If a 5MB ceiling still isn't enough at q=88, the source is absurdly
-        // large and the admin should resize before uploading.
-        foreach ([92, 90, 88] as $quality) {
+        foreach ([92, 88, 85] as $quality) {
             $ok = match ($encodeMime) {
                 'image/jpeg' => imagejpeg($img, $path, $quality),
                 'image/webp' => imagewebp($img, $path, $quality),

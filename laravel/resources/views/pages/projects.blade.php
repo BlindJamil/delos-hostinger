@@ -19,29 +19,42 @@
     {{-- Full-bleed project image --}}
     <div id="project-slideshow" class="absolute inset-0">
         @foreach($heroProjects as $i => $p)
+            @php
+                $pTitle = $p->localized('title');
+                $pBrand = $p->brand;
+                $pCity = $p->city;
+                $pYear = $p->year;
+            @endphp
             @if($p->image)
-                {{-- Hero slide alt intentionally empty — avoids the
-                     5-slide alt-text-leak overlap. The visible title +
-                     meta strip underneath carries the actual label. --}}
                 <x-responsive-image
                     :src="$p->image"
                     :mobile-src="$p->image_mobile"
                     :focal="$p->focal_point"
-                    alt=""
+                    :alt="$pTitle"
                     sizes="100vw"
                     class="hero-slide absolute inset-0 w-full h-full object-cover {{ $i === 0 ? '' : 'opacity-0' }}"
                 :loading="$i === 0 ? 'eager' : 'lazy'"
-                :fetchpriority="$i === 0 ? 'high' : null" />
+                :fetchpriority="$i === 0 ? 'high' : null"
+                data-meta="{{ trim(collect([$pBrand, $pCity, $pYear])->filter()->join(' · ')) }}" />
             @endif
         @endforeach
     </div>
 
-    {{-- Bottom strip: compact glass bar. Only the dot navigation is kept —
-         no title, meta, or counter text, since projects no longer carry
-         per-card copy. --}}
+    {{-- Bottom strip: compact glass bar --}}
     <div class="absolute bottom-0 inset-x-0 z-10">
         <div class="bg-delos-cream/50 backdrop-blur-2xl border-t border-delos-gold/10 py-5 lg:py-6 px-6 lg:px-12" style="-webkit-backdrop-filter: blur(30px);">
-            <div class="max-w-[1400px] mx-auto flex items-center justify-center gap-6">
+            <div class="max-w-[1400px] mx-auto flex items-center justify-between gap-6">
+
+                <div data-motion="fade-up" class="flex items-center gap-6 lg:gap-10">
+                    <div>
+                        @php
+                            $firstHero = $heroProjects->first();
+                            $firstMeta = $firstHero ? trim(collect([$firstHero->brand, $firstHero->city, $firstHero->year])->filter()->join(' · ')) : '';
+                        @endphp
+                        <p id="project-hero-title" class="font-serif text-delos-dark text-lg lg:text-xl font-light leading-tight">{{ $firstHero?->localized('title') }}</p>
+                        <p id="project-hero-meta" class="text-delos-muted text-[9px] tracking-[0.3em] uppercase mt-0.5" style="font-family: 'Inter', sans-serif;">{{ $firstMeta }}</p>
+                    </div>
+                </div>
 
                 <div data-motion="fade" class="flex items-center gap-3">
                     @for($i = 0; $i < $heroProjects->count(); $i++)
@@ -50,6 +63,9 @@
                     @endfor
                 </div>
 
+                <div data-motion="fade-up" class="hidden sm:block">
+                    <span class="text-delos-muted text-[9px] tracking-[0.4em] uppercase" style="font-family: 'Inter', sans-serif;">{{ pcontent('projects.hero.counter') }}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -92,9 +108,8 @@
             @foreach($projects as $project)
                 @php
                     $i = $loop->index;
-                    // Title is no longer rendered on the card — kept here
-                    // purely to power the <img alt> + admin edit pill label.
                     $projTitle = $project->localized('title');
+                    $projTypeLabel = $project->localized('type_label') ?: ucfirst($project->type ?? '');
                 @endphp
                 <div data-motion="fade-up" class="project-item group relative aspect-[4/3] overflow-hidden bg-delos-dark cursor-pointer"
                      data-type="{{ $project->type }}"
@@ -106,23 +121,19 @@
                             :focal="$project->focal_point"
                             :alt="$projTitle"
                             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                            class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700" />
                     @endif
+                    <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/20 to-transparent"></div>
 
-                    {{-- Bottom scrim — inline styles (not Tailwind arbitrary
-                         values) so it works without a Vite rebuild. Four-stop
-                         ramp in the brand's delos-dark (#3d2e2a): 92% opaque
-                         at the baseline for crisp label contrast, softens
-                         through 55% and 20% before clearing completely
-                         halfway up the card. --}}
-                    <div class="pointer-events-none absolute inset-x-0 bottom-0"
-                         style="height: 50%; background: linear-gradient(to top, rgba(61,46,42,0.92) 0%, rgba(61,46,42,0.55) 35%, rgba(61,46,42,0.2) 70%, transparent 100%);"></div>
-
-                    {{-- Category label — original brand styling: muted
-                         gold, 10px, wide tracking, uppercase, Inter. --}}
                     <div class="absolute bottom-0 left-0 right-0 p-6 lg:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase" style="font-family: 'Inter', sans-serif;">
-                            {{ $project->localized('type_label') ?: ucfirst($project->type ?? '') }}
+                        <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase mb-1" style="font-family: 'Inter', sans-serif;">
+                            {{ trim(collect([$project->city, $project->year])->filter()->join(' · ')) }}
+                        </p>
+                        <h3 class="font-serif text-delos-cream text-xl font-light group-hover:text-delos-gold transition-colors duration-300">
+                            {{ $projTitle }}
+                        </h3>
+                        <p class="text-delos-cream/50 text-[11px] tracking-[0.2em] uppercase mt-2 opacity-0 group-hover:opacity-100 transition-all duration-300" style="font-family: 'Inter', sans-serif;">
+                            {{ $projTypeLabel }}
                         </p>
                     </div>
                 </div>

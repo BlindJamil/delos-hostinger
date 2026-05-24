@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Concerns\GeneratesResponsiveVariants;
 use App\Http\Controllers\Admin\Concerns\HandlesHybridImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ServiceRequest;
@@ -14,7 +13,6 @@ use Illuminate\View\View;
 
 class ServiceController extends Controller
 {
-    use GeneratesResponsiveVariants;
     use HandlesHybridImages;
 
     public function index(Request $request): View
@@ -57,7 +55,6 @@ class ServiceController extends Controller
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('uploads/services', 'public');
-            $this->generateResponsiveVariants($data['image']);
         } else {
             unset($data['image']);
         }
@@ -83,10 +80,8 @@ class ServiceController extends Controller
             if ($service->image && str_starts_with($service->image, 'uploads/')
                 && Storage::disk('public')->exists($service->image)) {
                 Storage::disk('public')->delete($service->image);
-                $this->deleteResponsiveVariants($service->image);
             }
             $data['image'] = $request->file('image')->store('uploads/services', 'public');
-            $this->generateResponsiveVariants($data['image']);
         } else {
             unset($data['image']);
         }
@@ -95,7 +90,6 @@ class ServiceController extends Controller
             if (str_starts_with($service->image, 'uploads/')
                 && Storage::disk('public')->exists($service->image)) {
                 Storage::disk('public')->delete($service->image);
-                $this->deleteResponsiveVariants($service->image);
             }
             $data['image'] = null;
         }
@@ -113,7 +107,6 @@ class ServiceController extends Controller
         if ($service->image && str_starts_with($service->image, 'uploads/')
             && Storage::disk('public')->exists($service->image)) {
             Storage::disk('public')->delete($service->image);
-            $this->deleteResponsiveVariants($service->image);
         }
         $this->deleteHybridImageFiles($service);
 

@@ -79,7 +79,11 @@
                     <thead>
                         <tr class="border-b border-delos-dark/5 text-[10px] tracking-[0.2em] uppercase text-delos-muted font-medium">
                             <th class="px-5 py-3 text-left font-medium w-20">Photo</th>
+                            <th class="px-5 py-3 text-left font-medium">Title</th>
                             <th class="px-5 py-3 text-left font-medium">Type</th>
+                            <th class="px-5 py-3 text-left font-medium">City</th>
+                            <th class="px-5 py-3 text-left font-medium">Brand</th>
+                            <th class="px-5 py-3 text-center font-medium w-16">Year</th>
                             <th class="px-5 py-3 text-center font-medium w-20">Featured</th>
                             <th class="px-5 py-3 text-center font-medium w-24">Status</th>
                             <th class="px-5 py-3 text-right font-medium w-32">Actions</th>
@@ -97,7 +101,19 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td class="px-5 py-3 text-delos-dark-2/80">{{ ucfirst($proj->type ?: '—') }}</td>
+                                <td class="px-5 py-3">
+                                    <div class="font-medium text-delos-dark-2">{{ $proj->title_en }}</div>
+                                    @if($proj->title_ar || $proj->title_it)
+                                        <div class="text-xs text-delos-muted mt-0.5 flex items-center gap-2">
+                                            @if($proj->title_ar)<span>🇮🇶 {{ $proj->title_ar }}</span>@endif
+                                            @if($proj->title_it)<span>🇮🇹 {{ $proj->title_it }}</span>@endif
+                                        </div>
+                                    @endif
+                                </td>
+                                <td class="px-5 py-3 text-delos-dark-2/80">{{ $proj->type_label_en ?: ucfirst($proj->type ?: '—') }}</td>
+                                <td class="px-5 py-3 text-delos-muted">{{ $proj->city ?: '—' }}</td>
+                                <td class="px-5 py-3 text-delos-muted">{{ $proj->brand ?: '—' }}</td>
+                                <td class="px-5 py-3 text-center text-delos-muted">{{ $proj->year ?: '—' }}</td>
                                 <td class="px-5 py-3 text-center">
                                     <form method="POST" action="{{ route('admin.projects.featured', $proj) }}" class="inline">
                                         @csrf
@@ -120,7 +136,7 @@
                                         <a href="{{ route('admin.projects.edit', $proj) }}" class="p-2 text-delos-muted hover:text-delos-gold hover:bg-delos-gold/10 rounded-lg transition-colors" title="Edit">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                         </a>
-                                        <form method="POST" action="{{ route('admin.projects.destroy', $proj) }}" class="inline" onsubmit="return confirm('Delete this project? This cannot be undone.');">
+                                        <form method="POST" action="{{ route('admin.projects.destroy', $proj) }}" class="inline" onsubmit="return confirm('Delete {{ addslashes($proj->title_en) }}? This cannot be undone.');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="p-2 text-delos-muted hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">

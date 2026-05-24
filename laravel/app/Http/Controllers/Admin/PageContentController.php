@@ -79,6 +79,7 @@ class PageContentController extends Controller
      *   values[<key>][en] = "..."
      *   values[<key>][ar] = "..."
      *   values[<key>][it] = "..."
+     *   values[<key>][ku] = "..."
      *
      * Each key that arrives in the payload is either updated (existing row)
      * or created (new row). Keys absent from the payload are untouched so
@@ -166,12 +167,15 @@ class PageContentController extends Controller
                 'submitted_en' => $trunc($submitted['en'] ?? null),
                 'submitted_ar' => $trunc($submitted['ar'] ?? null),
                 'submitted_it' => $trunc($submitted['it'] ?? null),
+                'submitted_ku' => $trunc($submitted['ku'] ?? null),
                 'db_before_en' => $trunc($row?->value_en),
                 'db_before_ar' => $trunc($row?->value_ar),
                 'db_before_it' => $trunc($row?->value_it),
+                'db_before_ku' => $trunc($row?->value_ku),
                 'changed_en' => ($submitted['en'] ?? null) !== ($row?->value_en ?? null),
                 'changed_ar' => ($submitted['ar'] ?? null) !== ($row?->value_ar ?? null),
                 'changed_it' => ($submitted['it'] ?? null) !== ($row?->value_it ?? null),
+                'changed_ku' => ($submitted['ku'] ?? null) !== ($row?->value_ku ?? null),
             ];
         }
         $auditBase['watchlist'] = $watchlistData;
@@ -264,6 +268,7 @@ class PageContentController extends Controller
                             'value_en' => $localeValues['en'] ?? null,
                             'value_ar' => $localeValues['ar'] ?? null,
                             'value_it' => $localeValues['it'] ?? null,
+                            'value_ku' => $localeValues['ku'] ?? null,
                         ]
                     );
                     $saved++;
@@ -337,6 +342,7 @@ class PageContentController extends Controller
                 'db_after_en' => $trunc($row?->value_en),
                 'db_after_ar' => $trunc($row?->value_ar),
                 'db_after_it' => $trunc($row?->value_it),
+                'db_after_ku' => $trunc($row?->value_ku),
             ];
         }
 
@@ -465,7 +471,7 @@ class PageContentController extends Controller
         foreach ($pageConfig['sections'] ?? [] as $section) {
             foreach ($section['fields'] ?? [] as $field) {
                 $key = $field['key'];
-                foreach (['en', 'ar', 'it'] as $locale) {
+                foreach (['en', 'ar', 'it', 'ku'] as $locale) {
                     $defaults[$key][$locale] = $this->readLangValue($key, $locale);
                 }
             }
