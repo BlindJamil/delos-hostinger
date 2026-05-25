@@ -331,7 +331,7 @@
         </div>
 
         <div data-motion-group="branches-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            @foreach(['erbil', 'kirkuk', 'sulaymaniyah', 'baghdad'] as $slug)
+            @foreach(['erbil', 'baghdad', 'sulaymaniyah', 'kirkuk'] as $slug)
                 <div data-motion="fade-up" class="group flex flex-col h-full border border-white/10 p-6 lg:p-8 hover:border-delos-gold/40 transition-colors duration-400">
                     <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase font-medium mb-4" style="font-family: 'Inter', sans-serif;">{{ pcontent('about.story.year_label') }} {{ pcontent("about.branches.items.{$slug}.year") }}</p>
                     <h3 class="font-serif text-delos-cream text-2xl font-light mb-4 group-hover:text-delos-gold transition-colors duration-300">
