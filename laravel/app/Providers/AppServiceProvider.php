@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Filesystem\FinfoFreeFilesystemManager;
 use App\Models\Branch;
 use App\Models\SiteSetting;
 use Illuminate\Support\Facades\View;
@@ -23,6 +24,15 @@ class AppServiceProvider extends ServiceProvider
             'session.lifetime' => 480,
             'session.expire_on_close' => false,
         ]);
+
+        // Production's PHP build has ext-fileinfo disabled, and installing
+        // it requires host-level (WHM) access we don't have. Flysystem's
+        // default local-disk MIME detector needs finfo just to construct
+        // the adapter, so every admin image upload 500'd before this.
+        // Swap in our subclass that detects MIME type from the file
+        // extension instead — see FinfoFreeFilesystemManager for why
+        // that's safe here.
+        $this->app->singleton('filesystem', fn ($app) => new FinfoFreeFilesystemManager($app));
     }
 
     public function boot(): void
