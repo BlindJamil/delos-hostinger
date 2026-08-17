@@ -3,6 +3,7 @@
 <html lang="{{ $locale }}" dir="{{ $dir }}" class="locale-{{ $locale }}">
 <head>
     <meta charset="UTF-8">
+    <meta name="facebook-domain-verification" content="qr0kchean94mt7tscpyz0d9v6mdcst" />
     {{-- Client-side cache busters. The PreventAdminCaching middleware
          already sends Cache-Control + Pragma + Expires response headers,
          but Safari in particular has historically ignored `no-store`
