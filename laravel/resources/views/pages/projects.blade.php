@@ -143,9 +143,11 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/20 to-transparent"></div>
 
                     <div class="absolute bottom-0 left-0 right-0 p-6 lg:p-8 z-[3] pointer-events-none transition-transform duration-300 {{ $projHasDetail ? 'translate-y-2 group-hover:translate-y-0' : '' }}">
-                        <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase mb-1" style="font-family: 'Inter', sans-serif;">
-                            {{ trim(collect([$project->city, $project->year])->filter()->join(' · ')) }}
-                        </p>
+                        @if($project->city || $project->year)
+                            <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase mb-1" style="font-family: 'Inter', sans-serif;">
+                                {{ trim(collect([$project->city, $project->year])->filter()->join(' · ')) }}
+                            </p>
+                        @endif
                         <h3 class="font-serif text-delos-cream text-xl font-light transition-colors duration-300 {{ $projHasDetail ? 'group-hover:text-delos-gold' : '' }}">
                             {{ $projTitle }}
                         </h3>

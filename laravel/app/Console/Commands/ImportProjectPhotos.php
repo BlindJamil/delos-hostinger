@@ -49,7 +49,12 @@ class ImportProjectPhotos extends Command
             return self::SUCCESS;
         }
 
-        $nextSortOrder = (int) (Project::max('sort_order') ?? 0) + 10;
+        // New projects go above everything existing, not below — matches the
+        // admin "Add Project" default. The whole batch lands as one block
+        // ahead of old content, preserving the folders' own alphabetical
+        // order within that block (first folder ends up topmost overall).
+        $existingMinSortOrder = (int) (Project::min('sort_order') ?? 0);
+        $nextSortOrder = $existingMinSortOrder - ($projectDirs->count() * 10);
 
         foreach ($projectDirs as $folderName) {
             $title = $folderName;

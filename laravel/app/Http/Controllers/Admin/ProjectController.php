@@ -53,7 +53,9 @@ class ProjectController extends Controller
         $project = new Project([
             'active' => true,
             'featured' => false,
-            'sort_order' => Project::max('sort_order') + 10,
+            // New projects default to the top of the list, not the bottom —
+            // the most recent work should be the first thing a visitor sees.
+            'sort_order' => Project::min('sort_order') - 10,
         ]);
         return view('admin.projects.create', [
             'project' => $project,
