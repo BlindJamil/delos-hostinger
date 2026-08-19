@@ -1,4 +1,5 @@
 import { qs, qsa } from './runtime.js';
+import { getLenis, refreshScrollTriggers } from './motion.js';
 
 const TRANSITION_DURATION_MS = 600;
 const LOADER_HIDE_DELAY_MS = 1400;
@@ -223,6 +224,12 @@ export function initProjectFilters() {
         if (nextButton) {
             nextButton.disabled = currentPage >= pageCount;
         }
+
+        // Hiding/showing this many cards changes the grid's height, which
+        // shifts everything below it (Stats, CTA) on the page — GSAP's
+        // ScrollTrigger doesn't know that happened until told. See
+        // refreshScrollTriggers()'s own comment for why this matters.
+        refreshScrollTriggers();
     };
 
     const setFilter = (value) => {
@@ -249,7 +256,23 @@ export function initProjectFilters() {
         }
         currentPage = page;
         render();
-        qs('#projects-grid')?.scrollIntoView({ block: 'start' });
+
+        const grid = qs('#projects-grid');
+        if (!grid) {
+            return;
+        }
+        // Lenis owns real scrolling on desktop (see motion.js) and re-asserts
+        // its own target every frame — a plain scrollIntoView() fights it
+        // and can visibly jitter or get partially reverted. Route through
+        // Lenis when it's active; native scrollIntoView is the correct
+        // fallback everywhere Lenis is deliberately off (touch, <1024px,
+        // reduced motion).
+        const lenis = getLenis();
+        if (lenis) {
+            lenis.scrollTo(grid, { immediate: true });
+        } else {
+            grid.scrollIntoView({ block: 'start' });
+        }
     };
 
     buttons.forEach((button) => {

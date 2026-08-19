@@ -15,6 +15,26 @@ export function getLenis() {
     return lenisInstance;
 }
 
+/**
+ * ScrollTrigger caches each trigger's start/end as pixel scroll positions
+ * and only recalculates them on resize/load/visibilitychange — never on a
+ * plain DOM mutation. Anything that changes page height by hiding/showing a
+ * meaningful number of elements (e.g. the projects pager) must call this
+ * afterward, or every trigger below the change point keeps stale
+ * coordinates — which can put a `once: true` trigger permanently out of
+ * reach, leaving it stuck at the CSS opacity:0 starting state forever.
+ * Wrapped in rAF so it measures after the browser has actually repainted
+ * the new layout, matching the same pattern used after initial page load.
+ * (initCounters() reacts to visibility directly via MutationObserver rather
+ * than depending on this refresh reaching its own separate trigger, so no
+ * extra handling is needed here for counters specifically.)
+ */
+export function refreshScrollTriggers() {
+    requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+    });
+}
+
 const MOTION_VARIANTS = {
     fade: {
         duration: 0.95,
@@ -831,31 +851,52 @@ function initCounters(context) {
             suffix.classList.remove('is-visible');
         }
 
+        const parent = counter.closest('[data-motion]');
+        if (!parent) {
+            return;
+        }
+
+        let started = false;
+        const start = () => {
+            if (started) {
+                return;
+            }
+            started = true;
+            animateCounter(counter, targetValue, context.prefersReducedMotion);
+        };
+
+        // Counts whenever its wrapping element actually becomes visible —
+        // whatever caused that — instead of relying on a second, separate
+        // ScrollTrigger staying in lockstep with the one driving the
+        // element's own fade-up reveal (addRevealTween's onComplete adds
+        // .is-visible). Testing showed those two triggers can fall out of
+        // sync after a dynamic layout change elsewhere on the page (see
+        // refreshScrollTriggers() in the projects pager) — the reveal
+        // fires again correctly, but a second trigger on the same element
+        // sometimes doesn't, leaving the counter stuck at 0 forever inside
+        // an otherwise fully visible section. A MutationObserver sidesteps
+        // that entirely: it reacts to the actual visible state, not to
+        // whichever mechanism produced it.
+        if (parent.classList.contains('is-visible') || context.prefersReducedMotion) {
+            start();
+            return;
+        }
+
+        const observer = new MutationObserver(() => {
+            if (parent.classList.contains('is-visible')) {
+                observer.disconnect();
+                start();
+            }
+        });
+        observer.observe(parent, { attributes: true, attributeFilter: ['class'] });
+
+        // Still need something to trigger the reveal in the first place for
+        // the ordinary "scroll down to it" case — nothing else does that.
         ScrollTrigger.create({
-            trigger: counter.closest('[data-motion]') ?? counter,
+            trigger: parent,
             start: 'top 80%',
             once: true,
-            onEnter: () => {
-                const parent = counter.closest('[data-motion]');
-                if (!parent || parent.classList.contains('is-visible') || context.prefersReducedMotion) {
-                    animateCounter(counter, targetValue, context.prefersReducedMotion);
-                    return;
-                }
-                let started = false;
-                const start = () => {
-                    if (started) return;
-                    started = true;
-                    animateCounter(counter, targetValue, context.prefersReducedMotion);
-                };
-                const observer = new MutationObserver(() => {
-                    if (parent.classList.contains('is-visible')) {
-                        observer.disconnect();
-                        start();
-                    }
-                });
-                observer.observe(parent, { attributes: true, attributeFilter: ['class'] });
-                setTimeout(() => { observer.disconnect(); start(); }, 2500);
-            },
+            onEnter: start,
         });
     });
 }
