@@ -147,6 +147,19 @@ export function initAnchorNavigation(context) {
     });
 }
 
+const PROJECTS_PAGE_SIZE = 15;
+
+/**
+ * Type filter + pagination for the projects grid, sharing one `hidden`
+ * state machine since both act on the same .project-item elements.
+ *
+ * Pagination only ever applies to the unfiltered "All" tab — the numbered
+ * pager (rendered server-side in projects.blade.php, present only when
+ * there's more than one page) is hidden whenever a specific type is
+ * selected, and every match for that type is shown at once. This avoids
+ * a type filter appearing broken/empty just because its matches happen to
+ * fall on a page the visitor isn't currently viewing.
+ */
 export function initProjectFilters() {
     const buttons = qsa('.project-filter');
     const items = qsa('.project-item');
@@ -154,7 +167,68 @@ export function initProjectFilters() {
         return;
     }
 
+    const pager = qs('#projects-pager');
+    const pageButtons = pager ? qsa('[data-pager-page]', pager) : [];
+    const prevButton = pager ? qs('[data-pager-prev]', pager) : null;
+    const nextButton = pager ? qs('[data-pager-next]', pager) : null;
+    const pageCount = pageButtons.length;
+
+    let currentFilter = 'all';
+    let currentPage = 1;
+
+    const render = () => {
+        const isAllFilter = currentFilter === 'all';
+        let matchIndex = 0;
+
+        items.forEach((item) => {
+            const matchesFilter = isAllFilter || item.dataset.type === currentFilter;
+            if (!matchesFilter) {
+                item.hidden = true;
+                item.setAttribute('aria-hidden', 'true');
+                return;
+            }
+
+            const matchesPage = !isAllFilter
+                || Math.floor(matchIndex / PROJECTS_PAGE_SIZE) + 1 === currentPage;
+            if (isAllFilter) {
+                matchIndex++;
+            }
+
+            const wasHidden = item.hidden;
+            item.hidden = !matchesPage;
+            item.setAttribute('aria-hidden', String(!matchesPage));
+
+            // An item that was hidden (by the filter or a different page)
+            // and is now being shown may never get GSAP's scroll-triggered
+            // fade-in — motion.js deliberately skips creating a trigger for
+            // elements that are hidden when it runs. Apply the same "fully
+            // revealed" class its own reveal animation would end on, so it
+            // never gets stuck at the CSS-level opacity:0 starting state.
+            if (wasHidden && matchesPage) {
+                item.classList.add('is-visible');
+            }
+        });
+
+        if (pager) {
+            pager.hidden = !isAllFilter || pageCount <= 1;
+        }
+        pageButtons.forEach((button) => {
+            const isCurrent = Number(button.dataset.pagerPage) === currentPage;
+            button.classList.toggle('is-active', isCurrent);
+            button.setAttribute('aria-current', isCurrent ? 'page' : 'false');
+        });
+        if (prevButton) {
+            prevButton.disabled = currentPage <= 1;
+        }
+        if (nextButton) {
+            nextButton.disabled = currentPage >= pageCount;
+        }
+    };
+
     const setFilter = (value) => {
+        currentFilter = value;
+        currentPage = 1;
+
         buttons.forEach((button) => {
             const active = button.dataset.filter === value;
             button.setAttribute('aria-pressed', String(active));
@@ -166,16 +240,27 @@ export function initProjectFilters() {
             button.classList.toggle('border-delos-dark/20', !active);
         });
 
-        items.forEach((item) => {
-            const matches = value === 'all' || item.dataset.type === value;
-            item.hidden = !matches;
-            item.setAttribute('aria-hidden', String(!matches));
-        });
+        render();
+    };
+
+    const goToPage = (page) => {
+        if (page < 1 || page > pageCount || page === currentPage) {
+            return;
+        }
+        currentPage = page;
+        render();
+        qs('#projects-grid')?.scrollIntoView({ block: 'start' });
     };
 
     buttons.forEach((button) => {
         button.addEventListener('click', () => setFilter(button.dataset.filter ?? 'all'));
     });
+
+    pageButtons.forEach((button) => {
+        button.addEventListener('click', () => goToPage(Number(button.dataset.pagerPage)));
+    });
+    prevButton?.addEventListener('click', () => goToPage(currentPage - 1));
+    nextButton?.addEventListener('click', () => goToPage(currentPage + 1));
 
     const initialFilter = buttons.find((button) => button.getAttribute('aria-pressed') === 'true')?.dataset.filter ?? 'all';
     setFilter(initialFilter);

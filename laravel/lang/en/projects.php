@@ -51,6 +51,13 @@ return [
         'turnkey' => 'Turnkey',
     ],
 
+    'pagination' => [
+        'label' => 'Projects pagination',
+        'previous' => 'Previous page',
+        'next' => 'Next page',
+        'page' => 'Page',
+    ],
+
     'grid' => [
         'villa_moderna_kitchen' => [
             'title' => 'Villa Moderna Kitchen',

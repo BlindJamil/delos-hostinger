@@ -51,6 +51,13 @@ return [
         'turnkey' => 'Chiavi in mano',
     ],
 
+    'pagination' => [
+        'label' => 'Paginazione progetti',
+        'previous' => 'Pagina precedente',
+        'next' => 'Pagina successiva',
+        'page' => 'Pagina',
+    ],
+
     'grid' => [
         'villa_moderna_kitchen' => [
             'title' => 'Cucina Villa Moderna',

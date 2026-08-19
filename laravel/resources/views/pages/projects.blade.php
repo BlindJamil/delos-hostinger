@@ -104,6 +104,14 @@
         </div>
 
         {{-- Projects Grid --}}
+        @php
+            // Pagination is client-side (see initProjectFilters() in
+            // navigation.js) — it only ever chunks the unfiltered "All" view;
+            // selecting a type filter shows every match for that type instead.
+            // Rendered server-side here since the page count is already known.
+            $projectsPageSize = 15;
+            $projectsPageCount = (int) ceil($projects->count() / $projectsPageSize);
+        @endphp
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="projects-grid">
             @foreach($projects as $project)
                 @php
@@ -166,6 +174,35 @@
                 </div>
             @endforeach
         </div>
+
+        @if($projectsPageCount > 1)
+            {{-- No data-motion here deliberately: it's a functional control,
+                 not a scroll-reveal candidate, and the generic [data-motion]
+                 reveal system in motion.js creates one ScrollTrigger per
+                 element — adding another to a grid that can already contain
+                 dozens of project cards isn't worth it for a fade-in. --}}
+            <nav id="projects-pager" class="flex items-center justify-center gap-2 mt-16" aria-label="{{ pcontent('projects.pagination.label') }}">
+                <button type="button" class="projects-pager__nav" data-pager-prev aria-label="{{ pcontent('projects.pagination.previous') }}">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                @for($page = 1; $page <= $projectsPageCount; $page++)
+                    <button type="button"
+                            class="projects-pager__page {{ $page === 1 ? 'is-active' : '' }}"
+                            data-pager-page="{{ $page }}"
+                            aria-current="{{ $page === 1 ? 'page' : 'false' }}"
+                            aria-label="{{ pcontent('projects.pagination.page') }} {{ $page }}">
+                        {{ $page }}
+                    </button>
+                @endfor
+                <button type="button" class="projects-pager__nav" data-pager-next aria-label="{{ pcontent('projects.pagination.next') }}">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </nav>
+        @endif
 
     </div>
 </section>

@@ -771,7 +771,13 @@ function initRevealMotion() {
     });
 
     qsa('[data-motion]', document).forEach((item) => {
-        if (animated.has(item) || item.closest('[data-motion-hero]') || item.closest('#employee-track')) {
+        // Elements already hidden when this runs (e.g. project cards past
+        // page 1 of the projects grid pager) never scroll into view, so a
+        // ScrollTrigger created against them is both pointless and — being
+        // zero-dimension at creation time — a source of GSAP internal
+        // errors on later refresh. Whatever un-hides them is responsible for
+        // marking them .is-visible directly (see initProjectFilters()).
+        if (animated.has(item) || item.hidden || item.closest('[data-motion-hero]') || item.closest('#employee-track')) {
             return;
         }
 
