@@ -406,6 +406,9 @@ Route::prefix('{locale}')
         // Become a Dealer — public B2B inquiry page for prospective regional dealers.
         Route::get('/become-a-dealer', [PageController::class, 'becomeDealer'])->name('become-dealer');
         Route::get('/team/{employee}', [PageController::class, 'showEmployee'])->name('employee-show');
+        Route::get('/projects/{project}', [PageController::class, 'showProject'])
+            ->whereNumber('project')
+            ->name('project-show');
     });
 
 /*

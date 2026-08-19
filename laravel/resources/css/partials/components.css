@@ -1151,5 +1151,194 @@ body.has-custom-cursor .admin-bar label.admin-bar__toggle * {
     }
 }
 
+/* ===== Project card — "View Project" affordance =====
+   The only signal that a card is clickable, since some cards on the same
+   grid are intentionally not. Hover-only reveals are invisible on
+   touchscreens, so — unlike the plain type-label reveal elsewhere on this
+   card, which stays hover-only and is a pre-existing, accepted gap — this
+   one must default to visible wherever there is no hover to reveal it. */
+.project-item__cue {
+    opacity: 0;
+    transform: translateY(4px);
+}
+.project-item:hover .project-item__cue {
+    opacity: 1;
+    transform: translateY(0);
+}
+@media (hover: none) {
+    .project-item__cue {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Project detail page ===== */
+
+/* Fluid title: 32px floor (mobile) → 72px ceiling, matching employee-show__name. */
+.project-show__title {
+    font-size: clamp(2rem, 1.1rem + 3.2vw, 4.5rem);
+    letter-spacing: -0.01em;
+}
+
+/* Rich text from the admin's WYSIWYG editor — the only place project HTML renders. */
+.project-show__body h2,
+.project-show__body h3 {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--color-delos-dark, #3D2E2A);
+    font-weight: 400;
+    line-height: 1.25;
+    margin: 1.6em 0 0.6em;
+}
+.project-show__body h2 { font-size: 1.75em; }
+.project-show__body h3 { font-size: 1.35em; }
+.project-show__body p { margin-bottom: 1.1em; }
+.project-show__body p:last-child { margin-bottom: 0; }
+.project-show__body strong { color: var(--color-delos-dark, #3D2E2A); font-weight: 600; }
+.project-show__body ul,
+.project-show__body ol { margin: 0 0 1.1em 1.5em; }
+.project-show__body ul { list-style: disc; }
+.project-show__body ol { list-style: decimal; }
+.project-show__body li { margin-bottom: 0.4em; }
+.project-show__body a {
+    color: var(--color-delos-gold, #C49A7A);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.project-show__body blockquote {
+    border-inline-start: 3px solid var(--color-delos-gold, #C49A7A);
+    padding-inline-start: 1.25em;
+    margin: 1.5em 0;
+    font-style: italic;
+}
+[dir="rtl"] .project-show__body ul,
+[dir="rtl"] .project-show__body ol { margin: 0 1.5em 1.1em 0; }
+
+.project-gallery__item {
+    display: block;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+    background: var(--color-delos-dark-2, #2C2220);
+}
+.project-gallery__item:focus-visible {
+    outline: 2px solid var(--color-delos-gold, #C49A7A);
+    outline-offset: 3px;
+}
+
+/* "Gallery frame" hero effect — see initHeroFrame() in motion.js. Base state
+   is the plain full-bleed hero (identical to Services); JS scrub-tweens
+   scale/border-radius/--frame-border-opacity on top as the visitor scrolls.
+   With no JS (or where the effect is intentionally skipped — touch, <1024px,
+   reduced motion) this rule alone renders a fully normal, static hero. */
+[data-hero-frame] {
+    overflow: hidden;
+    border: 1px solid rgba(196, 154, 122, var(--frame-border-opacity, 0));
+}
+
+/* ===== Project gallery lightbox ===== */
+
+/* Locks background scroll while the overlay is open. No prior scroll-lock
+   convention existed in this project. */
+html.lightbox-open,
+html.lightbox-open body {
+    overflow: hidden;
+}
+
+.project-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200; /* Above the header (z-50) and the page-transition overlay. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.5rem, 2vw, 2rem);
+    padding: clamp(1rem, 4vw, 3rem);
+    background: rgba(26, 20, 18, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+.project-lightbox[hidden] { display: none; }
+
+.project-lightbox__stage {
+    margin: 0;
+    max-width: min(100%, 1400px);
+    max-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.project-lightbox__img {
+    max-width: 100%;
+    max-height: 82vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    box-shadow: 0 40px 120px -40px rgba(0, 0, 0, 0.8);
+}
+
+.project-lightbox__close,
+.project-lightbox__nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* 44px minimum touch target. */
+    width: 48px;
+    height: 48px;
+    flex: 0 0 auto;
+    border: 1px solid rgba(248, 244, 239, 0.18);
+    border-radius: 50%;
+    background: rgba(248, 244, 239, 0.06);
+    color: var(--color-delos-cream, #F8F4EF);
+    cursor: pointer;
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+.project-lightbox__close:hover,
+.project-lightbox__nav:hover,
+.project-lightbox__close:focus-visible,
+.project-lightbox__nav:focus-visible {
+    background: var(--color-delos-gold, #C49A7A);
+    border-color: var(--color-delos-gold, #C49A7A);
+    color: var(--color-delos-dark, #3D2E2A);
+}
+.project-lightbox__close:focus-visible,
+.project-lightbox__nav:focus-visible {
+    outline: 2px solid var(--color-delos-cream, #F8F4EF);
+    outline-offset: 3px;
+}
+.project-lightbox__close {
+    position: absolute;
+    top: clamp(1rem, 3vw, 2rem);
+    inset-inline-end: clamp(1rem, 3vw, 2rem);
+}
+.project-lightbox__nav[hidden] { display: none; }
+
+/* RTL: prev/next glyphs point along the reading direction. */
+[dir="rtl"] .project-lightbox__nav svg { transform: scaleX(-1); }
+
+.project-lightbox__counter {
+    position: absolute;
+    bottom: clamp(1rem, 3vw, 2rem);
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    color: rgba(248, 244, 239, 0.6);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+}
+
+/* Phones: stack the nav under the image so it never crowds the photo. */
+@media (max-width: 639px) {
+    .project-lightbox {
+        flex-wrap: wrap;
+        align-content: center;
+    }
+    .project-lightbox__stage { flex: 1 0 100%; order: 1; }
+    .project-lightbox__nav--prev { order: 2; }
+    .project-lightbox__nav--next { order: 3; }
+    .project-lightbox__img { max-height: 62vh; }
+}
+
 
 

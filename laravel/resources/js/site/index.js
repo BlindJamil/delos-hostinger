@@ -10,6 +10,7 @@ import {
     initProjectFilters,
 } from './navigation.js';
 import { initMotion } from './motion.js';
+import { initProjectGallery } from './project-gallery.js';
 import { initIraqMap } from './iraq-map.js';
 import { initLanguageGlobe } from './language-globe.js';
 import { initViewportHeight } from './viewport.js';
@@ -31,6 +32,7 @@ export function initSite() {
     initAnchorNavigation(context);
     initPageTransitions(context);
     initProjectFilters();
+    initProjectGallery(context);
     initMediaControls(context);
     initLanguageSwitcher();
     initLanguageGlobe();

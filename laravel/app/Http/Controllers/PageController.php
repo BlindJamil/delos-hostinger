@@ -51,7 +51,7 @@ class PageController extends Controller
     public function projects()
     {
         $projects = $this->safeQuery(
-            fn () => Project::query()->active()->ordered()->get()
+            fn () => Project::query()->active()->ordered()->withCount('images')->get()
         );
         $heroProjects = $projects->where('featured', true)->values();
 
@@ -108,5 +108,36 @@ class PageController extends Controller
         }
 
         return view('pages.employee-show', compact('employee'));
+    }
+
+    public function showProject(string $locale, int $project)
+    {
+        $project = $this->safeQuery(
+            fn () => Project::query()
+                ->where('id', $project)
+                ->where('active', true)
+                ->with('images')
+                ->limit(1)
+                ->get()
+        )->first();
+
+        // Also guards direct URL entry — a project with no admin-added detail
+        // content has no public page, even though its card exists on /projects.
+        if (!$project || !$project->hasDetailContent()) {
+            abort(404);
+        }
+
+        $relatedProjects = $this->safeQuery(
+            fn () => Project::query()
+                ->active()
+                ->ordered()
+                ->withCount('images')
+                ->whereKeyNot($project->id)
+                ->get()
+        )->filter(fn (Project $candidate) => $candidate->hasDetailContent())
+            ->take(3)
+            ->values();
+
+        return view('pages.project-show', compact('project', 'relatedProjects'));
     }
 }

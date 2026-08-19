@@ -63,6 +63,8 @@ return [
         'back_to_team' => 'Back to Team',
         'work_with_team' => 'Work with our team',
         'about_company' => 'About the company',
+        'view_project' => 'View Project',
+        'back_to_projects' => 'Back to Projects',
     ],
 
     'language_picker' => [

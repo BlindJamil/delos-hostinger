@@ -137,4 +137,25 @@ return [
         'heading_1' => 'Your project could be',
         'heading_accent' => 'our next masterpiece.',
     ],
+
+    'detail' => [
+        'overline' => 'Project Details',
+        'heading' => 'The Vision',
+        'gallery' => 'In Detail',
+        'more' => 'More Projects',
+        'open_image' => 'Open image',
+        'lightbox_close' => 'Close gallery',
+        'lightbox_prev' => 'Previous image',
+        'lightbox_next' => 'Next image',
+        'meta' => [
+            'city' => 'City',
+            'type' => 'Type',
+            'brand' => 'Brand',
+            'year' => 'Year',
+        ],
+        'cta' => [
+            'overline' => 'Begin Yours',
+            'heading' => 'Your space is waiting.',
+        ],
+    ],
 ];

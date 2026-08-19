@@ -137,4 +137,25 @@ return [
         'heading_1' => 'Il tuo progetto potrebbe essere',
         'heading_accent' => 'il nostro prossimo capolavoro.',
     ],
+
+    'detail' => [
+        'overline' => 'Dettagli del progetto',
+        'heading' => 'La Visione',
+        'gallery' => 'Nel Dettaglio',
+        'more' => 'Altri Progetti',
+        'open_image' => 'Apri immagine',
+        'lightbox_close' => 'Chiudi galleria',
+        'lightbox_prev' => 'Immagine precedente',
+        'lightbox_next' => 'Immagine successiva',
+        'meta' => [
+            'city' => 'Città',
+            'type' => 'Tipo',
+            'brand' => 'Marchio',
+            'year' => 'Anno',
+        ],
+        'cta' => [
+            'overline' => 'Comincia Ora',
+            'heading' => 'Il tuo spazio ti aspetta.',
+        ],
+    ],
 ];

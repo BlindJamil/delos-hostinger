@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Project extends Model
 {
@@ -20,6 +21,7 @@ class Project extends Model
         'image',
         'image_mobile',
         'focal_point',
+        'description_en', 'description_ar', 'description_it', 'description_ku',
         'featured',
         'sort_order',
         'active',
@@ -103,5 +105,60 @@ class Project extends Model
             }
             return asset('images/' . $path);
         });
+    }
+
+    /** Gallery images for the public detail page, in admin-defined order. */
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProjectImage::class)
+            ->orderBy('sort_order')
+            ->orderBy('id');
+    }
+
+    /**
+     * Content gate for the public detail page. True as soon as the admin has
+     * added EITHER a description for the current locale OR one gallery image.
+     *
+     * Computed, never stored, so it can't drift from the actual content. Used
+     * in three places: the card link in projects.blade.php, the 404 guard in
+     * PageController::showProject(), and the admin index badge.
+     */
+    public function hasDetailContent(?string $locale = null): bool
+    {
+        return $this->hasDescriptionText($locale) || $this->galleryImageCount() > 0;
+    }
+
+    /**
+     * The admin's rich-text editor serialises an empty document as "<p></p>"
+     * — truthy, but visually blank. Strip markup and non-breaking spaces so
+     * an untouched editor correctly counts as "no description".
+     */
+    public function hasDescriptionText(?string $locale = null): bool
+    {
+        $html = (string) $this->localized('description', $locale);
+        if ($html === '') {
+            return false;
+        }
+        $plain = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return trim(str_replace("\u{00A0}", ' ', $plain)) !== '';
+    }
+
+    /**
+     * Gallery size without triggering a query per card. Prefers withCount()'s
+     * images_count, then an eager-loaded relation, and only falls back to a
+     * COUNT query when neither was primed — which is what keeps the projects
+     * grid at one query instead of N.
+     */
+    private function galleryImageCount(): int
+    {
+        if (array_key_exists('images_count', $this->attributes)) {
+            return (int) $this->attributes['images_count'];
+        }
+        if ($this->relationLoaded('images')) {
+            return $this->images->count();
+        }
+
+        return $this->images()->count();
     }
 }

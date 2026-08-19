@@ -63,6 +63,8 @@ return [
         'back_to_team' => 'Torna al team',
         'work_with_team' => 'Lavora con il nostro team',
         'about_company' => 'Informazioni sulla società',
+        'view_project' => 'Vedi il progetto',
+        'back_to_projects' => 'Torna ai progetti',
     ],
 
     'language_picker' => [

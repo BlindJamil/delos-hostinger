@@ -63,6 +63,8 @@ return [
         'back_to_team' => 'گەڕانەوە بۆ تیمەکە',
         'work_with_team' => 'لەگەڵ تیمەکەماندا کار بکە',
         'about_company' => 'دەربارەی کۆمپانیا',
+        'view_project' => 'بینینی پڕۆژە',
+        'back_to_projects' => 'گەڕانەوە بۆ پڕۆژەکان',
     ],
 
     'language_picker' => [

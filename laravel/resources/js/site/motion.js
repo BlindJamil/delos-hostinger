@@ -6,6 +6,15 @@ import { qs, qsa } from './runtime.js';
 const GROUP_STAGGER_MS = 90;
 const LINE_DURATION = 1.2;
 
+// Held at module scope so overlays (e.g. the project gallery lightbox) can
+// pause smooth scrolling while they're open. Null under reduced motion, on
+// touch devices, and below 1024px — initSmoothScroll() bails there.
+let lenisInstance = null;
+
+export function getLenis() {
+    return lenisInstance;
+}
+
 const MOTION_VARIANTS = {
     fade: {
         duration: 0.95,
@@ -83,8 +92,9 @@ export function initMotion(context) {
         return;
     }
 
-    const lenis = initSmoothScroll(context);
-    initHeroMotion();
+    lenisInstance = initSmoothScroll(context);
+    const lenis = lenisInstance;
+    initHeroMotion(context);
     initHeroSlideshow(context);
     initProjectSlideshow(context);
     initBrandShowcase(context);
@@ -145,7 +155,13 @@ function initSmoothScroll(context) {
     return lenis;
 }
 
-function initHeroMotion() {
+function initHeroMotion(context) {
+    // The hero-frame effect (below) pairs with desktop smooth-scroll: it's a
+    // scroll-scrubbed transform, so it's skipped anywhere Lenis itself is
+    // skipped (touch devices, narrow viewports) to avoid animating against
+    // native momentum scrolling, which reads as janky rather than cinematic.
+    const supportsHeroFrame = !context.isTouchDevice && window.innerWidth >= 1024;
+
     qsa('[data-motion-hero]').forEach((hero) => {
         const splitLines = qsa('[data-motion="split-line"]', hero);
         const heroItems = qsa('[data-motion]', hero).filter(
@@ -211,6 +227,30 @@ function initHeroMotion() {
                     start: '30% top',
                     end: '60% top',
                     scrub: true,
+                },
+            });
+        }
+
+        // "Gallery frame" — the project detail hero's signature moment. As
+        // the visitor scrolls past, the full-bleed photo settles into a
+        // matted, gold-bordered frame: a plain scale-down on an inset:0
+        // element reveals the section's own background in the margin that
+        // opens up around it, so no separate overlay elements are needed.
+        // --frame-border-opacity is a CSS custom property (see
+        // components.css) driving the hairline border's fade-in in step
+        // with the scale/radius tween.
+        const frameTarget = qs('[data-hero-frame]', hero);
+        if (frameTarget && supportsHeroFrame) {
+            gsap.to(frameTarget, {
+                scale: 0.92,
+                borderRadius: '28px',
+                '--frame-border-opacity': 1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: hero,
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 1.2,
                 },
             });
         }
@@ -789,7 +829,27 @@ function initCounters(context) {
             trigger: counter.closest('[data-motion]') ?? counter,
             start: 'top 80%',
             once: true,
-            onEnter: () => animateCounter(counter, targetValue, context.prefersReducedMotion),
+            onEnter: () => {
+                const parent = counter.closest('[data-motion]');
+                if (!parent || parent.classList.contains('is-visible') || context.prefersReducedMotion) {
+                    animateCounter(counter, targetValue, context.prefersReducedMotion);
+                    return;
+                }
+                let started = false;
+                const start = () => {
+                    if (started) return;
+                    started = true;
+                    animateCounter(counter, targetValue, context.prefersReducedMotion);
+                };
+                const observer = new MutationObserver(() => {
+                    if (parent.classList.contains('is-visible')) {
+                        observer.disconnect();
+                        start();
+                    }
+                });
+                observer.observe(parent, { attributes: true, attributeFilter: ['class'] });
+                setTimeout(() => { observer.disconnect(); start(); }, 2500);
+            },
         });
     });
 }

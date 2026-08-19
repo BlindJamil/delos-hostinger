@@ -110,31 +110,56 @@
                     $i = $loop->index;
                     $projTitle = $project->localized('title');
                     $projTypeLabel = $project->localized('type_label') ?: ucfirst($project->type ?? '');
+                    // Gate: only projects the admin gave a description or a
+                    // gallery image to become clickable. Everything else
+                    // keeps today's markup minus the hover cues that imply
+                    // interactivity — a non-clickable card shouldn't look
+                    // clickable.
+                    $projHasDetail = $project->hasDetailContent();
                 @endphp
-                <div data-motion="fade-up" class="project-item group relative aspect-[4/3] overflow-hidden bg-delos-dark cursor-pointer"
+                <div data-motion="fade-up" class="project-item group relative aspect-[4/3] overflow-hidden bg-delos-dark {{ $projHasDetail ? 'cursor-pointer' : '' }}"
                      data-type="{{ $project->type }}"
                      style="--motion-delay: {{ ($i % 3) * 100 }}ms;">
                     <x-admin-edit-pill :href="route('admin.projects.edit', $project)" :label="'Edit ' . $projTitle" />
+
+                    @if($projHasDetail)
+                        {{-- Full-bleed link under the edit pill (z-5) and above the
+                             image, mirroring .employee-card__link on the home page. --}}
+                        <a href="{{ lroute('project-show', ['project' => $project->id]) }}"
+                           class="project-item__link absolute inset-0 z-[4]"
+                           aria-label="{{ pcontent('common.ctas.view_project') }} — {{ $projTitle }}">
+                            <span class="sr-only">{{ $projTitle }}</span>
+                        </a>
+                    @endif
+
                     @if($project->image)
                         <x-responsive-image :src="$project->image"
                             :mobile-src="$project->image_mobile"
                             :focal="$project->focal_point"
                             :alt="$projTitle"
                             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                            class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700" />
+                            class="absolute inset-0 w-full h-full object-cover opacity-60 transition-all duration-700 {{ $projHasDetail ? 'group-hover:opacity-75 group-hover:scale-105' : '' }}" />
                     @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-delos-dark via-delos-dark/20 to-transparent"></div>
 
-                    <div class="absolute bottom-0 left-0 right-0 p-6 lg:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 lg:p-8 z-[3] pointer-events-none transition-transform duration-300 {{ $projHasDetail ? 'translate-y-2 group-hover:translate-y-0' : '' }}">
                         <p class="text-delos-gold text-[10px] tracking-[0.4em] uppercase mb-1" style="font-family: 'Inter', sans-serif;">
                             {{ trim(collect([$project->city, $project->year])->filter()->join(' · ')) }}
                         </p>
-                        <h3 class="font-serif text-delos-cream text-xl font-light group-hover:text-delos-gold transition-colors duration-300">
+                        <h3 class="font-serif text-delos-cream text-xl font-light transition-colors duration-300 {{ $projHasDetail ? 'group-hover:text-delos-gold' : '' }}">
                             {{ $projTitle }}
                         </h3>
                         <p class="text-delos-cream/50 text-[11px] tracking-[0.2em] uppercase mt-2 opacity-0 group-hover:opacity-100 transition-all duration-300" style="font-family: 'Inter', sans-serif;">
                             {{ $projTypeLabel }}
                         </p>
+                        @if($projHasDetail)
+                            <span class="project-item__cue inline-flex items-center gap-2 text-delos-gold text-[10px] tracking-[0.3em] uppercase mt-3 transition-all duration-300" style="font-family: 'Inter', sans-serif;">
+                                {{ pcontent('common.ctas.view_project') }}
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </span>
+                        @endif
                     </div>
                 </div>
             @endforeach
